@@ -1,0 +1,8 @@
+{
+  "openspec_proposal": "openspec/changes/miniprogram-foundation/proposal.md",
+  "openspec_design": "openspec/changes/miniprogram-foundation/design.md",
+  "openspec_tasks": "openspec/changes/miniprogram-foundation/tasks.md",
+  "openspec_delta_spec": "openspec/changes/miniprogram-foundation/specs/app-scaffold/spec.md",
+  "handoff_context": "openspec/changes/miniprogram-foundation/.comet/handoff/design-context.json",
+  "handoff_markdown": "openspec/changes/miniprogram-foundation/.comet/handoff/design-context.md"
+}

@@ -1,0 +1,17 @@
+{
+  "change": "miniprogram-foundation",
+  "phase": "design",
+  "mode": "compact",
+  "canonical_spec": "openspec",
+  "generated_by": "comet-handoff.sh",
+  "context_hash": "f88d5ea706389fd87dfae3922e64786dc9145d549d24458496865f865acc75f5",
+  "files": [
+    { "path": "openspec/changes/miniprogram-foundation/proposal.md", "sha256": "18493d20be817bdc08c81e44679679ed92c65840cf67736a195ecacd0f08ff75" },
+    { "path": "openspec/changes/miniprogram-foundation/design.md", "sha256": "883ab5a31d783cfe270832537a2f43d975f4149fd18142d79bb57a8f7457ebde" },
+    { "path": "openspec/changes/miniprogram-foundation/tasks.md", "sha256": "eac19bede907ded9c1b556db855953d575d31668f09254eef50424a17542ea20" },
+    { "path": "openspec/changes/miniprogram-foundation/specs/app-scaffold/spec.md", "sha256": "27cac14a3796aea227b1bfb11fe810c0a8583944e23982ea4a9c57593d59fbc0" },
+    { "path": "openspec/changes/miniprogram-foundation/specs/data-access/spec.md", "sha256": "6edb5c1a418bb01e7f15cf2a45dba8946f940ca7caa709abc724c9cc4efbc177" },
+    { "path": "openspec/changes/miniprogram-foundation/specs/design-system/spec.md", "sha256": "c2355ed05589b599645b14f00e5f6eb4deac19ef44dec96310c8d5ee916eac96" },
+    { "path": "openspec/changes/miniprogram-foundation/specs/wechat-auth/spec.md", "sha256": "4919efd1c0ae385f279218702b6263714038349629fb1a1f7b4c8035d4a112e3" }
+  ]
+}
