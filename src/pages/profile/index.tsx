@@ -1,4 +1,4 @@
-import { useEffect, useState, useCallback } from 'react'
+import { useEffect, useState, useCallback, useRef } from 'react'
 import { View, Text, ScrollView } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
 import { Avatar, PostCard, SkeletonList } from '../../components'
@@ -17,7 +17,8 @@ export default function Profile() {
   const showToast = useUiStore((s) => s.showToast)
   const [profile, setProfile] = useState<User | null>(null)
   const [tab, setTab] = useState<Tab>('posts')
-  const [loadedTabs, setLoadedTabs] = useState<Set<Tab>>(new Set())
+  const [scrollTop, setScrollTop] = useState(0)
+  const loadedTabsRef = useRef<Set<Tab>>(new Set())
 
   const myPosts = usePagedList<Post>((page) => postsApi.findMyPosts(page))
   const favorites = usePagedList<Post>((page) => interactionsApi.getFavorites(page).then(unwrapFavorites))
@@ -34,22 +35,35 @@ export default function Profile() {
 
   const ensureLoaded = useCallback(
     (t: Tab) => {
-      if (!useAuthStore.getState().isLogin || loadedTabs.has(t)) return
-      setLoadedTabs((prev) => new Set(prev).add(t))
+      if (!useAuthStore.getState().isLogin || loadedTabsRef.current.has(t)) return
+      loadedTabsRef.current.add(t)
       if (t === 'posts') myPosts.reload()
       else favorites.reload()
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [loadedTabs],
+    [],
   )
 
+  // 登录态变化：登录则拉资料，登出则清缓存
   useEffect(() => {
     if (isLogin) {
       loadProfile()
       ensureLoaded(tab)
+    } else {
+      loadedTabsRef.current = new Set()
+      setProfile(null)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isLogin, tab])
+  }, [isLogin])
+
+  // 切 Tab：懒加载对应数据 + 滚动回顶（避免误触发新 Tab loadMore）
+  useEffect(() => {
+    if (isLogin) {
+      ensureLoaded(tab)
+      setScrollTop(0)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [tab])
 
   useDidShow(() => {
     // 从编辑页返回后刷新资料
@@ -60,6 +74,7 @@ export default function Profile() {
     try {
       await login()
       loadProfile()
+      ensureLoaded(tab)
     } catch (e: any) {
       showToast(e?.message || '登录失败', 'error')
     }
@@ -67,12 +82,18 @@ export default function Profile() {
 
   const active = tab === 'posts' ? myPosts : favorites
 
+  const onScrollToLower = () => {
+    // 仅登录态、非首屏加载时触发；未登录不请求受保护接口
+    if (isLogin) active.loadMore()
+  }
+
   return (
     <ScrollView
       scrollY
       className='bg-bg'
       style={{ height: '100vh' }}
-      onScrollToLower={() => active.loadMore()}
+      scrollTop={scrollTop}
+      onScrollToLower={onScrollToLower}
       lowerThreshold={80}
     >
       <View className='px-6 pt-16 pb-8'>

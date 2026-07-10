@@ -21,6 +21,7 @@ export default function ProfileEdit() {
   const [orig, setOrig] = useState<FormState | null>(null)
   const [form, setForm] = useState<FormState>({ nickname: '', bio: '', gender: 0, avatar: '' })
   const [saving, setSaving] = useState(false)
+  const [uploading, setUploading] = useState(false)
 
   useEffect(() => {
     usersApi
@@ -40,18 +41,23 @@ export default function ProfileEdit() {
   }, [])
 
   const chooseAvatar = async () => {
+    if (uploading) return
     try {
       const res = await Taro.chooseImage({ count: 1, sizeType: ['compressed'] })
       const filePath = res.tempFilePaths[0]
+      if (!filePath) return
+      setUploading(true)
       const { url } = await uploadApi.uploadImage(filePath)
       setForm((f) => ({ ...f, avatar: url }))
     } catch {
       showToast('头像上传失败', 'error')
+    } finally {
+      setUploading(false)
     }
   }
 
   const save = async () => {
-    if (!orig || saving) return
+    if (!orig || saving || uploading) return
     const changed = collectChanges(orig as any, form as any)
     if (Object.keys(changed).length === 0) {
       showToast('没有修改', 'info')
@@ -87,7 +93,7 @@ export default function ProfileEdit() {
           )}
         </View>
         <View className='mt-2'>
-          <Text className='text-xs text-ink-sub'>点击更换头像</Text>
+          <Text className='text-xs text-ink-sub'>{uploading ? '上传中…' : '点击更换头像'}</Text>
         </View>
       </View>
 
@@ -133,7 +139,7 @@ export default function ProfileEdit() {
 
       {/* 保存 */}
       <View
-        className={`press bg-peach rounded-pill py-3 flex justify-center items-center ${saving ? 'opacity-50' : ''}`}
+        className={`press bg-peach rounded-pill py-3 flex justify-center items-center ${saving || uploading ? 'opacity-50' : ''}`}
         onClick={save}
       >
         <Text className='text-base text-card'>{saving ? '保存中…' : '保存'}</Text>
