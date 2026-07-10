@@ -46,6 +46,20 @@
 
 **通过。** 无 CRITICAL / IMPORTANT 失败项。
 
+## verify 阶段真机联调发现并修复的缺陷（前后端）
+
+真机冒烟发现 5 个问题，根因全部确证并修复，用户已真机复验通过：
+
+| 问题 | 根因 | 修复 | 归属 |
+|------|------|------|------|
+| 点赞/收藏重复点 500 | Like/Favorite 软删除 + 唯一索引冲突 | 硬删除 + Create 前清理残留 | go-service（已归档 `fix-interactions-bugs`） |
+| 已赞状态退出重进不回显 | 详情公开路由无可选鉴权，拿不到 userID | 新增 OptionalJWTMiddleware；前端 findOne 改 authRequest | 前后端 |
+| 评论提交不回显 | 后端评论返 GORM 原始模型（PascalCase 无 author） | 后端加 CommentResponse DTO | go-service |
+| 列表无法测下拉刷新 | 前端未传 limit，默认 10 条=1 页 | findAll 加 limit，首页 limit=5 | 前端 |
+| 触底不加载 + 文案未居中 | ScrollView 用 min-height；footer 缺 justify-center | ScrollView 固定 100vh；显式 flex 居中 | 前端 |
+
+后端修复（go-service）走独立 openspec 流程，已 curl 验证评论 DTO 与匿名详情、go build + middleware 单测通过、change 已归档。前端修复 tsc+测试+编译通过。**用户真机复验：点赞收藏、已赞回显、触底加载、文案居中全部正常。**
+
 ## 已知项（非阻塞）
 
 - 评论点赞后端无接口：前端本地乐观 + 预留 `interactions.likeComment`，后端就绪后一行接入，状态暂不持久化
