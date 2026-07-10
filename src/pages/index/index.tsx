@@ -18,7 +18,8 @@ export default function Index() {
   return (
     <ScrollView
       scrollY
-      className='min-h-screen bg-bg'
+      className='bg-bg'
+      style={{ height: '100vh' }}
       refresherEnabled
       refresherTriggered={feed.refreshing}
       onRefresherRefresh={() => feed.refresh()}
@@ -39,7 +40,7 @@ export default function Index() {
 
         {/* 错误兜底 */}
         {feed.error && feed.list.length === 0 && (
-          <View className='bg-card rounded-card shadow-soft p-6 items-center'>
+          <View className='bg-card rounded-card shadow-soft p-6 flex flex-col items-center'>
             <View className='py-4'>
               <Text className='text-sm text-ink-sub'>内容加载失败</Text>
             </View>
@@ -51,7 +52,7 @@ export default function Index() {
 
         {/* 空态 */}
         {!isFirstLoading && !feed.error && feed.list.length === 0 && (
-          <View className='bg-card rounded-card shadow-soft p-6 items-center'>
+          <View className='bg-card rounded-card shadow-soft p-6 flex flex-col items-center'>
             <View className='py-6'>
               <Text className='text-sm text-ink-sub'>还没有随笔，来写第一篇吧～</Text>
             </View>
@@ -65,7 +66,10 @@ export default function Index() {
 
         {/* 加载更多/到底提示 */}
         {feed.list.length > 0 && (
-          <View className='press py-4 items-center' onClick={() => feed.hasMore && feed.loadMore()}>
+          <View
+            className='press py-4 flex justify-center items-center'
+            onClick={() => feed.hasMore && feed.loadMore()}
+          >
             <Text className='text-xs text-ink-sub'>
               {feed.loading
                 ? '加载中…'
