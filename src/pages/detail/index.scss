@@ -1,0 +1,17 @@
+.rich-body {
+  margin-top: 8rpx;
+  font-size: 30rpx;
+  line-height: 1.7;
+  color: #4a413a;
+
+  /* rich-text 内部图片自适应宽度 */
+  image,
+  img {
+    max-width: 100%;
+    border-radius: 16rpx;
+  }
+
+  p {
+    margin-bottom: 16rpx;
+  }
+}
