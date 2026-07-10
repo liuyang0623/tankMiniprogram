@@ -65,9 +65,15 @@ export default function Index() {
 
         {/* 加载更多/到底提示 */}
         {feed.list.length > 0 && (
-          <View className='py-4 items-center'>
+          <View className='press py-4 items-center' onClick={() => feed.hasMore && feed.loadMore()}>
             <Text className='text-xs text-ink-sub'>
-              {feed.loading ? '加载中…' : feed.hasMore ? '上拉加载更多' : '没有更多了'}
+              {feed.loading
+                ? '加载中…'
+                : feed.error
+                  ? '加载失败，点击重试'
+                  : feed.hasMore
+                    ? '上拉加载更多'
+                    : '没有更多了'}
             </Text>
           </View>
         )}

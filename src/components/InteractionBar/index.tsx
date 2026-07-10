@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { View, Text } from '@tarojs/components'
 import { interactionsApi } from '../../services/api'
 import { useAuthGuard } from '../../hooks/useAuthGuard'
@@ -21,11 +21,15 @@ export default function InteractionBar({
 }: InteractionBarProps) {
   const [like, setLike] = useState({ active: initialLiked, count: initialLikeCount })
   const [favorited, setFavorited] = useState(initialFavorited)
+  const likingRef = useRef(false)
+  const favingRef = useRef(false)
   const guard = useAuthGuard()
   const showToast = useUiStore((s) => s.showToast)
 
   const onLike = () =>
     guard(async () => {
+      if (likingRef.current) return
+      likingRef.current = true
       const prev = like
       setLike(nextToggleState(prev))
       try {
@@ -34,11 +38,15 @@ export default function InteractionBar({
       } catch {
         setLike(prev)
         showToast('操作失败，请重试', 'error')
+      } finally {
+        likingRef.current = false
       }
     })
 
   const onFavorite = () =>
     guard(async () => {
+      if (favingRef.current) return
+      favingRef.current = true
       const prev = favorited
       setFavorited(!prev)
       try {
@@ -47,6 +55,8 @@ export default function InteractionBar({
       } catch {
         setFavorited(prev)
         showToast('操作失败，请重试', 'error')
+      } finally {
+        favingRef.current = false
       }
     })
 

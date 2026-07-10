@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { View, Textarea } from '@tarojs/components'
 import { interactionsApi } from '../../services/api'
 import { useAuthGuard } from '../../hooks/useAuthGuard'
@@ -16,16 +16,20 @@ export interface CommentInputProps {
 export default function CommentInput({ postId, replyTo, onCancelReply, onSubmitted }: CommentInputProps) {
   const [content, setContent] = useState('')
   const [submitting, setSubmitting] = useState(false)
+  const submittingRef = useRef(false)
   const guard = useAuthGuard()
   const showToast = useUiStore((s) => s.showToast)
 
   const submit = () =>
     guard(async () => {
+      // 防重复提交：ref 立即生效，避免异步 setState 前的连点
+      if (submittingRef.current) return
       const text = content.trim()
       if (!text) {
         showToast('说点什么吧～', 'info')
         return
       }
+      submittingRef.current = true
       setSubmitting(true)
       try {
         const created = await interactionsApi.createComment({
@@ -39,6 +43,7 @@ export default function CommentInput({ postId, replyTo, onCancelReply, onSubmitt
       } catch {
         showToast('发送失败，请重试', 'error')
       } finally {
+        submittingRef.current = false
         setSubmitting(false)
       }
     })

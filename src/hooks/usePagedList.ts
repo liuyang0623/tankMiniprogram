@@ -25,10 +25,10 @@ export function usePagedList<T>(fetchPage: (page: number) => Promise<Paginated<T
   const loadingRef = useRef(false)
 
   const load = useCallback(
-    async (targetPage: number, mode: 'append' | 'replace') => {
+    async (targetPage: number, mode: 'append' | 'replace', asRefresh = false) => {
       if (loadingRef.current) return
       loadingRef.current = true
-      if (mode === 'replace') setRefreshing(true)
+      if (asRefresh) setRefreshing(true)
       else setLoading(true)
       setError(false)
       try {
@@ -47,10 +47,12 @@ export function usePagedList<T>(fetchPage: (page: number) => Promise<Paginated<T
     [fetchPage],
   )
 
-  const reload = useCallback(() => load(1, 'replace'), [load])
-  const refresh = useCallback(() => load(1, 'replace'), [load])
+  // reload：首屏/重试加载，用 loading（不触发下拉刷新态）
+  const reload = useCallback(() => load(1, 'replace', false), [load])
+  // refresh：下拉刷新，用 refreshing
+  const refresh = useCallback(() => load(1, 'replace', true), [load])
   const loadMore = useCallback(() => {
-    if (hasMore && !loadingRef.current) load(page + 1, 'append')
+    if (hasMore && !loadingRef.current) load(page + 1, 'append', false)
   }, [hasMore, page, load])
 
   return { list, page, hasMore, loading, refreshing, error, loadMore, refresh, reload, setList }

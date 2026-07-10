@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { View, Text } from '@tarojs/components'
+import Taro from '@tarojs/taro'
 import { Avatar } from '../index'
 import { interactionsApi } from '../../services/api'
 import { useAuthStore } from '../../store/auth'
@@ -36,6 +37,8 @@ export default function CommentItem({ comment, depth = 0, onReply, onDeleted }: 
   }
 
   const onDelete = async () => {
+    const { confirm } = await Taro.showModal({ title: '删除评论', content: '确定删除这条评论吗？' })
+    if (!confirm) return
     try {
       await interactionsApi.deleteComment(comment.id)
       onDeleted(comment.id)

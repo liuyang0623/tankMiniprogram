@@ -5,6 +5,7 @@ import { interactionsApi } from '../../services/api'
 import CommentItem from '../CommentItem'
 import CommentInput from '../CommentInput'
 import { Skeleton } from '../index'
+import { insertReply, removeComment } from '../../utils/commentTree'
 import type { Comment } from '../../types/api'
 
 export interface CommentListProps {
@@ -24,19 +25,14 @@ export default function CommentList({ postId }: CommentListProps) {
   const handleSubmitted = (created: Comment, parentId?: number) => {
     comments.setList((prev) => {
       if (!parentId) return [created, ...prev]
-      // 回复：挂到对应父评论的 replies 下
-      return prev.map((c) =>
-        c.id === parentId ? { ...c, replies: [...(c.replies || []), created] } : c,
-      )
+      // 回复：递归找到父评论（任意深度）挂到其 replies 下
+      return insertReply(prev, parentId, created)
     })
   }
 
   const handleDeleted = (id: number) => {
-    comments.setList((prev) =>
-      prev
-        .filter((c) => c.id !== id)
-        .map((c) => ({ ...c, replies: (c.replies || []).filter((r) => r.id !== id) })),
-    )
+    // 递归移除任意深度的评论
+    comments.setList((prev) => removeComment(prev, id))
   }
 
   const isFirstLoading = comments.loading && comments.list.length === 0
