@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { View, Text, RichText, ScrollView } from '@tarojs/components'
 import Taro, { useRouter } from '@tarojs/taro'
-import { Avatar, Tag, Skeleton } from '../../components'
+import { Avatar, Tag, Skeleton, InteractionBar } from '../../components'
 import { postsApi } from '../../services/api'
 import { extractImageUrls } from '../../utils/richtext'
 import type { Post } from '../../types/api'
@@ -95,7 +95,15 @@ export default function Detail() {
               <RichText nodes={post.content || ''} />
             </View>
 
-            {/* InteractionBar 与评论区在 Task 6/7 挂载 */}
+            {/* 互动栏 */}
+            <InteractionBar
+              postId={post.id}
+              initialLiked={!!post.isLiked}
+              initialFavorited={!!post.isFavorited}
+              initialLikeCount={post.likeCount}
+            />
+
+            {/* 评论区在 Task 7 挂载 */}
           </View>
         )}
       </View>
