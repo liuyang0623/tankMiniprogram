@@ -1,4 +1,11 @@
-/* 全局样式 —— Tailwind 与设计 token 在 Task 2 接入 */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@use './styles/tokens.scss';
+@use './styles/motion.scss';
+
+/* 全局基础 */
 page {
   background-color: #faf6f0;
   color: #4a413a;
