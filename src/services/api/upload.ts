@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import { BASE_URL } from '../../../config/env'
+import { BASE_URL } from '../../config/env'
 import { useAuthStore } from '../../store/auth'
 import { ApiError } from '../errors'
 

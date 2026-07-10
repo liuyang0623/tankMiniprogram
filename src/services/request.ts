@@ -1,5 +1,5 @@
 import Taro from '@tarojs/taro'
-import { BASE_URL } from '../../config/env'
+import { BASE_URL } from '../config/env'
 import { ApiError } from './errors'
 
 type Method = 'GET' | 'POST' | 'PATCH' | 'DELETE' | 'PUT'
