@@ -1,5 +1,5 @@
 import { authRequest } from '../authRequest'
-import type { Comment, Post, Paginated, PaginatedComments } from '../../types/api'
+import type { Comment, PaginatedComments, PaginatedFavorites } from '../../types/api'
 
 export interface CreateCommentBody {
   postId: number
@@ -16,8 +16,9 @@ export const interactionsApi = {
   /** 受保护：收藏（toggle，返回当前状态） */
   favoritePost: (id: number) =>
     authRequest<{ favorited: boolean }>({ url: `/posts/${id}/favorite`, method: 'POST' }),
-  /** 受保护：我的收藏 */
-  getFavorites: () => authRequest<Paginated<Post>>({ url: '/users/me/favorites' }),
+  /** 受保护：我的收藏（分页，post 为规范 DTO） */
+  getFavorites: (page = 1) =>
+    authRequest<PaginatedFavorites>({ url: `/users/me/favorites?page=${page}` }),
   /** 受保护：发表评论 */
   createComment: (body: CreateCommentBody) =>
     authRequest<Comment>({ url: '/comments', method: 'POST', data: body }),

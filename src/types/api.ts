@@ -100,3 +100,12 @@ export interface AuthResponse {
 
 /** 评论分页返回 */
 export type PaginatedComments = Paginated<Comment>
+
+/** 收藏项：包裹帖子与收藏时间 */
+export interface FavoriteItem {
+  post: Post
+  favoritedAt: string
+}
+
+/** 收藏分页返回 */
+export type PaginatedFavorites = Paginated<FavoriteItem>
