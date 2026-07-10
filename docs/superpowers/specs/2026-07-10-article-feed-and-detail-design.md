@@ -2,6 +2,8 @@
 comet_change: article-feed-and-detail
 role: technical-design
 canonical_spec: openspec
+archived-with: 2026-07-10-article-feed-and-detail
+status: final
 ---
 
 # article-feed-and-detail 技术设计
@@ -110,3 +112,4 @@ onLike: guard(async () => {
 ## 9. 非目标（YAGNI）
 
 不引 SWR/react-query；不做评论排序/热度、@提及自动补全；不做多端输出。
+

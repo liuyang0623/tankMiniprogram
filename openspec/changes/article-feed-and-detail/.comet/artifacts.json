@@ -1,8 +1,0 @@
-{
-  "openspec_proposal": "openspec/changes/article-feed-and-detail/proposal.md",
-  "openspec_design": "openspec/changes/article-feed-and-detail/design.md",
-  "openspec_tasks": "openspec/changes/article-feed-and-detail/tasks.md",
-  "openspec_delta_spec": "openspec/changes/article-feed-and-detail/specs/article-detail/spec.md",
-  "handoff_context": "openspec/changes/article-feed-and-detail/.comet/handoff/design-context.json",
-  "handoff_markdown": "openspec/changes/article-feed-and-detail/.comet/handoff/design-context.md"
-}

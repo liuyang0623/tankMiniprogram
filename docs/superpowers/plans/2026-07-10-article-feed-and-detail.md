@@ -2,6 +2,7 @@
 change: article-feed-and-detail
 design-doc: docs/superpowers/specs/2026-07-10-article-feed-and-detail-design.md
 base-ref: 8554a141ea79e4c72c549fc1b450d66e0b43797b
+archived-with: 2026-07-10-article-feed-and-detail
 ---
 
 # 信息流+详情+互动 Implementation Plan
@@ -22,6 +23,7 @@ base-ref: 8554a141ea79e4c72c549fc1b450d66e0b43797b
 - 评论点赞后端暂无接口 → 前端本地乐观 + 预留 `interactions.likeComment`
 - 动效仅 transform/opacity；语言简体中文；单位 rpx
 
+archived-with: 2026-07-10-article-feed-and-detail
 ---
 
 ### Task 1: 类型增量与 API 预留
@@ -55,6 +57,7 @@ git add src/types src/services/api
 git commit -m "feat(feed): 类型增量与评论点赞预留接口"
 ```
 
+archived-with: 2026-07-10-article-feed-and-detail
 ---
 
 ### Task 2: usePagedList hook（TDD）
@@ -141,6 +144,7 @@ git add src/hooks
 git commit -m "feat(feed): usePagedList 分页 hook + 纯逻辑单测"
 ```
 
+archived-with: 2026-07-10-article-feed-and-detail
 ---
 
 ### Task 3: 乐观更新 hook（TDD）
@@ -186,6 +190,7 @@ git add src/hooks
 git commit -m "feat(interactions): 乐观更新 toggle hook + 单测"
 ```
 
+archived-with: 2026-07-10-article-feed-and-detail
 ---
 
 ### Task 4: 信息流首页
@@ -210,6 +215,7 @@ git add src/components/PostCard src/pages/index
 git commit -m "feat(feed): 信息流首页分页/刷新/加载更多 + PostCard"
 ```
 
+archived-with: 2026-07-10-article-feed-and-detail
 ---
 
 ### Task 5: 文章详情页
@@ -237,6 +243,7 @@ git add src/pages/detail src/app.config.ts src/utils
 git commit -m "feat(detail): 详情页 rich-text 渲染 + 图片预览"
 ```
 
+archived-with: 2026-07-10-article-feed-and-detail
 ---
 
 ### Task 6: 点赞收藏互动栏
@@ -255,6 +262,7 @@ git add src/components/InteractionBar src/pages/detail
 git commit -m "feat(interactions): 详情页点赞收藏乐观更新"
 ```
 
+archived-with: 2026-07-10-article-feed-and-detail
 ---
 
 ### Task 7: 评论功能
@@ -281,6 +289,7 @@ git add src/components/CommentList src/components/CommentItem src/components/Com
 git commit -m "feat(interactions): 评论列表/递归回复/评论点赞/删除"
 ```
 
+archived-with: 2026-07-10-article-feed-and-detail
 ---
 
 ### Task 8: 全量验证
@@ -295,6 +304,7 @@ git add -A
 git commit -m "chore(feed): 全量验证通过" || true
 ```
 
+archived-with: 2026-07-10-article-feed-and-detail
 ---
 
 ## Self-Review
@@ -303,3 +313,4 @@ git commit -m "chore(feed): 全量验证通过" || true
 - **占位符**：无 TBD；代码步骤含真实代码。
 - **类型一致**：`usePagedList`/`nextToggleState`/`postsApi.*`/`interactionsApi.*`/`PaginatedComments` 跨任务一致。
 - **已知项**：评论点赞后端无接口（前端预留，本地态）；rich-text 复杂回显与真实数据需服务端联调。
+
