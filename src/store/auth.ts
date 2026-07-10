@@ -1,0 +1,42 @@
+import { create } from 'zustand'
+import Taro from '@tarojs/taro'
+import type { LoginUser } from '../types/api'
+
+const TOKEN_KEY = 'blr_token'
+const USER_KEY = 'blr_user'
+
+interface AuthState {
+  token: string
+  user: LoginUser | null
+  isLogin: boolean
+  /** 登录成功：写入内存态 + 持久化 */
+  setAuth: (token: string, user: LoginUser) => void
+  /** 清除登录态（登出 / 401 失效） */
+  clear: () => void
+  /** 启动时从本地存储恢复 */
+  restore: () => void
+}
+
+export const useAuthStore = create<AuthState>((set) => ({
+  token: '',
+  user: null,
+  isLogin: false,
+
+  setAuth: (token, user) => {
+    Taro.setStorageSync(TOKEN_KEY, token)
+    Taro.setStorageSync(USER_KEY, user)
+    set({ token, user, isLogin: true })
+  },
+
+  clear: () => {
+    Taro.removeStorageSync(TOKEN_KEY)
+    Taro.removeStorageSync(USER_KEY)
+    set({ token: '', user: null, isLogin: false })
+  },
+
+  restore: () => {
+    const token = Taro.getStorageSync(TOKEN_KEY)
+    const user = Taro.getStorageSync(USER_KEY)
+    if (token) set({ token, user: user || null, isLogin: true })
+  },
+}))
