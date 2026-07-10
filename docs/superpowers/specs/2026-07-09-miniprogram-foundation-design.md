@@ -2,6 +2,8 @@
 comet_change: miniprogram-foundation
 role: technical-design
 canonical_spec: openspec
+archived-with: 2026-07-10-miniprogram-foundation
+status: final
 ---
 
 # miniprogram-foundation 技术设计
@@ -141,3 +143,4 @@ wx.login() → code → POST /api/v1/auth/wechat/login {code}
 ## 8. 非目标（YAGNI）
 
 暗色模式、具体业务页面完整功能、lottie 等重动效库、多端（H5/App）输出、E2E —— 均不在地基层范围。
+
