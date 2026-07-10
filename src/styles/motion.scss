@@ -1,0 +1,48 @@
+/* 动效原语 —— 仅用 transform / opacity，小程序性能友好 */
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(16rpx);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes shimmer {
+  from {
+    background-position: -200% 0;
+  }
+  to {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes floating {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8rpx);
+  }
+}
+
+/* 进场：淡入上浮 */
+.anim-in {
+  animation: fadeInUp 0.32s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* 卡片呼吸/浮动 */
+.anim-float {
+  animation: floating 3.2s ease-in-out infinite;
+}
+
+/* 按压反馈 */
+.press:active {
+  transform: scale(0.97);
+  opacity: 0.9;
+  transition: transform 0.18s, opacity 0.18s;
+}

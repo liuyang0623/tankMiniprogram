@@ -34,3 +34,12 @@ yarn-error.log*
 
 # wechat devtools
 project.private.config.json
+
+# 平台/工具工作区（不纳入代码仓库）
+.agents/
+.claude/
+.codegraph/
+.codex/
+.comet/
+.cursor/
+.superpowers/

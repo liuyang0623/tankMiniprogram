@@ -91,7 +91,18 @@ token 同时注入 Tailwind theme（`colors`/`borderRadius`/`boxShadow`/`fontSiz
 - `upload.ts`：`uploadImage(filePath)` / `uploadFile(filePath)`
 
 ### 4.3 契约类型（`types/api.ts`）
-对齐后端 GORM 模型：`User`、`Post`（含 `status: 'DRAFT'|'PUBLISHED'`、`viewCount/likeCount/commentCount`、`images`、`topics`、`author`）、`PostImage`、`Topic`、`Comment`（含 `parentId`/`replies`）、`Like`、`Favorite`、分页包裹、`AuthResponse{ token, user }`。
+以 go-service handler 实际 JSON 返回为准（已核对 `pkg/response` 与各 service 的 response struct）：
+
+- **统一响应包裹**：`{ data, code, message }`，**成功时 `code === 200`**（HTTP 状态码，非 0），失败 `code` 为对应 HTTP 状态码
+- **分页返回**：`data` 为 `{ data: T[], meta: { total, page, limit/pageSize } }`（PaginatedResult）
+- **Post**（PostResponse）：含 `id, title, content, cover?, status('DRAFT'|'PUBLISHED'), authorId, author, viewCount, likeCount, commentCount, createdAt, updatedAt, publishedAt?, images?, topics?`
+- **Author**（AuthorInfo）：`{ id, name, avatar }`（昵称 json tag 是 `name`）
+- **Image**（ImageInfo）：`{ id, url, order }`（排序 json tag 是 `order`）
+- **Topic**：`{ id, name }`
+- **Comment**：`{ id, content, parentId?, replies? }`（嵌套回复）
+- **登录**：请求体 `{ code, nickName?, avatarUrl? }`；返回 `{ token, user }`（LoginResult）
+
+> 解包逻辑集中在 request 层：成功判定 `code === 200`（兼容 2xx HTTP 且无 code 的情况），便于后端若调整统一在一处修改。
 
 ### 4.4 状态（`store/`）
 - `useAuthStore`：`{ token, user, isLogin, setAuth(), clear(), restore() }`，token/user 持久化到 `Taro.setStorageSync`
