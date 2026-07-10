@@ -2,8 +2,9 @@
 @tailwind components;
 @tailwind utilities;
 
-@use './styles/tokens.scss';
-@use './styles/motion.scss';
+/* stylelint-disable-next-line -- @tailwind 指令需在最前，故 partial 用 @import */
+@import './styles/tokens.scss';
+@import './styles/motion.scss';
 
 /* 全局基础 */
 page {
