@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { View, Text, RichText, ScrollView } from '@tarojs/components'
 import Taro, { useRouter } from '@tarojs/taro'
-import { Avatar, Tag, Skeleton, InteractionBar } from '../../components'
+import { Avatar, Tag, Skeleton, InteractionBar, CommentList } from '../../components'
 import { postsApi } from '../../services/api'
 import { extractImageUrls } from '../../utils/richtext'
 import type { Post } from '../../types/api'
@@ -103,7 +103,8 @@ export default function Detail() {
               initialLikeCount={post.likeCount}
             />
 
-            {/* 评论区在 Task 7 挂载 */}
+            {/* 评论区 */}
+            <CommentList postId={post.id} />
           </View>
         )}
       </View>
