@@ -30,7 +30,7 @@ base-ref: 8554a141ea79e4c72c549fc1b450d66e0b43797b
 - Modify: `src/types/api.ts`
 - Modify: `src/services/api/interactions.ts`
 
-- [ ] **Step 1: 补充类型字段**
+- [x] **Step 1: 补充类型字段**
 
 `src/types/api.ts`：
 - `Post` 加 `isLiked?: boolean`、`isFavorited?: boolean`
@@ -38,7 +38,7 @@ base-ref: 8554a141ea79e4c72c549fc1b450d66e0b43797b
 - `Comment` 加 `authorId?: number`、`author?: PostAuthor`、`likeCount?: number`、`isLiked?: boolean`
 - 末尾加 `export type PaginatedComments = Paginated<Comment>`
 
-- [ ] **Step 2: interactions 补预留方法**
+- [x] **Step 2: interactions 补预留方法**
 
 `src/services/api/interactions.ts` 的 `interactionsApi` 加：
 ```ts
@@ -47,7 +47,7 @@ likeComment: (_id: number) => Promise.resolve<{ liked: boolean }>({ liked: true 
 ```
 并确认 `getComments(postId, page)` 返回 `Paginated<Comment>`（若签名是 `Comment[]` 改为分页）。
 
-- [ ] **Step 3: 类型校验 + Commit**
+- [x] **Step 3: 类型校验 + Commit**
 
 Run: `bunx tsc --noEmit` → 0 错误
 ```bash
@@ -66,7 +66,7 @@ git commit -m "feat(feed): 类型增量与评论点赞预留接口"
 **Interfaces:**
 - Produces: `usePagedList<T>(fetchPage): { list,page,hasMore,loading,refreshing,error,loadMore,refresh,reload,setList }`
 
-- [ ] **Step 1: 写失败测试**
+- [x] **Step 1: 写失败测试**
 
 `src/hooks/__tests__/usePagedList.test.ts`（用 `@tarojs/test-utils-react` 的 renderHook 或 React 测试工具；若不可用，将分页逻辑抽为纯函数 `pagedReducer` 测试）。为降低小程序渲染依赖，本计划将核心逻辑抽为纯函数测试：
 ```ts
@@ -85,9 +85,9 @@ describe('usePagedList 纯逻辑', () => {
 })
 ```
 
-- [ ] **Step 2: 运行确认失败** — `bunx vitest run src/hooks/__tests__/usePagedList.test.ts` → FAIL
+- [x] **Step 2: 运行确认失败** — `bunx vitest run src/hooks/__tests__/usePagedList.test.ts` → FAIL
 
-- [ ] **Step 3: 实现 usePagedList**
+- [x] **Step 3: 实现 usePagedList**
 
 导出纯函数 `computeHasMore(page,totalPages)`、`mergePage(prev,next,mode)`，以及 `usePagedList` hook：
 ```ts
@@ -133,9 +133,9 @@ export function usePagedList<T>(fetchPage: (page: number) => Promise<Paginated<T
 }
 ```
 
-- [ ] **Step 4: 运行确认通过** — PASS
+- [x] **Step 4: 运行确认通过** — PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 ```bash
 git add src/hooks
 git commit -m "feat(feed): usePagedList 分页 hook + 纯逻辑单测"
@@ -152,7 +152,7 @@ git commit -m "feat(feed): usePagedList 分页 hook + 纯逻辑单测"
 **Interfaces:**
 - Produces: 纯函数 `applyToggle(state, delta)` + hook；供点赞/收藏/评论点赞复用
 
-- [ ] **Step 1: 写失败测试**
+- [x] **Step 1: 写失败测试**
 ```ts
 import { describe, it, expect } from 'vitest'
 import { nextToggleState } from '../useOptimisticToggle'
@@ -167,9 +167,9 @@ describe('nextToggleState', () => {
 })
 ```
 
-- [ ] **Step 2: 确认失败** — FAIL
+- [x] **Step 2: 确认失败** — FAIL
 
-- [ ] **Step 3: 实现**
+- [x] **Step 3: 实现**
 ```ts
 export interface ToggleState { active: boolean; count: number }
 export function nextToggleState(s: ToggleState): ToggleState {
@@ -178,9 +178,9 @@ export function nextToggleState(s: ToggleState): ToggleState {
 ```
 hook 版：`useOptimisticToggle(initial, action)` 返回 `{state, run}`，run 内乐观改 → 调 action → 失败回滚（详细见 Design Doc 5.1）。
 
-- [ ] **Step 4: 确认通过** — PASS
+- [x] **Step 4: 确认通过** — PASS
 
-- [ ] **Step 5: Commit**
+- [x] **Step 5: Commit**
 ```bash
 git add src/hooks
 git commit -m "feat(interactions): 乐观更新 toggle hook + 单测"
@@ -194,15 +194,15 @@ git commit -m "feat(interactions): 乐观更新 toggle hook + 单测"
 - Create: `src/components/PostCard/index.tsx`
 - Modify: `src/pages/index/index.tsx`
 
-- [ ] **Step 1: PostCard 组件**
+- [x] **Step 1: PostCard 组件**
 
 复用地基 Card/Avatar/Tag。展示 title、content 摘要、author.name+avatar、topics、likeCount/commentCount。点击 `Taro.navigateTo({url:'/pages/detail/index?id='+post.id})`。
 
-- [ ] **Step 2: 首页接 usePagedList**
+- [x] **Step 2: 首页接 usePagedList**
 
 `pages/index/index.tsx` 用 `usePagedList(p => postsApi.findAll(p))`；ScrollView `refresher-enabled` 绑 refresh、`onScrollToLower` 绑 loadMore；映射 loading→SkeletonList / error→重试 / 空→空态 / success→PostCard 列表 + 到底提示。
 
-- [ ] **Step 3: 编译验证 + Commit**
+- [x] **Step 3: 编译验证 + Commit**
 
 Run: `bun run build:weapp` → success
 ```bash
@@ -219,19 +219,19 @@ git commit -m "feat(feed): 信息流首页分页/刷新/加载更多 + PostCard"
 - Modify: `src/app.config.ts`
 - Create: `src/utils/richtext.ts`（提取 img）
 
-- [ ] **Step 1: 注册路由**
+- [x] **Step 1: 注册路由**
 
 `src/app.config.ts` 的 pages 加 `'pages/detail/index'`。
 
-- [ ] **Step 2: 详情加载与渲染**
+- [x] **Step 2: 详情加载与渲染**
 
 `useRouter().params.id` → `postsApi.findOne(id)`；骨架/错误态；文章头（标题/Avatar+作者/Tag 话题/浏览计数）；`<RichText nodes={content}>` 渲染正文。
 
-- [ ] **Step 3: 图片预览工具**
+- [x] **Step 3: 图片预览工具**
 
 `src/utils/richtext.ts` 导出 `extractImageUrls(html: string): string[]`（正则 `/<img[^>]+src=["']([^"']+)["']/g`）。详情页解析后，图片区可点击 → `Taro.previewImage({ current, urls })`。
 
-- [ ] **Step 4: 编译验证 + Commit**
+- [x] **Step 4: 编译验证 + Commit**
 ```bash
 git add src/pages/detail src/app.config.ts src/utils
 git commit -m "feat(detail): 详情页 rich-text 渲染 + 图片预览"
@@ -245,11 +245,11 @@ git commit -m "feat(detail): 详情页 rich-text 渲染 + 图片预览"
 - Create: `src/components/InteractionBar/index.tsx`
 - Modify: `src/pages/detail/index.tsx`
 
-- [ ] **Step 1: InteractionBar**
+- [x] **Step 1: InteractionBar**
 
 点赞、收藏按钮 + 计数，初始值来自 `isLiked/isFavorited/likeCount`。乐观更新（复用 useOptimisticToggle）：点击即改 → `interactionsApi.likePost/favoritePost` → 成功以 `{liked}`/`{favorited}` 为准 / 失败回滚 + showToast。未登录经 `useAuthGuard`。
 
-- [ ] **Step 2: 挂到详情页 + 编译 + Commit**
+- [x] **Step 2: 挂到详情页 + 编译 + Commit**
 ```bash
 git add src/components/InteractionBar src/pages/detail
 git commit -m "feat(interactions): 详情页点赞收藏乐观更新"
@@ -263,19 +263,19 @@ git commit -m "feat(interactions): 详情页点赞收藏乐观更新"
 - Create: `src/components/CommentList/index.tsx`、`src/components/CommentItem/index.tsx`、`src/components/CommentInput/index.tsx`
 - Modify: `src/pages/detail/index.tsx`
 
-- [ ] **Step 1: CommentList**
+- [x] **Step 1: CommentList**
 
 `usePagedList(p => interactionsApi.getComments(postId, p))`，加载更多。空态提示。
 
-- [ ] **Step 2: CommentItem（递归 + 评论点赞 + 删除）**
+- [x] **Step 2: CommentItem（递归 + 评论点赞 + 删除）**
 
 递归组件：渲染自身（Avatar+作者+内容+时间）+ `replies.map(CommentItem depth+1)`；`depth` 超限深（3）不再加缩进、`@昵称` 前缀。评论点赞按钮（本地乐观 + 预留 likeComment）。本人评论（`authorId===当前user.id`）显示删除 → `deleteComment` + 本地移除。
 
-- [ ] **Step 3: CommentInput（发表/回复）**
+- [x] **Step 3: CommentInput（发表/回复）**
 
 输入 + 提交，`createComment({postId, content, parentId?})`，未登录 `useAuthGuard`。提交成功插入列表。
 
-- [ ] **Step 4: 挂到详情页 + 编译 + Commit**
+- [x] **Step 4: 挂到详情页 + 编译 + Commit**
 ```bash
 git add src/components/CommentList src/components/CommentItem src/components/CommentInput src/pages/detail
 git commit -m "feat(interactions): 评论列表/递归回复/评论点赞/删除"
@@ -285,11 +285,11 @@ git commit -m "feat(interactions): 评论列表/递归回复/评论点赞/删除
 
 ### Task 8: 全量验证
 
-- [ ] **Step 1: 全量校验**
+- [x] **Step 1: 全量校验**
 
 Run: `bunx tsc --noEmit && bunx vitest run && bun run build:weapp` → 全绿
 
-- [ ] **Step 2: 提交剩余变更**
+- [x] **Step 2: 提交剩余变更**
 ```bash
 git add -A
 git commit -m "chore(feed): 全量验证通过" || true
