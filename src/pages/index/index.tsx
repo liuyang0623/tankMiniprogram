@@ -6,7 +6,7 @@ import type { Post } from '../../types/api'
 import { useEffect } from 'react'
 
 export default function Index() {
-  const feed = usePagedList<Post>((page) => postsApi.findAll(page))
+  const feed = usePagedList<Post>((page) => postsApi.findAll(page, 5))
 
   useEffect(() => {
     feed.reload()

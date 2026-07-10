@@ -1,4 +1,3 @@
-import { request } from '../request'
 import { authRequest } from '../authRequest'
 import type { Comment, Post, Paginated, PaginatedComments } from '../../types/api'
 
@@ -9,9 +8,9 @@ export interface CreateCommentBody {
 }
 
 export const interactionsApi = {
-  /** 公开：帖子评论列表（分页） */
+  /** 公开（可选鉴权）：帖子评论列表（分页） */
   getComments: (postId: number, page = 1) =>
-    request<PaginatedComments>({ url: `/posts/${postId}/comments?page=${page}` }),
+    authRequest<PaginatedComments>({ url: `/posts/${postId}/comments?page=${page}` }),
   /** 受保护：点赞（toggle，返回当前状态） */
   likePost: (id: number) => authRequest<{ liked: boolean }>({ url: `/posts/${id}/like`, method: 'POST' }),
   /** 受保护：收藏（toggle，返回当前状态） */

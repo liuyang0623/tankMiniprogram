@@ -1,4 +1,3 @@
-import { request } from '../request'
 import { authRequest } from '../authRequest'
 import type { Post, Paginated } from '../../types/api'
 
@@ -13,10 +12,11 @@ export interface CreatePostBody {
 export type UpdatePostBody = Partial<CreatePostBody>
 
 export const postsApi = {
-  /** 公开：帖子列表（分页） */
-  findAll: (page = 1) => request<Paginated<Post>>({ url: `/posts?page=${page}` }),
-  /** 公开：帖子详情 */
-  findOne: (id: number) => request<Post>({ url: `/posts/${id}` }),
+  /** 公开（可选鉴权）：帖子列表（分页）。带 token 时后端可返回个性化信息 */
+  findAll: (page = 1, limit = 10) =>
+    authRequest<Paginated<Post>>({ url: `/posts?page=${page}&limit=${limit}` }),
+  /** 公开（可选鉴权）：帖子详情。带 token 时后端返回真实 isLiked/isFavorited */
+  findOne: (id: number) => authRequest<Post>({ url: `/posts/${id}` }),
   /** 受保护：创建帖子 */
   create: (body: CreatePostBody) => authRequest<Post>({ url: '/posts', method: 'POST', data: body }),
   /** 受保护：更新帖子 */
