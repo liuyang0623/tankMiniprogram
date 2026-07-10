@@ -13,7 +13,10 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
     sourceRoot: 'src',
     outputRoot: 'dist',
     plugins: ['@tarojs/plugin-framework-react'],
-    defineConstants: {},
+    // 编译期把 process.env.TARO_APP_ENV 替换为字面量，避免小程序运行时无 process 全局
+    defineConstants: {
+      'process.env.TARO_APP_ENV': JSON.stringify(process.env.TARO_APP_ENV || 'dev'),
+    },
     copy: { patterns: [], options: {} },
     framework: 'react',
     compiler: { type: 'webpack5', prebundle: { enable: false } },
