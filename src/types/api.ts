@@ -51,6 +51,9 @@ export interface Post {
   commentCount: number
   images?: PostImage[]
   topics?: Topic[]
+  // 当前登录用户对该帖的互动态（详情接口返回）
+  isLiked?: boolean
+  isFavorited?: boolean
   createdAt: string
   updatedAt: string
   publishedAt?: string
@@ -62,6 +65,11 @@ export interface Comment {
   parentId?: number
   replies?: Comment[]
   createdAt?: string
+  authorId?: number
+  author?: PostAuthor
+  // 评论点赞：后端暂无接口，前端本地乐观字段
+  likeCount?: number
+  isLiked?: boolean
 }
 
 /** 分页元信息 */
@@ -69,6 +77,7 @@ export interface PaginationMeta {
   total: number
   page: number
   limit: number
+  totalPages: number
 }
 
 /** 分页返回：{ data: T[], meta } */
@@ -88,3 +97,6 @@ export interface AuthResponse {
   token: string
   user: LoginUser
 }
+
+/** 评论分页返回 */
+export type PaginatedComments = Paginated<Comment>
