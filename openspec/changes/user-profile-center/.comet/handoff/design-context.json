@@ -1,0 +1,16 @@
+{
+  "change": "user-profile-center",
+  "phase": "design",
+  "mode": "compact",
+  "canonical_spec": "openspec",
+  "generated_by": "comet-handoff.sh",
+  "context_hash": "b6074067b201955933a41fb268bc187fd142255e84c0ac5d515f26cc026c8d87",
+  "files": [
+    { "path": "openspec/changes/user-profile-center/proposal.md", "sha256": "4997fe8f065a496a8cae4244472dfffa72df8c7162a3dfb58d48632791d4182a" },
+    { "path": "openspec/changes/user-profile-center/design.md", "sha256": "d241c88d71499f47e08791da4cf94dc5a23721a67a8218bee2aa6dc04159bdd0" },
+    { "path": "openspec/changes/user-profile-center/tasks.md", "sha256": "657444cc65adde6714daa4dae3c217bd8c3d086d386f3ea94884e8099ef97e69" },
+    { "path": "openspec/changes/user-profile-center/specs/my-content/spec.md", "sha256": "66649c30a586a7d0d7e25a22015d34c297da946fa4d7a40b3de2311e06edd3f2" },
+    { "path": "openspec/changes/user-profile-center/specs/profile-center/spec.md", "sha256": "be59ab72b92b20542ea52f4742a45e90efa796a53a005606d2ca5012ace7cd70" },
+    { "path": "openspec/changes/user-profile-center/specs/profile-edit/spec.md", "sha256": "bb4561c9a1f4cd286f275034515666365c30782765459472679c246e3ff2a5f1" }
+  ]
+}

@@ -1,6 +1,6 @@
 workflow: full
 language: zh-CN
-phase: open
+phase: build
 context_compression: off
 build_mode: null
 build_pause: null
@@ -11,7 +11,7 @@ isolation: null
 verify_mode: null
 auto_transition: true
 base_ref: fab8c21fe5f33c5eb12f53873631a5c1d891f386
-design_doc: null
+design_doc: docs/superpowers/specs/2026-07-10-user-profile-center-design.md
 plan: null
 verify_result: pending
 verification_report: null
@@ -19,3 +19,11 @@ branch_status: pending
 created_at: 2026-07-10
 verified_at: null
 archived: false
+direct_override: null
+build_command: null
+verify_command: null
+handoff_context: openspec/changes/user-profile-center/.comet/handoff/design-context.json
+handoff_hash: b6074067b201955933a41fb268bc187fd142255e84c0ac5d515f26cc026c8d87
+classic_profile: full
+classic_migration: 1
+run_id: 96231d8f-f01f-4118-8e95-f1925b68acd1

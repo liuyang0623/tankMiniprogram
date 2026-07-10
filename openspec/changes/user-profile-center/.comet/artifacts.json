@@ -1,0 +1,8 @@
+{
+  "openspec_proposal": "openspec/changes/user-profile-center/proposal.md",
+  "openspec_design": "openspec/changes/user-profile-center/design.md",
+  "openspec_tasks": "openspec/changes/user-profile-center/tasks.md",
+  "openspec_delta_spec": "openspec/changes/user-profile-center/specs/my-content/spec.md",
+  "handoff_context": "openspec/changes/user-profile-center/.comet/handoff/design-context.json",
+  "handoff_markdown": "openspec/changes/user-profile-center/.comet/handoff/design-context.md"
+}
