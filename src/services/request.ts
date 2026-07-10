@@ -22,12 +22,18 @@ export async function request<T = any>(opts: RequestOptions): Promise<T> {
   const header: Record<string, string> = { 'Content-Type': 'application/json' }
   if (opts.token) header['Authorization'] = `Bearer ${opts.token}`
 
-  const res = await Taro.request({
-    url: BASE_URL + opts.url,
-    method: (opts.method || 'GET') as any,
-    data: opts.data,
-    header,
-  })
+  let res: any
+  try {
+    res = await Taro.request({
+      url: BASE_URL + opts.url,
+      method: (opts.method || 'GET') as any,
+      data: opts.data,
+      header,
+    })
+  } catch (e: any) {
+    // 网络失败（离线/超时/DNS）：规范化为 ApiError，code=0 表示网络层错误
+    throw new ApiError(0, e?.errMsg || e?.message || '网络请求失败', 0)
+  }
 
   if (res.statusCode === 401) {
     opts.onUnauthorized?.()

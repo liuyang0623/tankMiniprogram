@@ -47,4 +47,10 @@ describe('request', () => {
     await expect(request({ url: '/me', onUnauthorized })).rejects.toBeInstanceOf(ApiError)
     expect(onUnauthorized).toHaveBeenCalledOnce()
   })
+
+  it('网络失败包装为 ApiError（code 0）', async () => {
+    mockRequest.mockRejectedValue(new Error('request:fail timeout'))
+    await expect(request({ url: '/posts' })).rejects.toBeInstanceOf(ApiError)
+    await expect(request({ url: '/posts' })).rejects.toMatchObject({ code: 0 })
+  })
 })
