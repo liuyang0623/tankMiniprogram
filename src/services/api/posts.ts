@@ -27,7 +27,7 @@ export const postsApi = {
   /** 受保护：发布帖子 */
   publish: (id: number) => authRequest<Post>({ url: `/posts/${id}/publish`, method: 'POST' }),
   /** 受保护：我的草稿 */
-  findDrafts: () => authRequest<Paginated<Post>>({ url: '/posts/drafts' }),
+  findDrafts: (page = 1) => authRequest<Paginated<Post>>({ url: `/posts/drafts?page=${page}` }),
   /** 受保护：我的帖子 */
-  findMyPosts: () => authRequest<Paginated<Post>>({ url: '/posts/my' }),
+  findMyPosts: (page = 1) => authRequest<Paginated<Post>>({ url: `/posts/my?page=${page}` }),
 }
