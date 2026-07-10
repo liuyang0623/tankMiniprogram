@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { View, Text, Input, Textarea, Image } from '@tarojs/components'
+import { View, Text, Input, Textarea, Image, Button } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { usersApi, uploadApi } from '../../services/api'
 import { collectChanges } from '../../utils/profile'
@@ -40,14 +40,13 @@ export default function ProfileEdit() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
-  const chooseAvatar = async () => {
-    if (uploading) return
+  // 微信头像授权：open-type=chooseAvatar 返回临时头像路径，上传取正式 URL
+  const onChooseAvatar = async (e: any) => {
+    const avatarUrl = e?.detail?.avatarUrl
+    if (!avatarUrl || uploading) return
+    setUploading(true)
     try {
-      const res = await Taro.chooseImage({ count: 1, sizeType: ['compressed'] })
-      const filePath = res.tempFilePaths[0]
-      if (!filePath) return
-      setUploading(true)
-      const { url } = await uploadApi.uploadImage(filePath)
+      const { url } = await uploadApi.uploadImage(avatarUrl)
       setForm((f) => ({ ...f, avatar: url }))
     } catch {
       showToast('头像上传失败', 'error')
@@ -83,28 +82,35 @@ export default function ProfileEdit() {
 
   return (
     <View className='min-h-screen bg-bg px-6 pt-8'>
-      {/* 头像 */}
+      {/* 头像：微信头像授权 */}
       <View className='flex flex-col items-center mb-8'>
-        <View className='press' onClick={chooseAvatar}>
+        <Button
+          className='p-0 bg-transparent'
+          style={{ lineHeight: 'normal', border: 'none' }}
+          openType='chooseAvatar'
+          onChooseAvatar={onChooseAvatar}
+        >
           {form.avatar ? (
             <Image className='rounded-pill bg-haze' style={{ width: '160rpx', height: '160rpx' }} src={form.avatar} mode='aspectFill' />
           ) : (
             <View className='rounded-pill bg-haze' style={{ width: '160rpx', height: '160rpx' }} />
           )}
-        </View>
+        </Button>
         <View className='mt-2'>
-          <Text className='text-xs text-ink-sub'>{uploading ? '上传中…' : '点击更换头像'}</Text>
+          <Text className='text-xs text-ink-sub'>{uploading ? '上传中…' : '点击使用微信头像'}</Text>
         </View>
       </View>
 
-      {/* 昵称 */}
+      {/* 昵称：微信昵称授权 */}
       <View className='bg-card rounded-card shadow-soft p-5 mb-4'>
         <Text className='text-xs text-ink-sub'>昵称</Text>
         <Input
           className='mt-2 text-base text-ink'
+          type='nickname'
           value={form.nickname}
-          placeholder='起个名字吧'
+          placeholder='点击填写或使用微信昵称'
           onInput={(e) => setForm((f) => ({ ...f, nickname: e.detail.value }))}
+          onBlur={(e) => setForm((f) => ({ ...f, nickname: e.detail.value }))}
         />
       </View>
 

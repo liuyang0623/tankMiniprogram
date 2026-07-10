@@ -6,7 +6,7 @@ import { usePagedList } from '../../hooks/usePagedList'
 import { postsApi, interactionsApi, usersApi } from '../../services/api'
 import { unwrapFavorites } from '../../utils/favorites'
 import { useAuthStore } from '../../store/auth'
-import { login } from '../../services/auth'
+import { login, logout } from '../../services/auth'
 import { useUiStore } from '../../store/ui'
 import type { Post, User } from '../../types/api'
 
@@ -78,6 +78,16 @@ export default function Profile() {
     } catch (e: any) {
       showToast(e?.message || '登录失败', 'error')
     }
+  }
+
+  const onLogout = async () => {
+    const { confirm } = await Taro.showModal({ title: '退出登录', content: '确定退出当前账号吗？' })
+    if (!confirm) return
+    logout()
+    // 清本地列表与资料，回到未登录态（仍可浏览公开内容）
+    loadedTabsRef.current = new Set()
+    setProfile(null)
+    setTab('posts')
   }
 
   const active = tab === 'posts' ? myPosts : favorites
@@ -162,6 +172,17 @@ export default function Profile() {
                 </Text>
               </View>
             )}
+
+            {/* 退出登录 */}
+            <View
+              className='press mt-6 mb-4 py-3 flex justify-center items-center rounded-card'
+              style={{ border: '1rpx solid #E4A9BE' }}
+              onClick={onLogout}
+            >
+              <Text className='text-sm' style={{ color: '#E4A9BE' }}>
+                退出登录
+              </Text>
+            </View>
           </>
         )}
       </View>
