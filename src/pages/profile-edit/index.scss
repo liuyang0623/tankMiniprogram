@@ -1,0 +1,11 @@
+/* 头像按钮：去掉微信 Button 默认边框/背景/内边距 */
+.avatar-btn {
+  padding: 0;
+  margin: 0;
+  line-height: normal;
+  background: transparent;
+
+  &::after {
+    border: none;
+  }
+}

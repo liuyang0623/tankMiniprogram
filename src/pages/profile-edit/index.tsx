@@ -6,6 +6,7 @@ import { collectChanges } from '../../utils/profile'
 import { useAuthStore } from '../../store/auth'
 import { useUiStore } from '../../store/ui'
 import type { User } from '../../types/api'
+import './index.scss'
 
 const GENDERS = ['保密', '男', '女']
 
@@ -84,12 +85,7 @@ export default function ProfileEdit() {
     <View className='min-h-screen bg-bg px-6 pt-8'>
       {/* 头像：微信头像授权 */}
       <View className='flex flex-col items-center mb-8'>
-        <Button
-          className='p-0 bg-transparent'
-          style={{ lineHeight: 'normal', border: 'none' }}
-          openType='chooseAvatar'
-          onChooseAvatar={onChooseAvatar}
-        >
+        <Button className='avatar-btn' openType='chooseAvatar' onChooseAvatar={onChooseAvatar}>
           {form.avatar ? (
             <Image className='rounded-pill bg-haze' style={{ width: '160rpx', height: '160rpx' }} src={form.avatar} mode='aspectFill' />
           ) : (
