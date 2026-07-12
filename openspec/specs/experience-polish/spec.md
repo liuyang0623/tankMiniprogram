@@ -1,0 +1,47 @@
+# experience-polish Specification
+
+## Purpose
+TBD - created by archiving change profile-and-experience-polish. Update Purpose after archive.
+## Requirements
+### Requirement: 详情页结构化骨架屏
+
+系统 SHALL 在文章详情页加载中展示贴合页面结构的骨架屏（标题条、作者头像行、正文块），而非通用行占位，加载完成后替换为真实内容。
+
+#### Scenario: 详情加载中展示结构骨架
+
+- **WHEN** 用户进入文章详情且内容加载中
+- **THEN** 系统 SHALL 展示标题/头像/正文结构的骨架屏
+
+#### Scenario: 加载完成替换内容
+
+- **WHEN** 详情内容加载成功
+- **THEN** 系统 SHALL 用真实文章内容替换骨架屏
+
+### Requirement: 草稿卡片内删除按钮
+
+系统 SHALL 将草稿箱的删除操作置于草稿卡片内部，点击后二次确认再删除，删除后从列表移除。
+
+#### Scenario: 卡片内删除草稿
+
+- **WHEN** 用户点击草稿卡片内的删除按钮并确认
+- **THEN** 系统 SHALL 删除该草稿并从列表移除
+
+#### Scenario: 点击卡片主体继续编辑
+
+- **WHEN** 用户点击草稿卡片主体（非删除按钮）
+- **THEN** 系统 SHALL 进入该草稿的编辑页，不误触删除
+
+### Requirement: 发布时登录过期优化
+
+系统 SHALL 在发布或自动保存过程中遇到登录过期（401）时，给出明确的登录过期提示并引导重新登录，且不丢失用户当前编辑的内容。
+
+#### Scenario: 发布时 401 提示
+
+- **WHEN** 用户提交发布时后端返回 401
+- **THEN** 系统 SHALL 提示登录已过期并引导重新登录，保留已编辑的标题与正文
+
+#### Scenario: 自动保存时 401 不打断编辑
+
+- **WHEN** 自动保存草稿时返回 401
+- **THEN** 系统 SHALL 以不打断编辑的方式提示登录过期，保留编辑内容，不静默失败
+

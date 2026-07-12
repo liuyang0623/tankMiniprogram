@@ -2,6 +2,8 @@
 comet_change: profile-and-experience-polish
 role: technical-design
 canonical_spec: openspec
+archived-with: 2026-07-12-profile-and-experience-polish
+status: final
 ---
 
 # profile-and-experience-polish 技术设计
@@ -96,3 +98,4 @@ export function isUnauthorized(err: unknown): boolean {
 ## 8. 非目标（YAGNI）
 
 不做暗黑模式本身（后续 change）；不改 go-service；不做主题自定义/多主题；不重构请求层整体错误处理；不做自动重登+自动重试。
+

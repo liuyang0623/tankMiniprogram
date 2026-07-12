@@ -2,6 +2,7 @@
 change: profile-and-experience-polish
 design-doc: docs/superpowers/specs/2026-07-12-profile-and-experience-polish-design.md
 base-ref: e5ec8fc40f1eed65da22cbd23055c2e5d9a667f7
+archived-with: 2026-07-12-profile-and-experience-polish
 ---
 
 # 摆烂随笔·体验优化 实施计划
@@ -28,6 +29,7 @@ base-ref: e5ec8fc40f1eed65da22cbd23055c2e5d9a667f7
 - 测试文件放 `src/**/__tests__/**/*.test.ts`，从相对路径 import 被测模块（见现有 `src/utils/__tests__/publish.test.ts`）。
 - 每个任务独立 commit，遵循 conventional commits（`feat:`/`fix:`），提交信息用中文描述亦可。
 
+archived-with: 2026-07-12-profile-and-experience-polish
 ---
 
 ## 文件结构
@@ -44,6 +46,7 @@ base-ref: e5ec8fc40f1eed65da22cbd23055c2e5d9a667f7
 - **修改** `src/hooks/useDraftAutosave.ts` —— `SaveStatus` 扩展 `'expired'`；catch 判断 401 → `setStatus('expired')` 不弹窗。
 - **修改** `src/pages/profile/index.tsx` —— 加设置按钮打开抽屉；移除底部退出登录 + Tab 上方草稿箱入口。
 
+archived-with: 2026-07-12-profile-and-experience-polish
 ---
 
 ## Task 1: DetailSkeleton 结构化骨架组件
@@ -143,6 +146,7 @@ git add src/components/DetailSkeleton/index.tsx src/components/index.ts src/page
 git commit -m "feat: 详情页结构化骨架屏 DetailSkeleton"
 ```
 
+archived-with: 2026-07-12-profile-and-experience-polish
 ---
 
 ## Task 2: PostCard 加可选 action 插槽
@@ -240,6 +244,7 @@ git add src/components/PostCard/index.tsx
 git commit -m "feat: PostCard 支持可选右上角 action 插槽"
 ```
 
+archived-with: 2026-07-12-profile-and-experience-polish
 ---
 
 ## Task 3: 草稿删除按钮内移卡片
@@ -303,6 +308,7 @@ git add src/pages/drafts/index.tsx src/components/Card/index.tsx
 git commit -m "feat: 草稿删除按钮内移至卡片右上角"
 ```
 
+archived-with: 2026-07-12-profile-and-experience-polish
 ---
 
 ## Task 4: isUnauthorized 纯函数（TDD）
@@ -373,6 +379,7 @@ git add src/utils/http.ts src/utils/__tests__/http.test.ts
 git commit -m "feat: 新增 isUnauthorized 401 判断纯函数"
 ```
 
+archived-with: 2026-07-12-profile-and-experience-polish
 ---
 
 ## Task 5: 发布页 401 模态引导重登
@@ -446,6 +453,7 @@ git add src/pages/publish/index.tsx
 git commit -m "feat: 发布 401 登录过期模态引导重登，保留编辑内容"
 ```
 
+archived-with: 2026-07-12-profile-and-experience-polish
 ---
 
 ## Task 6: 自动保存 401 不打断编辑
@@ -501,6 +509,7 @@ git add src/hooks/useDraftAutosave.ts
 git commit -m "feat: 自动保存 401 转 expired 态不打断编辑"
 ```
 
+archived-with: 2026-07-12-profile-and-experience-polish
 ---
 
 ## Task 7: SettingsDrawer 设置抽屉组件
@@ -657,6 +666,7 @@ git add src/components/SettingsDrawer/index.tsx src/components/index.ts
 git commit -m "feat: 新增 SettingsDrawer 右滑设置抽屉"
 ```
 
+archived-with: 2026-07-12-profile-and-experience-polish
 ---
 
 ## Task 8: 个人中心接入设置抽屉
@@ -767,6 +777,7 @@ git add src/pages/profile/index.tsx
 git commit -m "feat: 个人中心接入设置抽屉，迁移草稿箱与退出登录入口"
 ```
 
+archived-with: 2026-07-12-profile-and-experience-polish
 ---
 
 ## Task 9: 全量验证
@@ -808,6 +819,7 @@ Expected: 编译成功，无报错
 
 若 Comet verify 阶段需产物，按 `/comet-verify` 指引生成验证报告；本计划实现阶段到此结束。
 
+archived-with: 2026-07-12-profile-and-experience-polish
 ---
 
 ## 自检记录
@@ -824,3 +836,4 @@ Expected: 编译成功，无报错
 **类型一致性：** `SaveStatus` 在 Task 6 扩展 `'expired'`，Task 5 引用一致；`isUnauthorized` 签名 Task 4 定义、Task 5/6 引用一致；`PostCard` `action` Task 2 定义、Task 3 引用一致；`SettingsDrawer` props `open/onClose/onLoggedOut` Task 7 定义、Task 8 引用一致。
 
 **执行顺序提示：** Task 4 → Task 6 → Task 5 保证 `SaveStatus`/`isUnauthorized` 依赖就绪再过 `tsc`；Task 2 → Task 3；Task 7 → Task 8。
+
