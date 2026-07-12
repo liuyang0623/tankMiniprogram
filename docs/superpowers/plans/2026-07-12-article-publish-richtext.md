@@ -2,6 +2,7 @@
 change: article-publish-richtext
 design-doc: docs/superpowers/specs/2026-07-12-article-publish-richtext-design.md
 base-ref: 5844047dc038b5e3494d5415d5b9c746da8037ab
+archived-with: 2026-07-12-article-publish-richtext
 ---
 
 # 富文本发布功能（article-publish-richtext）实施计划
@@ -31,6 +32,7 @@ base-ref: 5844047dc038b5e3494d5415d5b9c746da8037ab
 - **测试位置**：纯函数测试放 `src/utils/__tests__/*.test.ts`，风格 `import { describe, it, expect } from 'vitest'`。
 - **提交**：每个任务结束一次 `git commit`，conventional commits 格式，不积攒。
 
+archived-with: 2026-07-12-article-publish-richtext
 ---
 
 ## 文件结构
@@ -53,6 +55,7 @@ base-ref: 5844047dc038b5e3494d5415d5b9c746da8037ab
 - `src/pages/profile/index.tsx` — 个人中心挂草稿箱入口。
 - `src/components/index.ts` — 导出 `RichEditor`（若存在 barrel）。
 
+archived-with: 2026-07-12-article-publish-richtext
 ---
 
 ## Task 1: API 契约修正与话题/首图纯函数
@@ -179,6 +182,7 @@ git add src/services/api/posts.ts src/utils/publish.ts src/utils/__tests__/publi
 git commit -m "feat(publish): 修正 CreatePostBody 契约 + firstImage/parseTopics 纯函数"
 ```
 
+archived-with: 2026-07-12-article-publish-richtext
 ---
 
 ## Task 2: RichEditor 富文本编辑器组件
@@ -548,6 +552,7 @@ git add src/components/RichEditor src/components/index.ts
 git commit -m "feat(publish): RichEditor 富文本编辑器（EditorContext + 分层工具栏 + 图片插入）"
 ```
 
+archived-with: 2026-07-12-article-publish-richtext
 ---
 
 ## Task 3: 发布页 pages/publish（新建 + 编辑双态）
@@ -734,6 +739,7 @@ git add src/pages/publish/index.tsx src/utils/publish.ts
 git commit -m "feat(publish): 发布页新建/编辑双态 + 未登录拦截 + 封面取首图"
 ```
 
+archived-with: 2026-07-12-article-publish-richtext
 ---
 
 ## Task 4: 草稿自动保存 useDraftAutosave
@@ -985,6 +991,7 @@ git add src/hooks/useDraftAutosave.ts src/pages/publish/index.tsx
 git commit -m "feat(publish): 草稿自动保存 useDraftAutosave（draftId 生命周期 + debounce + 竞态 + 保存状态字）"
 ```
 
+archived-with: 2026-07-12-article-publish-richtext
 ---
 
 ## Task 5: 草稿箱页 pages/drafts
@@ -1130,6 +1137,7 @@ git add src/pages/drafts src/app.config.ts src/pages/profile/index.tsx
 git commit -m "feat(drafts): 草稿箱页（分页列表 + 继续编辑 + 删除）+ 个人中心入口"
 ```
 
+archived-with: 2026-07-12-article-publish-richtext
 ---
 
 ## Task 6: 验证与冒烟
@@ -1185,6 +1193,7 @@ git commit -m "fix(publish): 冒烟修复"
 
 若无修复项，本步骤跳过提交。
 
+archived-with: 2026-07-12-article-publish-richtext
 ---
 
 ## 自查（Self-Review）
@@ -1202,3 +1211,4 @@ git commit -m "fix(publish): 冒烟修复"
   - 删除草稿二次确认（Task 5）✓
 - **占位扫描：** 无 TBD/TODO；所有代码步骤含完整代码。
 - **类型一致性：** `RichEditorHandle`（getContents/setContents/insertImage）跨 Task 2→3→4 一致；`CreatePostBody`/`UpdatePostBody` 全程一致；`SaveStatus`/`useDraftAutosave` 返回 `{ draftId, status, schedule, flush, cancel }` 与发布页调用一致；`firstImage`/`parseTopics`/`extractImagesInOrder` 签名一致。
+

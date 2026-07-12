@@ -2,6 +2,8 @@
 comet_change: article-publish-richtext
 role: technical-design
 canonical_spec: openspec
+archived-with: 2026-07-12-article-publish-richtext
+status: final
 ---
 
 # article-publish-richtext 技术设计
@@ -144,3 +146,4 @@ export type UpdatePostBody = Partial<CreatePostBody>
 ## 10. 非目标（YAGNI）
 
 不改 go-service；不做定时发布、内容审核、协同编辑、@提及、Markdown 源码模式、连续取色器/任意字号。
+
