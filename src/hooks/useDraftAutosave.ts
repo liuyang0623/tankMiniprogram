@@ -23,8 +23,8 @@ export function useDraftAutosave({ editingId, getSnapshot }: Opts) {
   const [status, setStatus] = useState<SaveStatus>('idle')
   const draftIdRef = useRef<number | null>(editingId)
   const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const creatingRef = useRef(false) // 首次 create 进行中
-  const dirtyRef = useRef(false) // create 期间又有变化
+  // 串行化：记录在飞的一次保存，新的保存先 await 它，避免并发 create/update
+  const inFlightRef = useRef<Promise<void> | null>(null)
 
   const cancel = useCallback(() => {
     if (timerRef.current) {
@@ -33,8 +33,8 @@ export function useDraftAutosave({ editingId, getSnapshot }: Opts) {
     }
   }, [])
 
-  // 真正执行一次保存（create 或 update）
-  const persist = useCallback(async () => {
+  // 单次保存的真正执行体（不含串行化）
+  const runPersist = useCallback(async () => {
     const snap = getSnapshot()
     // 空草稿防护：新建态 title 空 AND text 空则不 create
     if (draftIdRef.current === null && !snap.title.trim() && !snap.text.trim()) return
@@ -46,21 +46,9 @@ export function useDraftAutosave({ editingId, getSnapshot }: Opts) {
     setStatus('saving')
     try {
       if (draftIdRef.current === null) {
-        if (creatingRef.current) {
-          dirtyRef.current = true
-          return
-        }
-        creatingRef.current = true
         const post = await postsApi.create({ ...body, status: 'DRAFT' })
         draftIdRef.current = post.id
         setDraftId(post.id)
-        creatingRef.current = false
-        // create 期间有新变化：补一次 update
-        if (dirtyRef.current) {
-          dirtyRef.current = false
-          const s2 = getSnapshot()
-          await postsApi.update(post.id, { title: s2.title, content: s2.html, topics: s2.topics })
-        }
       } else {
         await postsApi.update(draftIdRef.current, body)
       }
@@ -70,6 +58,23 @@ export function useDraftAutosave({ editingId, getSnapshot }: Opts) {
     }
   }, [getSnapshot])
 
+  // persist：串行化入口。若已有在飞保存，先等它完成再执行本次，
+  // 保证同一时刻至多一个 create/update，杜绝重复建帖与更新丢失。
+  const persist = useCallback(async (): Promise<void> => {
+    const prev = inFlightRef.current
+    const run = (async () => {
+      if (prev) await prev
+      await runPersist()
+    })()
+    inFlightRef.current = run
+    try {
+      await run
+    } finally {
+      // 仅当自己仍是最新在飞任务时清空，避免抹掉后来者
+      if (inFlightRef.current === run) inFlightRef.current = null
+    }
+  }, [runPersist])
+
   // 外部调用：内容变化时触发 debounce
   const schedule = useCallback(() => {
     cancel()
@@ -78,14 +83,17 @@ export function useDraftAutosave({ editingId, getSnapshot }: Opts) {
     }, DEBOUNCE_MS)
   }, [cancel, persist])
 
-  // flush：取消 pending，立即保存并等待完成（发布/离开兜底）
-  const flush = useCallback(async () => {
+  // flush：取消 pending，立即保存并等待所有在飞保存完成，返回最终 draftId。
+  // 发布前调用以串行化：确保草稿 id 已落定，避免 submit 读到过期 null。
+  const flush = useCallback(async (): Promise<number | null> => {
     cancel()
     await persist()
+    // persist 内部已串行等待在飞任务，此处 draftIdRef 为最终值
+    return draftIdRef.current
   }, [cancel, persist])
 
   // 卸载清理
   useEffect(() => cancel, [cancel])
 
-  return { draftId, status, schedule, flush, cancel }
+  return { draftId, draftIdRef, status, schedule, flush, cancel }
 }

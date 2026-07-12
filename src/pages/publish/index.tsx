@@ -24,6 +24,8 @@ export default function Publish() {
   // 供自动保存取快照（正文异步取，缓存最近一次 getContents 结果）
   const lastHtmlRef = useRef('')
   const lastTextRef = useRef('')
+  // 回填 gate：编辑态载入回填未完成前，不触发自动保存（避免用空 html 覆盖草稿）
+  const backfillingRef = useRef<boolean>(!!(idParam ? Number(idParam) : null))
 
   const draft = useDraftAutosave({
     editingId,
@@ -53,26 +55,33 @@ export default function Publish() {
         setTitle(p.title || '')
         origStatusRef.current = p.status
         setTopicInput((p.topics || []).map((t) => `#${t.name}`).join(' '))
-        // 编辑器 ready 后回填（延迟确保 ctx 就绪）
+        // 编辑器 ready 后回填（延迟确保 ctx 就绪），回填完成才解除 gate
         setTimeout(() => {
           editorRef.current?.setContents(p.content || '')
           lastHtmlRef.current = p.content || ''
+          lastTextRef.current = (p.content || '').replace(/<[^>]+>/g, '')
+          backfillingRef.current = false
         }, 300)
       })
-      .catch(() => showToast('载入失败', 'error'))
+      .catch(() => {
+        backfillingRef.current = false
+        showToast('载入失败', 'error')
+      })
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editingId])
 
   // 编辑器内容变化：取内容缓存后触发 debounce 保存
   const onEditorInput = async () => {
+    if (backfillingRef.current) return
     const { html, text } = await editorRef.current!.getContents()
     lastHtmlRef.current = html
     lastTextRef.current = text
     draft.schedule()
   }
 
-  // 标题/话题变化也触发保存
+  // 标题/话题变化也触发保存（回填期间不触发）
   useEffect(() => {
+    if (backfillingRef.current) return
     if (title || topicInput) draft.schedule()
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [title, topicInput])
@@ -96,11 +105,12 @@ export default function Publish() {
     lastHtmlRef.current = html
     lastTextRef.current = text
     draft.cancel()
-    await draft.flush() // 等 pending 自动保存 settle，串行
+    // flush 串行等待在飞的自动保存 settle，并返回最终草稿 id（避免读到过期的 state）
+    const flushedId = await draft.flush()
     const topics = parseTopics(`${title} ${topicInput}`)
     const images = extractImagesInOrder(html)
     const cover = firstImage(html)
-    const targetId = editingId ?? draft.draftId
+    const targetId = editingId ?? flushedId
     setSubmitting(true)
     try {
       if (targetId) {
