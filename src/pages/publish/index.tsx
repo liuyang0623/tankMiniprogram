@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from 'react'
 import { View, Text, Input } from '@tarojs/components'
-import Taro, { getCurrentInstance } from '@tarojs/taro'
+import Taro, { getCurrentInstance, useUnload } from '@tarojs/taro'
 import RichEditor, { RichEditorHandle } from '../../components/RichEditor'
 import { firstImage, parseTopics, extractImagesInOrder } from '../../utils/publish'
 import { postsApi } from '../../services/api'
 import { useAuthStore } from '../../store/auth'
 import { login } from '../../services/auth'
 import { useUiStore } from '../../store/ui'
+import { useDraftAutosave } from '../../hooks/useDraftAutosave'
 import type { PostStatus } from '../../types/api'
 
 export default function Publish() {
@@ -20,6 +21,19 @@ export default function Publish() {
   const editingId = idParam ? Number(idParam) : null
   // 载入的原帖状态：编辑已发布帖子时用于保持 PUBLISHED
   const origStatusRef = useRef<PostStatus | null>(null)
+  // 供自动保存取快照（正文异步取，缓存最近一次 getContents 结果）
+  const lastHtmlRef = useRef('')
+  const lastTextRef = useRef('')
+
+  const draft = useDraftAutosave({
+    editingId,
+    getSnapshot: () => ({
+      title,
+      html: lastHtmlRef.current,
+      text: lastTextRef.current,
+      topics: parseTopics(`${title} ${topicInput}`),
+    }),
+  })
 
   // 未登录拦截：进入即校验
   useEffect(() => {
@@ -40,11 +54,33 @@ export default function Publish() {
         origStatusRef.current = p.status
         setTopicInput((p.topics || []).map((t) => `#${t.name}`).join(' '))
         // 编辑器 ready 后回填（延迟确保 ctx 就绪）
-        setTimeout(() => editorRef.current?.setContents(p.content || ''), 300)
+        setTimeout(() => {
+          editorRef.current?.setContents(p.content || '')
+          lastHtmlRef.current = p.content || ''
+        }, 300)
       })
       .catch(() => showToast('载入失败', 'error'))
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editingId])
+
+  // 编辑器内容变化：取内容缓存后触发 debounce 保存
+  const onEditorInput = async () => {
+    const { html, text } = await editorRef.current!.getContents()
+    lastHtmlRef.current = html
+    lastTextRef.current = text
+    draft.schedule()
+  }
+
+  // 标题/话题变化也触发保存
+  useEffect(() => {
+    if (title || topicInput) draft.schedule()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [title, topicInput])
+
+  // 离开页面兜底 flush
+  useUnload(() => {
+    void draft.flush()
+  })
 
   const submit = async () => {
     if (submitting) return
@@ -57,21 +93,27 @@ export default function Publish() {
       showToast('标题和正文不能为空', 'info')
       return
     }
+    lastHtmlRef.current = html
+    lastTextRef.current = text
+    draft.cancel()
+    await draft.flush() // 等 pending 自动保存 settle，串行
     const topics = parseTopics(`${title} ${topicInput}`)
     const images = extractImagesInOrder(html)
     const cover = firstImage(html)
+    const targetId = editingId ?? draft.draftId
     setSubmitting(true)
     try {
-      if (editingId) {
-        // 编辑态：已发布不传 status 保持 PUBLISHED；草稿更新后再发布
+      if (targetId) {
+        // 已发布不传 status 保持 PUBLISHED；草稿更新后再发布
         if (origStatusRef.current === 'PUBLISHED') {
-          await postsApi.update(editingId, { title, content: html, cover, images, topics })
+          await postsApi.update(targetId, { title, content: html, cover, images, topics })
         } else {
-          await postsApi.update(editingId, { title, content: html, cover, images, topics })
-          await postsApi.publish(editingId)
+          await postsApi.update(targetId, { title, content: html, cover, images, topics })
+          await postsApi.publish(targetId)
         }
-        showToast('已保存', 'success')
-        Taro.navigateBack()
+        showToast(editingId ? '已保存' : '发布成功', 'success')
+        if (editingId) Taro.navigateBack()
+        else Taro.redirectTo({ url: `/pages/detail/index?id=${targetId}` })
       } else {
         const post = await postsApi.create({
           title,
@@ -93,13 +135,19 @@ export default function Publish() {
 
   return (
     <View className='min-h-screen bg-bg px-6 pt-6'>
+      {/* 保存状态字 */}
+      <View className='flex justify-end py-1'>
+        <Text className='text-xs text-ink-sub'>
+          {draft.status === 'saving' ? '保存中…' : draft.status === 'saved' ? '草稿已保存' : ''}
+        </Text>
+      </View>
       <Input
         className='text-xl text-ink font-bold py-3'
         value={title}
         placeholder='起个标题吧～'
         onInput={(e) => setTitle(e.detail.value)}
       />
-      <RichEditor ref={editorRef} />
+      <RichEditor ref={editorRef} onInput={onEditorInput} />
       <View className='mt-4'>
         <Text className='text-xs text-ink-sub'>话题（用 #话题 形式，空格分隔）</Text>
         <Input
