@@ -8,6 +8,7 @@ import { useAuthStore } from '../../store/auth'
 import { login } from '../../services/auth'
 import { useUiStore } from '../../store/ui'
 import { useDraftAutosave } from '../../hooks/useDraftAutosave'
+import { isUnauthorized } from '../../utils/http'
 import type { PostStatus } from '../../types/api'
 
 export default function Publish() {
@@ -136,8 +137,23 @@ export default function Publish() {
         showToast('发布成功', 'success')
         Taro.redirectTo({ url: `/pages/detail/index?id=${post.id}` })
       }
-    } catch {
-      showToast('发布失败，请重试', 'error')
+    } catch (e) {
+      if (isUnauthorized(e)) {
+        const { confirm } = await Taro.showModal({
+          title: '登录已过期',
+          content: '请重新登录后再发布，已编辑的内容会保留',
+        })
+        if (confirm) {
+          try {
+            await login()
+            showToast('已重新登录，请再次点击发布', 'success')
+          } catch {
+            showToast('登录失败，请重试', 'error')
+          }
+        }
+      } else {
+        showToast('发布失败，请重试', 'error')
+      }
     } finally {
       setSubmitting(false)
     }
@@ -148,7 +164,13 @@ export default function Publish() {
       {/* 保存状态字 */}
       <View className='flex justify-end py-1'>
         <Text className='text-xs text-ink-sub'>
-          {draft.status === 'saving' ? '保存中…' : draft.status === 'saved' ? '草稿已保存' : ''}
+          {draft.status === 'saving'
+            ? '保存中…'
+            : draft.status === 'saved'
+              ? '草稿已保存'
+              : draft.status === 'expired'
+                ? '登录已过期，内容已保留'
+                : ''}
         </Text>
       </View>
       <Input
