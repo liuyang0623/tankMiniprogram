@@ -1,0 +1,61 @@
+.rich-editor {
+  display: flex;
+  flex-direction: column;
+}
+.editor-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  padding: 12rpx 8rpx;
+  border-radius: 20rpx;
+  .tool-btn {
+    padding: 8rpx 16rpx;
+    margin: 4rpx;
+    border-radius: 12rpx;
+    background: #faf6f0;
+    .tool-txt {
+      font-size: 26rpx;
+      color: #4a4038;
+    }
+  }
+}
+.more-panel {
+  margin-top: 8rpx;
+  padding: 12rpx;
+  border-radius: 20rpx;
+  .panel-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    margin-bottom: 8rpx;
+  }
+  .panel-label {
+    font-size: 24rpx;
+    margin-right: 12rpx;
+  }
+  .panel-btn {
+    padding: 6rpx 14rpx;
+    margin: 4rpx;
+    border-radius: 10rpx;
+    background: #faf6f0;
+    .panel-btn-txt {
+      font-size: 24rpx;
+      color: #4a4038;
+    }
+  }
+  .color-dot {
+    width: 44rpx;
+    height: 44rpx;
+    border-radius: 50%;
+    margin: 4rpx 8rpx;
+  }
+}
+.editor-body {
+  min-height: 480rpx;
+  margin-top: 16rpx;
+  padding: 16rpx;
+  border-radius: 20rpx;
+  background: #ffffff;
+  font-size: 30rpx;
+  line-height: 1.7;
+}
