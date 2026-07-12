@@ -1,6 +1,6 @@
 workflow: full
 language: zh-CN
-phase: build
+phase: verify
 context_compression: off
 build_mode: executing-plans
 build_pause: null
@@ -8,7 +8,7 @@ subagent_dispatch: null
 tdd_mode: tdd
 review_mode: standard
 isolation: branch
-verify_mode: null
+verify_mode: full
 auto_transition: true
 base_ref: e5ec8fc40f1eed65da22cbd23055c2e5d9a667f7
 design_doc: docs/superpowers/specs/2026-07-12-profile-and-experience-polish-design.md
