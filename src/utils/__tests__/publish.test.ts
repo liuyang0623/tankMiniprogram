@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { firstImage, parseTopics, extractImagesInOrder } from '../publish'
+import { firstImage, parseTopics, extractImagesInOrder, canPersistDraft } from '../publish'
 
 describe('firstImage', () => {
   it('多图取首图', () => {
@@ -38,5 +38,16 @@ describe('extractImagesInOrder', () => {
   })
   it('无图返回空数组', () => {
     expect(extractImagesInOrder('<p>纯文本</p>')).toEqual([])
+  })
+})
+
+describe('canPersistDraft', () => {
+  it('正文非空可保存', () => {
+    expect(canPersistDraft('今天好累')).toBe(true)
+  })
+  it('正文为空不保存（即使只写了标题）', () => {
+    // 复现 bug：只写标题、正文空时不应触发保存（后端 content 必填）
+    expect(canPersistDraft('')).toBe(false)
+    expect(canPersistDraft('   ')).toBe(false)
   })
 })

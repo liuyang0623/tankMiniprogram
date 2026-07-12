@@ -20,3 +20,11 @@ export function parseTopics(input: string): string[] {
 export function extractImagesInOrder(html: string): string[] {
   return extractImageUrls(html)
 }
+
+/**
+ * 能否保存草稿：后端 content 必填，正文为空一律不保存（无论是否已有 title）。
+ * 修复「只写标题触发 create 被后端拒 400 content is required」。
+ */
+export function canPersistDraft(text: string): boolean {
+  return text.trim().length > 0
+}

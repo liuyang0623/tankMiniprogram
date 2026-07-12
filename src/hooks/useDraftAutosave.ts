@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { postsApi } from '../services/api'
+import { canPersistDraft } from '../utils/publish'
 
 export type SaveStatus = 'idle' | 'saving' | 'saved'
 
@@ -36,8 +37,9 @@ export function useDraftAutosave({ editingId, getSnapshot }: Opts) {
   // 单次保存的真正执行体（不含串行化）
   const runPersist = useCallback(async () => {
     const snap = getSnapshot()
-    // 空草稿防护：新建态 title 空 AND text 空则不 create
-    if (draftIdRef.current === null && !snap.title.trim() && !snap.text.trim()) return
+    // 空正文防护：后端 content 必填，正文为空一律不保存（含"只写标题"场景）。
+    // 覆盖 create 与 update：都不该提交空 content。
+    if (!canPersistDraft(snap.text)) return
     const body = {
       title: snap.title,
       content: snap.html,
