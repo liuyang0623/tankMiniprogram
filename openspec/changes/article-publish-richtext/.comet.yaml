@@ -1,6 +1,6 @@
 workflow: full
 language: zh-CN
-phase: build
+phase: verify
 context_compression: off
 build_mode: executing-plans
 build_pause: null
@@ -8,7 +8,7 @@ subagent_dispatch: null
 tdd_mode: tdd
 review_mode: standard
 isolation: branch
-verify_mode: null
+verify_mode: full
 auto_transition: true
 base_ref: 5844047dc038b5e3494d5415d5b9c746da8037ab
 design_doc: docs/superpowers/specs/2026-07-12-article-publish-richtext-design.md
@@ -20,8 +20,8 @@ created_at: 2026-07-12
 verified_at: null
 archived: false
 direct_override: null
-build_command: null
-verify_command: null
+build_command: bun run build:weapp
+verify_command: bun run tsc && bun run test
 handoff_context: openspec/changes/article-publish-richtext/.comet/handoff/design-context.json
 handoff_hash: 766ac8c76f0c119e040858788760c436cfd696146d7e4e937bc391f58d6817b6
 classic_profile: full
