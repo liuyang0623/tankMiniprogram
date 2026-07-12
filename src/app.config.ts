@@ -5,6 +5,7 @@ export default defineAppConfig({
     'pages/profile/index',
     'pages/detail/index',
     'pages/profile-edit/index',
+    'pages/drafts/index',
   ],
   window: {
     backgroundTextStyle: 'dark',

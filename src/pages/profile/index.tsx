@@ -139,6 +139,14 @@ export default function Profile() {
         {isLogin && (
           <>
             <View className='flex mb-4'>
+              <View
+                className='press bg-card rounded-card shadow-soft px-4 py-2'
+                onClick={() => Taro.navigateTo({ url: '/pages/drafts/index' })}
+              >
+                <Text className='text-sm text-ink-sub'>草稿箱</Text>
+              </View>
+            </View>
+            <View className='flex mb-4'>
               <View className='press mr-6' onClick={() => setTab('posts')}>
                 <Text className={tab === 'posts' ? 'text-base text-ink font-bold' : 'text-base text-ink-sub'}>
                   我的帖子
