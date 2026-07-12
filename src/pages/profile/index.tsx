@@ -1,12 +1,12 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { View, Text, ScrollView } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
-import { Avatar, PostCard, SkeletonList } from '../../components'
+import { Avatar, PostCard, SkeletonList, SettingsDrawer } from '../../components'
 import { usePagedList } from '../../hooks/usePagedList'
 import { postsApi, interactionsApi, usersApi } from '../../services/api'
 import { unwrapFavorites } from '../../utils/favorites'
 import { useAuthStore } from '../../store/auth'
-import { login, logout } from '../../services/auth'
+import { login } from '../../services/auth'
 import { useUiStore } from '../../store/ui'
 import type { Post, User } from '../../types/api'
 
@@ -18,6 +18,7 @@ export default function Profile() {
   const [profile, setProfile] = useState<User | null>(null)
   const [tab, setTab] = useState<Tab>('posts')
   const [scrollTop, setScrollTop] = useState(0)
+  const [drawerOpen, setDrawerOpen] = useState(false)
   const loadedTabsRef = useRef<Set<Tab>>(new Set())
 
   const myPosts = usePagedList<Post>((page) => postsApi.findMyPosts(page))
@@ -80,11 +81,8 @@ export default function Profile() {
     }
   }
 
-  const onLogout = async () => {
-    const { confirm } = await Taro.showModal({ title: '退出登录', content: '确定退出当前账号吗？' })
-    if (!confirm) return
-    logout()
-    // 清本地列表与资料，回到未登录态（仍可浏览公开内容）
+  const handleLoggedOut = () => {
+    // 抽屉内部已 logout + 二次确认，这里只清本地列表与资料，回到未登录态
     loadedTabsRef.current = new Set()
     setProfile(null)
     setTab('posts')
@@ -98,14 +96,15 @@ export default function Profile() {
   }
 
   return (
-    <ScrollView
-      scrollY
-      className='bg-bg'
-      style={{ height: '100vh' }}
-      scrollTop={scrollTop}
-      onScrollToLower={onScrollToLower}
-      lowerThreshold={80}
-    >
+    <>
+      <ScrollView
+        scrollY
+        className='bg-bg'
+        style={{ height: '100vh' }}
+        scrollTop={scrollTop}
+        onScrollToLower={onScrollToLower}
+        lowerThreshold={80}
+      >
       <View className='px-6 pt-16 pb-8'>
         {/* 资料卡 */}
         {isLogin ? (
@@ -117,11 +116,20 @@ export default function Profile() {
                 <Text className='text-sm text-ink-sub'>{profile?.bio || '这个人很懒，什么都没写～'}</Text>
               </View>
             </View>
-            <View
-              className='press bg-peach rounded-pill px-4 py-2'
-              onClick={() => Taro.navigateTo({ url: '/pages/profile-edit/index' })}
-            >
-              <Text className='text-xs text-card'>编辑</Text>
+            <View className='flex flex-col items-end'>
+              <View
+                className='press bg-peach rounded-pill px-4 py-2 mb-2'
+                onClick={() => Taro.navigateTo({ url: '/pages/profile-edit/index' })}
+              >
+                <Text className='text-xs text-card'>编辑</Text>
+              </View>
+              <View
+                className='press bg-card rounded-pill px-4 py-2'
+                style={{ border: '1rpx solid #E4A9BE' }}
+                onClick={() => setDrawerOpen(true)}
+              >
+                <Text className='text-xs' style={{ color: '#E4A9BE' }}>设置</Text>
+              </View>
             </View>
           </View>
         ) : (
@@ -138,14 +146,6 @@ export default function Profile() {
         {/* Tab */}
         {isLogin && (
           <>
-            <View className='flex mb-4'>
-              <View
-                className='press bg-card rounded-card shadow-soft px-4 py-2'
-                onClick={() => Taro.navigateTo({ url: '/pages/drafts/index' })}
-              >
-                <Text className='text-sm text-ink-sub'>草稿箱</Text>
-              </View>
-            </View>
             <View className='flex mb-4'>
               <View className='press mr-6' onClick={() => setTab('posts')}>
                 <Text className={tab === 'posts' ? 'text-base text-ink font-bold' : 'text-base text-ink-sub'}>
@@ -180,20 +180,15 @@ export default function Profile() {
                 </Text>
               </View>
             )}
-
-            {/* 退出登录 */}
-            <View
-              className='press mt-6 mb-4 py-3 flex justify-center items-center rounded-card'
-              style={{ border: '1rpx solid #E4A9BE' }}
-              onClick={onLogout}
-            >
-              <Text className='text-sm' style={{ color: '#E4A9BE' }}>
-                退出登录
-              </Text>
-            </View>
           </>
         )}
       </View>
     </ScrollView>
+      <SettingsDrawer
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        onLoggedOut={handleLoggedOut}
+      />
+    </>
   )
 }
