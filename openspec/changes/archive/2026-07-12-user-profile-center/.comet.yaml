@@ -1,6 +1,6 @@
 workflow: full
 language: zh-CN
-phase: verify
+phase: archive
 context_compression: off
 build_mode: executing-plans
 build_pause: null
@@ -15,10 +15,10 @@ design_doc: docs/superpowers/specs/2026-07-10-user-profile-center-design.md
 plan: docs/superpowers/plans/2026-07-10-user-profile-center.md
 verify_result: pass
 verification_report: docs/superpowers/reports/2026-07-10-user-profile-center-verify.md
-branch_status: pending
+branch_status: handled
 created_at: 2026-07-10
-verified_at: null
-archived: false
+verified_at: 2026-07-12
+archived: true
 direct_override: null
 build_command: bun run build:weapp
 verify_command: bun run tsc && bun run test

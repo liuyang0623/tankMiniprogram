@@ -2,6 +2,7 @@
 change: user-profile-center
 design-doc: docs/superpowers/specs/2026-07-10-user-profile-center-design.md
 base-ref: f8b987966aece23d769adde11caaffa1b77fcdef
+archived-with: 2026-07-12-user-profile-center
 ---
 
 # 个人中心 Implementation Plan（前端）
@@ -20,6 +21,7 @@ base-ref: f8b987966aece23d769adde11caaffa1b77fcdef
 - 后端：`GET/PATCH /users/profile`、`GET /posts/my`、`GET /users/me/favorites`（已返 DTO）、`POST /upload/image`
 - 语言中文、单位 rpx、动效仅 transform/opacity
 
+archived-with: 2026-07-12-user-profile-center
 ---
 
 ### Task 1: 类型与 API + 纯函数（TDD）
@@ -87,6 +89,7 @@ git add src/types src/services/api src/utils
 git commit -m "feat(profile): 收藏包裹类型/解包与变更字段收集（TDD）"
 ```
 
+archived-with: 2026-07-12-user-profile-center
 ---
 
 ### Task 2: 个人中心页
@@ -109,6 +112,7 @@ git add src/pages/profile
 git commit -m "feat(profile): 个人中心资料卡 + 我的帖子/收藏 Tab 懒加载"
 ```
 
+archived-with: 2026-07-12-user-profile-center
 ---
 
 ### Task 3: 资料编辑页
@@ -136,6 +140,7 @@ git add src/pages/profile-edit src/app.config.ts
 git commit -m "feat(profile): 资料编辑页 + 头像上传"
 ```
 
+archived-with: 2026-07-12-user-profile-center
 ---
 
 ### Task 4: 全量验证
@@ -143,9 +148,11 @@ git commit -m "feat(profile): 资料编辑页 + 头像上传"
 - [x] **Step 1:** `bunx tsc --noEmit && bunx vitest run && bun run build:weapp` 全绿
 - [x] **Step 2:** Commit 剩余
 
+archived-with: 2026-07-12-user-profile-center
 ---
 
 ## Self-Review
 - Spec 覆盖：profile-center→Task2；profile-edit→Task3；my-content→Task1-2。
 - 纯函数 unwrapFavorites/collectChanges 有单测。
 - 已知：真机验证收藏 DTO 生效、头像上传、资料保存。
+

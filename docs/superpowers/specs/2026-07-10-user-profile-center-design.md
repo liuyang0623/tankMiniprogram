@@ -2,6 +2,8 @@
 comet_change: user-profile-center
 role: technical-design
 canonical_spec: openspec
+archived-with: 2026-07-12-user-profile-center
+status: final
 ---
 
 # user-profile-center 技术设计
@@ -84,3 +86,4 @@ export function unwrapFavorites(res: PaginatedFavorites): Paginated<Post> {
 ## 10. 非目标（YAGNI）
 
 不做他人主页、粉丝/关注、消息中心、多端。
+
