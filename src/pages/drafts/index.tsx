@@ -52,18 +52,18 @@ export default function Drafts() {
           </View>
         )}
         {list.map((post) => (
-          <View key={post.id}>
-            <View onClick={() => openDraft(post.id)}>
-              <PostCard post={post} />
-            </View>
-            <View className='flex justify-end px-2 -mt-2 mb-3'>
+          <PostCard
+            key={post.id}
+            post={post}
+            onCardClick={() => openDraft(post.id)}
+            action={
               <View className='press' onClick={() => removeDraft(post.id)}>
                 <Text className='text-xs' style={{ color: '#E4A9BE' }}>
                   删除
                 </Text>
               </View>
-            </View>
-          </View>
+            }
+          />
         ))}
         {list.length > 0 && (
           <View className='py-4 flex justify-center items-center'>

@@ -9,10 +9,12 @@ export interface PostCardProps {
   post: Post
   /** 可选卡片内操作区，渲染在右上角，点击不触发卡片跳转 */
   action?: ReactNode
+  /** 可选覆盖卡片点击行为，不传时默认进详情页 */
+  onCardClick?: () => void
 }
 
-/** 信息流帖子卡片，点击进详情；可选右上角 action 区 */
-export default function PostCard({ post, action }: PostCardProps) {
+/** 信息流帖子卡片，点击进详情；可选右上角 action 区、可选覆盖点击行为 */
+export default function PostCard({ post, action, onCardClick }: PostCardProps) {
   const goDetail = () => {
     Taro.navigateTo({ url: `/pages/detail/index?id=${post.id}` })
   }
@@ -20,7 +22,7 @@ export default function PostCard({ post, action }: PostCardProps) {
   const summary = post.content?.replace(/<[^>]+>/g, '').slice(0, 60) || ''
 
   return (
-    <Card float className='mb-4' onClick={goDetail}>
+    <Card float className='mb-4' onClick={onCardClick ?? goDetail}>
       {action && (
         <View
           className='absolute'

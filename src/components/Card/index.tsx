@@ -13,7 +13,7 @@ export interface CardProps {
 export default function Card({ float, className = '', onClick, children }: CardProps) {
   return (
     <View
-      className={`bg-card rounded-card shadow-soft p-6 ${float ? 'anim-in' : ''} ${className}`}
+      className={`relative bg-card rounded-card shadow-soft p-6 ${float ? 'anim-in' : ''} ${className}`}
       onClick={onClick}
     >
       {children}
