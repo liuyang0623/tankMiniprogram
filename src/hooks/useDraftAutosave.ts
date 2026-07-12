@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
 import { postsApi } from '../services/api'
 import { canPersistDraft } from '../utils/publish'
+import { isUnauthorized } from '../utils/http'
 
-export type SaveStatus = 'idle' | 'saving' | 'saved'
+export type SaveStatus = 'idle' | 'saving' | 'saved' | 'expired'
 
 interface Snapshot {
   title: string
@@ -55,8 +56,9 @@ export function useDraftAutosave({ editingId, getSnapshot }: Opts) {
         await postsApi.update(draftIdRef.current, body)
       }
       setStatus('saved')
-    } catch {
-      setStatus('idle')
+    } catch (e) {
+      // 401 登录过期：不弹窗打断编辑，转 expired 提示态，保留内容
+      setStatus(isUnauthorized(e) ? 'expired' : 'idle')
     }
   }, [getSnapshot])
 
