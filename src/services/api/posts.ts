@@ -1,12 +1,13 @@
 import { authRequest } from '../authRequest'
-import type { Post, Paginated } from '../../types/api'
+import type { Post, Paginated, PostStatus } from '../../types/api'
 
 export interface CreatePostBody {
   title: string
-  content: string
-  cover?: string
-  topicIds?: number[]
-  imageUrls?: string[]
+  content: string // 富文本 HTML
+  cover?: string // 正文首图
+  status?: PostStatus // DRAFT(默认) | PUBLISHED
+  images?: string[] // 图片 URL 数组，对齐后端 images
+  topics?: string[] // 话题名数组，对齐后端 topics（非 id）
 }
 
 export type UpdatePostBody = Partial<CreatePostBody>
