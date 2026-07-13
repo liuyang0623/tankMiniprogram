@@ -37,8 +37,8 @@
 
 ## 6. 我的页计数入口
 
-- [ ] 6.1 profile 页展示关注数/粉丝数（getProfile 或 getUser(self) 拉计数）
-- [ ] 6.2 点击关注数/粉丝数 → follow-list（userId=self, type）
+- [x] 6.1 profile 页展示关注数/粉丝数（getProfile 或 getUser(self) 拉计数）
+- [x] 6.2 点击关注数/粉丝数 → follow-list（userId=self, type）
 
 ## 7. 验证
 

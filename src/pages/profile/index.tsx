@@ -6,6 +6,7 @@ import { usePagedList } from '../../hooks/usePagedList'
 import { postsApi, interactionsApi, usersApi } from '../../services/api'
 import { unwrapFavorites } from '../../utils/favorites'
 import { useAuthStore } from '../../store/auth'
+import { useFollowStore } from '../../store/follow'
 import { login } from '../../services/auth'
 import { useUiStore } from '../../store/ui'
 import type { Post, User } from '../../types/api'
@@ -14,6 +15,8 @@ type Tab = 'posts' | 'favorites'
 
 export default function Profile() {
   const isLogin = useAuthStore((s) => s.isLogin)
+  const selfId = useAuthStore((s) => s.user?.id)
+  const myCounts = useFollowStore((s) => (selfId != null ? s.countsMap[selfId] : undefined))
   const showToast = useUiStore((s) => s.showToast)
   const [profile, setProfile] = useState<User | null>(null)
   const [tab, setTab] = useState<Tab>('posts')
@@ -29,6 +32,21 @@ export default function Profile() {
     try {
       const p = await usersApi.getProfile()
       setProfile(p)
+      // 拉自己的计数入 followStore（/users/profile 不带计数，用 /users/:id）
+      const selfId = useAuthStore.getState().user?.id
+      if (selfId != null) {
+        try {
+          const detail = await usersApi.getUser(selfId)
+          useFollowStore.getState().hydrateUser(selfId, {
+            isFollowing: false,
+            followerCount: detail.followerCount ?? 0,
+            followingCount: detail.followingCount ?? 0,
+            likeCount: detail.likeCount ?? 0,
+          })
+        } catch {
+          // 计数拉取失败不影响资料展示
+        }
+      }
     } catch {
       // 静默失败，用登录态兜底
     }
@@ -108,27 +126,52 @@ export default function Profile() {
       <View className='px-6 pt-16 pb-8'>
         {/* 资料卡 */}
         {isLogin ? (
-          <View className='anim-in bg-card rounded-card shadow-soft p-6 flex items-center mb-6'>
-            <Avatar src={profile?.avatar} size={112} />
-            <View className='ml-4 flex-1'>
-              <Text className='text-lg text-ink font-bold'>{profile?.nickname || '摆烂er'}</Text>
-              <View className='mt-1'>
-                <Text className='text-sm text-ink-sub'>{profile?.bio || '这个人很懒，什么都没写～'}</Text>
+          <View className='anim-in bg-card rounded-card shadow-soft p-6 mb-6'>
+            <View className='flex items-center'>
+              <Avatar src={profile?.avatar} size={112} />
+              <View className='ml-4 flex-1'>
+                <Text className='text-lg text-ink font-bold'>{profile?.nickname || '摆烂er'}</Text>
+                <View className='mt-1'>
+                  <Text className='text-sm text-ink-sub'>{profile?.bio || '这个人很懒，什么都没写～'}</Text>
+                </View>
+              </View>
+              <View className='flex flex-col items-end'>
+                <View
+                  className='press bg-peach rounded-pill px-4 py-2 mb-2'
+                  onClick={() => Taro.navigateTo({ url: '/pages/profile-edit/index' })}
+                >
+                  <Text className='text-xs text-card'>编辑</Text>
+                </View>
+                <View
+                  className='press bg-card rounded-pill px-4 py-2'
+                  style={{ border: '1rpx solid var(--c-taro)' }}
+                  onClick={() => setDrawerOpen(true)}
+                >
+                  <Text className='text-xs' style={{ color: 'var(--c-taro)' }}>设置</Text>
+                </View>
               </View>
             </View>
-            <View className='flex flex-col items-end'>
+            {/* 关注 / 粉丝计数 */}
+            <View className='flex mt-5'>
               <View
-                className='press bg-peach rounded-pill px-4 py-2 mb-2'
-                onClick={() => Taro.navigateTo({ url: '/pages/profile-edit/index' })}
+                className='press flex items-baseline mr-8'
+                onClick={() =>
+                  selfId != null &&
+                  Taro.navigateTo({ url: `/pages/follow-list/index?userId=${selfId}&type=following` })
+                }
               >
-                <Text className='text-xs text-card'>编辑</Text>
+                <Text className='text-base text-ink font-bold'>{myCounts?.followingCount ?? 0}</Text>
+                <Text className='text-xs text-ink-sub ml-1'>关注</Text>
               </View>
               <View
-                className='press bg-card rounded-pill px-4 py-2'
-                style={{ border: '1rpx solid var(--c-taro)' }}
-                onClick={() => setDrawerOpen(true)}
+                className='press flex items-baseline'
+                onClick={() =>
+                  selfId != null &&
+                  Taro.navigateTo({ url: `/pages/follow-list/index?userId=${selfId}&type=followers` })
+                }
               >
-                <Text className='text-xs' style={{ color: 'var(--c-taro)' }}>设置</Text>
+                <Text className='text-base text-ink font-bold'>{myCounts?.followerCount ?? 0}</Text>
+                <Text className='text-xs text-ink-sub ml-1'>粉丝</Text>
               </View>
             </View>
           </View>
