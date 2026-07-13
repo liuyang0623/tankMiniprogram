@@ -41,3 +41,9 @@
 - [x] 7.3 真机冒烟：三态切换即时生效、持久化重启保持、跟随系统实时响应、暗色各页面可读、强调色协调、富文本详情容器适配
 
 <!-- review (standard): 主会话自审。核查 4 项：① PageLayout 6 页含 profile SettingsDrawer 作用域覆盖 ② .theme-dark class 优先级高于 page 元素兜底,子树正确覆盖 ③ app.tsx init 先于页面渲染 ④ onThemeChange app 级注册一次。dist 验证 .theme-light/.theme-dark class 编译完整。spike 已确认 var() 编译通过。无 Critical/Important;切换即时性/持久化/跟随系统/暗色可读/滚动不破坏列入真机冒烟。 -->
+
+## 8. tabBar 主题适配（verify 阶段用户追加）
+
+- [x] 8.1 utils/tabbar.ts：applyTabBarStyle(resolved) 两套配色（暗色用暗卡片色 #26201B）
+- [x] 8.2 主题 store setMode/applySystem/init 三处联动 setTabBarStyle
+- [x] 8.3 tsc + 编译 + 全量测试通过（原生 tabBar 不受 CSS 变量控制，需运行时 API）
