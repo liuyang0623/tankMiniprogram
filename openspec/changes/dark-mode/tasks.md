@@ -47,3 +47,9 @@
 - [x] 8.1 utils/tabbar.ts：applyTabBarStyle(resolved) 两套配色（暗色用暗卡片色 #26201B）
 - [x] 8.2 主题 store setMode/applySystem/init 三处联动 setTabBarStyle
 - [x] 8.3 tsc + 编译 + 全量测试通过（原生 tabBar 不受 CSS 变量控制，需运行时 API）
+
+## 9. 导航栏 header 主题适配（verify 阶段用户追加）
+
+- [x] 9.1 utils/tabbar.ts：applyNavBarColor(resolved)，暗色用页面底色 #1A1613 + frontColor white（微信限 black/white）
+- [x] 9.2 PageLayout useEffect 每页进入 + resolved 变化时应用（导航栏为页面级 API，需每页重设）
+- [x] 9.3 tsc + 编译 + 全量测试通过
