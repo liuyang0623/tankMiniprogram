@@ -30,10 +30,10 @@
 
 ## 5. 入口接入（4 处头像/昵称跳转）
 
-- [ ] 5.1 PostCard 作者头像/昵称加 onClick → user-profile，stopPropagation
-- [ ] 5.2 detail 页作者信息加跳转
-- [ ] 5.3 CommentItem 评论者头像/昵称加跳转
-- [ ] 5.4 回归：卡片/详情原有点击行为不被误触
+- [x] 5.1 PostCard 作者头像/昵称加 onClick → user-profile，stopPropagation
+- [x] 5.2 detail 页作者信息加跳转
+- [x] 5.3 CommentItem 评论者头像/昵称加跳转
+- [x] 5.4 回归：卡片/详情原有点击行为不被误触
 
 ## 6. 我的页计数入口
 

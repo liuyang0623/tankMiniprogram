@@ -71,9 +71,18 @@ export default function Detail() {
 
             {/* 作者与计数 */}
             <View className='flex items-center mt-4 mb-4'>
-              <Avatar src={post.author?.avatar} size={64} />
-              <View className='ml-3'>
-                <Text className='text-sm text-ink'>{post.author?.name || '匿名'}</Text>
+              <View
+                className='press flex items-center'
+                onClick={() => {
+                  if (post.author?.id != null) {
+                    Taro.navigateTo({ url: `/pages/user-profile/index?id=${post.author.id}` })
+                  }
+                }}
+              >
+                <Avatar src={post.author?.avatar} size={64} />
+                <View className='ml-3'>
+                  <Text className='text-sm text-ink'>{post.author?.name || '匿名'}</Text>
+                </View>
               </View>
               <View className='ml-auto'>
                 <Text className='text-xs text-ink-sub'>阅读 {post.viewCount}</Text>
