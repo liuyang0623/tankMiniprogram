@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { View, Text, ScrollView } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
-import { Avatar, PostCard, SkeletonList, SettingsDrawer } from '../../components'
+import { Avatar, PostCard, SkeletonList, SettingsDrawer, PageLayout } from '../../components'
 import { usePagedList } from '../../hooks/usePagedList'
 import { postsApi, interactionsApi, usersApi } from '../../services/api'
 import { unwrapFavorites } from '../../utils/favorites'
@@ -96,7 +96,7 @@ export default function Profile() {
   }
 
   return (
-    <>
+    <PageLayout>
       <ScrollView
         scrollY
         className='bg-bg'
@@ -189,6 +189,6 @@ export default function Profile() {
         onClose={() => setDrawerOpen(false)}
         onLoggedOut={handleLoggedOut}
       />
-    </>
+    </PageLayout>
   )
 }
