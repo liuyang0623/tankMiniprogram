@@ -1,3 +1,4 @@
+import { describe, it, expect } from 'vitest'
 import { resolveTheme } from '../theme'
 
 describe('resolveTheme', () => {
