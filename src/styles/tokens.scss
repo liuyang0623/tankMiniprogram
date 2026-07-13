@@ -1,7 +1,25 @@
-/* 设计 token 的 CSS 变量镜像 —— 两套主题变量（spike 探针，Task 2 补全） */
+/* 设计 token 的 CSS 变量镜像 —— 两套主题变量，由 PageLayout 挂 .theme-* class 激活 */
 .theme-light {
   --c-bg: #faf6f0;
+  --c-card: #ffffff;
+  --c-card-soft: #fefcf9;
+  --c-peach: #f0a868;
+  --c-taro: #e4a9be;
+  --c-haze: #a6c0ce;
+  --c-ink: #4a413a;
+  --c-ink-sub: #8a7f76;
+  --c-heart: #ef8a7f;
+  --c-shadow: rgba(74, 65, 58, 0.08);
 }
 .theme-dark {
   --c-bg: #1a1613;
+  --c-card: #26201b;
+  --c-card-soft: #2e2721;
+  --c-peach: #f0a868;
+  --c-taro: #d98faa;
+  --c-haze: #7e9aa8;
+  --c-ink: #e8e2d9;
+  --c-ink-sub: #a89e93;
+  --c-heart: #e87b70;
+  --c-shadow: rgba(0, 0, 0, 0.3);
 }

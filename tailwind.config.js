@@ -6,22 +6,22 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        bg: 'var(--c-bg)', // 页面背景 奶油米白（spike 探针）
-        card: '#FFFFFF', // 卡片
-        'card-soft': '#FEFCF9', // 卡片次色
-        peach: '#F0A868', // 主强调 奶橘
-        taro: '#E4A9BE', // 次强调 藕粉
-        haze: '#A6C0CE', // 点缀 雾霾蓝
-        ink: '#4A413A', // 主文字 深棕灰
-        'ink-sub': '#8A7F76', // 次文字
-        heart: '#EF8A7F', // 互动暖红
+        bg: 'var(--c-bg)', // 页面背景
+        card: 'var(--c-card)', // 卡片
+        'card-soft': 'var(--c-card-soft)', // 卡片次色
+        peach: 'var(--c-peach)', // 主强调
+        taro: 'var(--c-taro)', // 次强调
+        haze: 'var(--c-haze)', // 点缀
+        ink: 'var(--c-ink)', // 主文字
+        'ink-sub': 'var(--c-ink-sub)', // 次文字
+        heart: 'var(--c-heart)', // 互动暖红
       },
       borderRadius: {
         card: '24rpx',
         pill: '999rpx',
       },
       boxShadow: {
-        soft: '0 8rpx 24rpx rgba(74,65,58,0.08)',
+        soft: '0 8rpx 24rpx var(--c-shadow)',
       },
       fontSize: {
         xs: '24rpx',

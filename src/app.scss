@@ -6,9 +6,19 @@
 @import './styles/tokens.scss';
 @import './styles/motion.scss';
 
-/* 全局基础 */
+/* 全局基础 —— page 默认给 light 变量兜底，PageLayout 子树覆盖为实际主题 */
 page {
-  background-color: #faf6f0;
-  color: #4a413a;
+  --c-bg: #faf6f0;
+  --c-card: #ffffff;
+  --c-card-soft: #fefcf9;
+  --c-peach: #f0a868;
+  --c-taro: #e4a9be;
+  --c-haze: #a6c0ce;
+  --c-ink: #4a413a;
+  --c-ink-sub: #8a7f76;
+  --c-heart: #ef8a7f;
+  --c-shadow: rgba(74, 65, 58, 0.08);
+  background-color: var(--c-bg);
+  color: var(--c-ink);
   font-size: 28rpx;
 }
