@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { View, Text, RichText, ScrollView } from '@tarojs/components'
 import Taro, { useRouter } from '@tarojs/taro'
-import { Avatar, Tag, DetailSkeleton, InteractionBar, CommentList } from '../../components'
+import { Avatar, Tag, DetailSkeleton, InteractionBar, CommentList, PageLayout } from '../../components'
 import { postsApi } from '../../services/api'
 import { extractImageUrls } from '../../utils/richtext'
 import type { Post } from '../../types/api'
@@ -44,7 +44,8 @@ export default function Detail() {
   }
 
   return (
-    <ScrollView scrollY className='min-h-screen bg-bg'>
+    <PageLayout>
+      <ScrollView scrollY className='min-h-screen bg-bg'>
       <View className='px-6 pt-12 pb-10'>
         {state === 'loading' && (
           <View className='bg-card rounded-card shadow-soft p-6'>
@@ -109,5 +110,6 @@ export default function Detail() {
         )}
       </View>
     </ScrollView>
+    </PageLayout>
   )
 }

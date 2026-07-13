@@ -1,5 +1,5 @@
 import { View, Text, ScrollView } from '@tarojs/components'
-import { PostCard, SkeletonList } from '../../components'
+import { PostCard, SkeletonList, PageLayout } from '../../components'
 import { usePagedList } from '../../hooks/usePagedList'
 import { postsApi } from '../../services/api'
 import type { Post } from '../../types/api'
@@ -16,16 +16,17 @@ export default function Index() {
   const isFirstLoading = feed.loading && feed.list.length === 0
 
   return (
-    <ScrollView
-      scrollY
-      className='bg-bg'
-      style={{ height: '100vh' }}
-      refresherEnabled
-      refresherTriggered={feed.refreshing}
-      onRefresherRefresh={() => feed.refresh()}
-      onScrollToLower={() => feed.loadMore()}
-      lowerThreshold={80}
-    >
+    <PageLayout>
+      <ScrollView
+        scrollY
+        className='bg-bg'
+        style={{ height: '100vh' }}
+        refresherEnabled
+        refresherTriggered={feed.refreshing}
+        onRefresherRefresh={() => feed.refresh()}
+        onScrollToLower={() => feed.loadMore()}
+        lowerThreshold={80}
+      >
       <View className='px-6 pt-16 pb-8'>
         {/* 标题区 */}
         <View className='anim-in mb-6'>
@@ -83,5 +84,6 @@ export default function Index() {
         )}
       </View>
     </ScrollView>
+    </PageLayout>
   )
 }

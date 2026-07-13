@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import { View, Text, ScrollView } from '@tarojs/components'
 import Taro from '@tarojs/taro'
-import { PostCard, SkeletonList } from '../../components'
+import { PostCard, SkeletonList, PageLayout } from '../../components'
 import { usePagedList } from '../../hooks/usePagedList'
 import { postsApi } from '../../services/api'
 import { useUiStore } from '../../store/ui'
@@ -35,13 +35,14 @@ export default function Drafts() {
   }
 
   return (
-    <ScrollView
-      scrollY
-      className='bg-bg'
-      style={{ height: '100vh' }}
-      onScrollToLower={() => loadMore()}
-      lowerThreshold={80}
-    >
+    <PageLayout>
+      <ScrollView
+        scrollY
+        className='bg-bg'
+        style={{ height: '100vh' }}
+        onScrollToLower={() => loadMore()}
+        lowerThreshold={80}
+      >
       <View className='px-6 pt-6 pb-8'>
         {loading && list.length === 0 && <SkeletonList count={3} />}
         {!loading && list.length === 0 && (
@@ -74,5 +75,6 @@ export default function Drafts() {
         )}
       </View>
     </ScrollView>
+    </PageLayout>
   )
 }
