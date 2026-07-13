@@ -6,6 +6,7 @@ import { interactionsApi } from '../../services/api'
 import { useAuthStore } from '../../store/auth'
 import { useUiStore } from '../../store/ui'
 import { nextToggleState } from '../../hooks/useOptimisticToggle'
+import { goUserProfile } from '../../utils/navigation'
 import type { Comment } from '../../types/api'
 
 export interface CommentItemProps {
@@ -47,12 +48,20 @@ export default function CommentItem({ comment, depth = 0, onReply, onDeleted }: 
     }
   }
 
+  const goProfile = () => {
+    goUserProfile(comment.authorId)
+  }
+
   return (
     <View style={{ marginLeft: `${indent}rpx` }} className='mb-4'>
       <View className='flex items-start'>
-        <Avatar src={comment.author?.avatar} size={48} />
+        <View className='press' onClick={goProfile}>
+          <Avatar src={comment.author?.avatar} size={48} />
+        </View>
         <View className='ml-2 flex-1'>
-          <Text className='text-xs text-ink-sub'>{comment.author?.name || '匿名'}</Text>
+          <View className='press' onClick={goProfile}>
+            <Text className='text-xs text-ink-sub'>{comment.author?.name || '匿名'}</Text>
+          </View>
           <View className='mt-1'>
             <Text className='text-sm text-ink'>{comment.content}</Text>
           </View>

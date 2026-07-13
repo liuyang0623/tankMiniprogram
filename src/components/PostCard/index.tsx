@@ -3,6 +3,7 @@ import type { ITouchEvent } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import type { ReactNode } from 'react'
 import { Card, Avatar, Tag } from '../index'
+import { goUserProfile } from '../../utils/navigation'
 import type { Post } from '../../types/api'
 
 export interface PostCardProps {
@@ -19,6 +20,11 @@ export default function PostCard({ post, action, onCardClick }: PostCardProps) {
     Taro.navigateTo({ url: `/pages/detail/index?id=${post.id}` })
   }
 
+  const goAuthor = (e: ITouchEvent) => {
+    e.stopPropagation()
+    goUserProfile(post.author?.id)
+  }
+
   const summary = post.content?.replace(/<[^>]+>/g, '').slice(0, 60) || ''
 
   return (
@@ -33,7 +39,7 @@ export default function PostCard({ post, action, onCardClick }: PostCardProps) {
         </View>
       )}
       {/* 作者 */}
-      <View className='flex items-center mb-3'>
+      <View className='flex items-center mb-3' onClick={goAuthor}>
         <Avatar src={post.author?.avatar} size={64} />
         <View className='ml-3'>
           <Text className='text-sm text-ink'>{post.author?.name || '匿名'}</Text>

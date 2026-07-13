@@ -4,6 +4,7 @@ import Taro, { useRouter } from '@tarojs/taro'
 import { Avatar, Tag, DetailSkeleton, InteractionBar, CommentList, PageLayout } from '../../components'
 import { postsApi } from '../../services/api'
 import { extractImageUrls } from '../../utils/richtext'
+import { goUserProfile } from '../../utils/navigation'
 import type { Post } from '../../types/api'
 import './index.scss'
 
@@ -71,9 +72,14 @@ export default function Detail() {
 
             {/* 作者与计数 */}
             <View className='flex items-center mt-4 mb-4'>
-              <Avatar src={post.author?.avatar} size={64} />
-              <View className='ml-3'>
-                <Text className='text-sm text-ink'>{post.author?.name || '匿名'}</Text>
+              <View
+                className='press flex items-center'
+                onClick={() => goUserProfile(post.author?.id)}
+              >
+                <Avatar src={post.author?.avatar} size={64} />
+                <View className='ml-3'>
+                  <Text className='text-sm text-ink'>{post.author?.name || '匿名'}</Text>
+                </View>
               </View>
               <View className='ml-auto'>
                 <Text className='text-xs text-ink-sub'>阅读 {post.viewCount}</Text>
