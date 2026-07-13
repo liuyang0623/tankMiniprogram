@@ -21,12 +21,12 @@
 
 ## 4. 他人主页 user-profile
 
-- [ ] 4.1 `pages/user-profile/index`：读 `?id=`，getUser 拉资料+计数，hydrate store，PageLayout 包裹
-- [ ] 4.2 头部：头像/昵称/简介 + 获赞/粉丝/关注三计数（粉丝/关注可点进 follow-list）
-- [ ] 4.3 关注按钮（读 store toggle）+ 私信占位按钮（disabled + showToast）
-- [ ] 4.4 自己的主页隐藏关注/私信按钮（比对 authStore 当前用户 id）
-- [ ] 4.5 帖子流：usePagedList(getUserPosts) + PostCard
-- [ ] 4.6 app.config.ts 注册页面
+- [x] 4.1 `pages/user-profile/index`：读 `?id=`，getUser 拉资料+计数，hydrate store，PageLayout 包裹
+- [x] 4.2 头部：头像/昵称/简介 + 获赞/粉丝/关注三计数（粉丝/关注可点进 follow-list）
+- [x] 4.3 关注按钮（读 store toggle）+ 私信占位按钮（disabled + showToast）
+- [x] 4.4 自己的主页隐藏关注/私信按钮（比对 authStore 当前用户 id）
+- [x] 4.5 帖子流：usePagedList(getUserPosts) + PostCard
+- [x] 4.6 app.config.ts 注册页面
 
 ## 5. 入口接入（4 处头像/昵称跳转）
 
