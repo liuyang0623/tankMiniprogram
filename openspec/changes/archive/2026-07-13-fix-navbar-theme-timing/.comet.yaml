@@ -1,6 +1,6 @@
 workflow: hotfix
 language: zh-CN
-phase: verify
+phase: archive
 context_compression: off
 build_mode: direct
 build_pause: null
@@ -13,12 +13,12 @@ auto_transition: true
 base_ref: 823e87e690fae10a4f1c1c7a0c4137a2263a7188
 design_doc: null
 plan: null
-verify_result: pending
-verification_report: null
-branch_status: pending
+verify_result: pass
+verification_report: docs/superpowers/reports/2026-07-13-fix-navbar-theme-timing-verify.md
+branch_status: handled
 created_at: 2026-07-13
-verified_at: null
-archived: false
+verified_at: 2026-07-13
+archived: true
 build_command: bun run build:weapp
 verify_command: bun run tsc && bun run test
 direct_override: null
