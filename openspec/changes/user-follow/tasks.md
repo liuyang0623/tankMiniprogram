@@ -13,11 +13,11 @@
 
 ## 3. follow-list 页（粉丝/关注两用）
 
-- [ ] 3.1 数据源选择纯函数（type→getFollowers/getFollowing）+ 单测
-- [ ] 3.2 `pages/follow-list/index`：读 `?userId=&type=`，usePagedList 分页，PageLayout 包裹，空态
-- [ ] 3.3 `FollowUserRow` 项组件：头像+昵称+简介+关注按钮（读 store，toggle，stopPropagation），点击行进他人主页
-- [ ] 3.4 列表加载把每项 isFollowing hydrate 进 followStore
-- [ ] 3.5 app.config.ts 注册页面
+- [x] 3.1 数据源选择纯函数（type→getFollowers/getFollowing）+ 单测
+- [x] 3.2 `pages/follow-list/index`：读 `?userId=&type=`，usePagedList 分页，PageLayout 包裹，空态
+- [x] 3.3 `FollowUserRow` 项组件：头像+昵称+简介+关注按钮（读 store，toggle，stopPropagation），点击行进他人主页
+- [x] 3.4 列表加载把每项 isFollowing hydrate 进 followStore
+- [x] 3.5 app.config.ts 注册页面
 
 ## 4. 他人主页 user-profile
 

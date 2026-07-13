@@ -6,6 +6,8 @@ export default defineAppConfig({
     'pages/detail/index',
     'pages/profile-edit/index',
     'pages/drafts/index',
+    'pages/user-profile/index',
+    'pages/follow-list/index',
   ],
   window: {
     backgroundTextStyle: 'dark',
