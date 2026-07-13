@@ -66,7 +66,7 @@ export default function UserProfile() {
     Taro.navigateTo({ url: `/pages/follow-list/index?userId=${userId}&type=following` })
 
   const onMessage = () => {
-    Taro.showToast({ title: '私信功能即将上线', icon: 'none' })
+    Taro.navigateTo({ url: `/pages/chat/index?userId=${userId}` })
   }
 
   if (!Number.isFinite(userId)) {

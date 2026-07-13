@@ -129,3 +129,43 @@ export interface FavoriteItem {
 
 /** 收藏分页返回 */
 export type PaginatedFavorites = Paginated<FavoriteItem>
+
+// ── 消息/私信 ──
+
+/** 会话列表中的对方用户精简信息 */
+export interface OtherUserInfo {
+  id: number
+  nickname: string
+  avatar: string
+}
+
+/** 会话列表项 */
+export interface ConversationItem {
+  id: number
+  otherUser: OtherUserInfo
+  lastMessage: string
+  lastTime: string
+  unreadCount: number
+}
+
+/** 消息项 */
+export interface MessageItem {
+  id: number
+  conversationId: number
+  senderId: number
+  type: 'text' | 'image'
+  content: string
+  createdAt: string
+}
+
+/** 会话列表分页返回 */
+export type PaginatedConversations = Paginated<ConversationItem>
+
+/** 消息列表分页返回 */
+export type PaginatedMessages = Paginated<MessageItem>
+
+/** WebSocket 推送的消息包裹 */
+export interface WsMessageEnvelope {
+  type: 'new_message'
+  data: MessageItem
+}

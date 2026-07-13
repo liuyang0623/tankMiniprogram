@@ -26,17 +26,26 @@ export const useAuthStore = create<AuthState>((set) => ({
     Taro.setStorageSync(TOKEN_KEY, token)
     Taro.setStorageSync(USER_KEY, user)
     set({ token, user, isLogin: true })
+    // 登录后建立 WebSocket 连接
+    import('../store/ws').then(({ useWsStore }) => useWsStore.getState().connect())
   },
 
   clear: () => {
     Taro.removeStorageSync(TOKEN_KEY)
     Taro.removeStorageSync(USER_KEY)
     set({ token: '', user: null, isLogin: false })
+    // 登出时断开 WebSocket
+    import('../store/ws').then(({ useWsStore }) => useWsStore.getState().disconnect())
+    import('./message').then(({ useMessageStore }) => useMessageStore.getState().reset())
   },
 
   restore: () => {
     const token = Taro.getStorageSync(TOKEN_KEY)
     const user = Taro.getStorageSync(USER_KEY)
-    if (token) set({ token, user: user || null, isLogin: true })
+    if (token) {
+      set({ token, user: user || null, isLogin: true })
+      // 从持久化恢复后也建立 WS 连接
+      import('../store/ws').then(({ useWsStore }) => useWsStore.getState().connect())
+    }
   },
 }))

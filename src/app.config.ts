@@ -1,6 +1,7 @@
 export default defineAppConfig({
   pages: [
     'pages/index/index',
+    'pages/messages/index',
     'pages/publish/index',
     'pages/profile/index',
     'pages/detail/index',
@@ -8,6 +9,7 @@ export default defineAppConfig({
     'pages/drafts/index',
     'pages/user-profile/index',
     'pages/follow-list/index',
+    'pages/chat/index',
   ],
   window: {
     backgroundTextStyle: 'dark',
@@ -23,6 +25,7 @@ export default defineAppConfig({
     borderStyle: 'white',
     list: [
       { pagePath: 'pages/index/index', text: '首页' },
+      { pagePath: 'pages/messages/index', text: '消息' },
       { pagePath: 'pages/publish/index', text: '发布' },
       { pagePath: 'pages/profile/index', text: '我的' },
     ],
