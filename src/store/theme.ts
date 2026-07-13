@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import Taro from '@tarojs/taro'
 import { resolveTheme, type Mode, type Resolved } from '../utils/theme'
+import { applyTabBarStyle } from '../utils/tabbar'
 
 const MODE_KEY = 'theme-mode'
 
@@ -21,17 +22,24 @@ export const useThemeStore = create<ThemeState>((set, get) => ({
 
   setMode: (m) => {
     const sys = getSystemTheme()
+    const resolved = resolveTheme(m, sys)
     Taro.setStorageSync(MODE_KEY, m)
-    set({ mode: m, resolved: resolveTheme(m, sys) })
+    set({ mode: m, resolved })
+    applyTabBarStyle(resolved)
   },
 
   applySystem: (sysTheme) => {
-    if (get().mode === 'system') set({ resolved: sysTheme })
+    if (get().mode === 'system') {
+      set({ resolved: sysTheme })
+      applyTabBarStyle(sysTheme)
+    }
   },
 
   init: (sysTheme) => {
     const stored = (Taro.getStorageSync(MODE_KEY) as Mode) || 'system'
-    set({ mode: stored, resolved: resolveTheme(stored, sysTheme) })
+    const resolved = resolveTheme(stored, sysTheme)
+    set({ mode: stored, resolved })
+    applyTabBarStyle(resolved)
   },
 }))
 
