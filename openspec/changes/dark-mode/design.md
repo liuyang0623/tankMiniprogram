@@ -71,3 +71,5 @@
 - 方案 α vs β（data-theme 注入方式）——design 阶段 spike 后定
 - peach 强调色暗色下是否微调——design 阶段看对比度
 - 默认主题：跟随系统 vs 亮色——倾向跟随系统
+
+> spike 结论（Task 1）：weapp-tailwindcss 3.7 编译 `var(--c-*)` 颜色 —— **通过**。dist 产物 `.bg-bg{background-color:var(--c-bg)}` 验证于 2026-07-12，方案 A（Token 变量化 + PageLayout）成立，无需切备选。

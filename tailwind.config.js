@@ -6,7 +6,7 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        bg: '#FAF6F0', // 页面背景 奶油米白
+        bg: 'var(--c-bg)', // 页面背景 奶油米白（spike 探针）
         card: '#FFFFFF', // 卡片
         'card-soft': '#FEFCF9', // 卡片次色
         peach: '#F0A868', // 主强调 奶橘

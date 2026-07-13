@@ -1,11 +1,7 @@
-/* 设计 token 的 CSS 变量镜像（供非 Tailwind 场景，如内联 style 引用） */
-page {
-  --color-bg: #faf6f0;
-  --color-card: #ffffff;
-  --color-peach: #f0a868;
-  --color-taro: #e4a9be;
-  --color-haze: #a6c0ce;
-  --color-ink: #4a413a;
-  --color-ink-sub: #8a7f76;
-  --color-heart: #ef8a7f;
+/* 设计 token 的 CSS 变量镜像 —— 两套主题变量（spike 探针，Task 2 补全） */
+.theme-light {
+  --c-bg: #faf6f0;
+}
+.theme-dark {
+  --c-bg: #1a1613;
 }
