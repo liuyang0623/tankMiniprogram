@@ -22,9 +22,10 @@ vi.mock('../../services/auth', () => ({
 }))
 
 let isLoginState = true
+let selfIdState: number | undefined = 1
 vi.mock('../auth', () => ({
   useAuthStore: {
-    getState: () => ({ isLogin: isLoginState }),
+    getState: () => ({ isLogin: isLoginState, user: selfIdState != null ? { id: selfIdState } : null }),
   },
 }))
 
@@ -35,6 +36,7 @@ describe('followStore', () => {
     toggleFollowMock.mockReset()
     loginMock.mockReset()
     isLoginState = true
+    selfIdState = 1
     // 重置 store
     useFollowStore.setState({ followingMap: {}, countsMap: {} })
   })
@@ -67,6 +69,38 @@ describe('followStore', () => {
     expect(useFollowStore.getState().isFollowing(2)).toBe(true)
     expect(useFollowStore.getState().countsMap[2].followerCount).toBe(11)
     expect(toggleFollowMock).toHaveBeenCalledWith(2)
+  })
+
+  it('关注：当前用户自己的 followingCount +1', async () => {
+    // 当前用户 selfId=1 已有关注数 3，关注 2 后应变 4
+    useFollowStore.getState().hydrateUser(1, { isFollowing: false, followerCount: 0, followingCount: 3 })
+    useFollowStore.getState().hydrateUser(2, { isFollowing: false, followerCount: 10, followingCount: 0 })
+    toggleFollowMock.mockResolvedValue({ following: true })
+
+    await useFollowStore.getState().toggle(2)
+
+    expect(useFollowStore.getState().countsMap[1].followingCount).toBe(4)
+  })
+
+  it('取关：当前用户自己的 followingCount -1', async () => {
+    useFollowStore.getState().hydrateUser(1, { isFollowing: false, followerCount: 0, followingCount: 3 })
+    useFollowStore.getState().hydrateUser(2, { isFollowing: true, followerCount: 10, followingCount: 0 })
+    toggleFollowMock.mockResolvedValue({ following: false })
+
+    await useFollowStore.getState().toggle(2)
+
+    expect(useFollowStore.getState().countsMap[1].followingCount).toBe(2)
+  })
+
+  it('不能关注自己：toggle(selfId) 直接返回，不发请求不改状态', async () => {
+    selfIdState = 5
+    useFollowStore.getState().hydrateUser(5, { isFollowing: false, followerCount: 8, followingCount: 3 })
+
+    await useFollowStore.getState().toggle(5)
+
+    expect(toggleFollowMock).not.toHaveBeenCalled()
+    expect(useFollowStore.getState().isFollowing(5)).toBe(false)
+    expect(useFollowStore.getState().countsMap[5].followerCount).toBe(8)
   })
 
   it('取关：乐观更新 isFollowing=false 且粉丝 -1', async () => {

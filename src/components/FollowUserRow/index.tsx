@@ -1,7 +1,7 @@
 import { View, Text } from '@tarojs/components'
-import Taro from '@tarojs/taro'
 import { Avatar } from '../index'
 import FollowButton from '../FollowButton'
+import { goUserProfile } from '../../utils/navigation'
 import type { FollowUserItem } from '../../types/api'
 
 export interface FollowUserRowProps {
@@ -13,7 +13,7 @@ export interface FollowUserRowProps {
 /** 关注/粉丝列表项：头像+昵称+简介，右侧关注按钮，点击行进他人主页 */
 export default function FollowUserRow({ user, currentUserId }: FollowUserRowProps) {
   const goProfile = () => {
-    Taro.navigateTo({ url: `/pages/user-profile/index?id=${user.id}` })
+    goUserProfile(user.id)
   }
   const isSelf = currentUserId != null && currentUserId === user.id
 

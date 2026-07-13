@@ -4,6 +4,7 @@ import Taro, { useRouter } from '@tarojs/taro'
 import { Avatar, Tag, DetailSkeleton, InteractionBar, CommentList, PageLayout } from '../../components'
 import { postsApi } from '../../services/api'
 import { extractImageUrls } from '../../utils/richtext'
+import { goUserProfile } from '../../utils/navigation'
 import type { Post } from '../../types/api'
 import './index.scss'
 
@@ -73,11 +74,7 @@ export default function Detail() {
             <View className='flex items-center mt-4 mb-4'>
               <View
                 className='press flex items-center'
-                onClick={() => {
-                  if (post.author?.id != null) {
-                    Taro.navigateTo({ url: `/pages/user-profile/index?id=${post.author.id}` })
-                  }
-                }}
+                onClick={() => goUserProfile(post.author?.id)}
               >
                 <Avatar src={post.author?.avatar} size={64} />
                 <View className='ml-3'>

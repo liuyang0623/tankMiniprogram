@@ -6,6 +6,7 @@ import { interactionsApi } from '../../services/api'
 import { useAuthStore } from '../../store/auth'
 import { useUiStore } from '../../store/ui'
 import { nextToggleState } from '../../hooks/useOptimisticToggle'
+import { goUserProfile } from '../../utils/navigation'
 import type { Comment } from '../../types/api'
 
 export interface CommentItemProps {
@@ -48,9 +49,7 @@ export default function CommentItem({ comment, depth = 0, onReply, onDeleted }: 
   }
 
   const goProfile = () => {
-    if (comment.authorId != null) {
-      Taro.navigateTo({ url: `/pages/user-profile/index?id=${comment.authorId}` })
-    }
+    goUserProfile(comment.authorId)
   }
 
   return (

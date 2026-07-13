@@ -58,8 +58,9 @@ export const useFollowStore = create<FollowState>((set, get) => ({
   isFollowing: (id) => get().followingMap[id] ?? false,
 
   toggle: async (id) => {
+    const auth = useAuthStore.getState()
     // 未登录：引导登录，不发关注请求
-    if (!useAuthStore.getState().isLogin) {
+    if (!auth.isLogin) {
       try {
         await login()
       } catch {
@@ -68,42 +69,50 @@ export const useFollowStore = create<FollowState>((set, get) => ({
       return
     }
 
+    const selfId = auth.user?.id
+    // 不能关注自己
+    if (selfId != null && selfId === id) return
+
     // 操作前基线快照（用于校正与回滚）
     const prevFollowing = get().followingMap[id] ?? false
-    const prevCounts = get().countsMap[id] ?? { followerCount: 0, followingCount: 0 }
+    const prevTarget = get().countsMap[id] ?? { followerCount: 0, followingCount: 0 }
+    // 当前用户自己的计数（更新其 followingCount）；未 hydrate 时用 0 基线兜底
+    const prevSelf =
+      (selfId != null ? get().countsMap[selfId] : undefined) ?? { followerCount: 0, followingCount: 0 }
     const optimistic = !prevFollowing
 
+    // 按目标关注态写入：目标用户 followerCount ±1，当前用户 followingCount ±1
+    const writeCounts = (nextFollowing: boolean) => {
+      set((s) => {
+        const counts = { ...s.countsMap }
+        counts[id] = {
+          ...(counts[id] ?? prevTarget),
+          followerCount: applyFollowerDelta(prevTarget.followerCount, prevFollowing, nextFollowing),
+        }
+        if (selfId != null && selfId !== id) {
+          counts[selfId] = {
+            ...(counts[selfId] ?? prevSelf),
+            followingCount: applyFollowerDelta(prevSelf.followingCount, prevFollowing, nextFollowing),
+          }
+        }
+        return { followingMap: { ...s.followingMap, [id]: nextFollowing }, countsMap: counts }
+      })
+    }
+
     // 乐观更新
-    set((s) => ({
-      followingMap: { ...s.followingMap, [id]: optimistic },
-      countsMap: {
-        ...s.countsMap,
-        [id]: {
-          ...prevCounts,
-          followerCount: applyFollowerDelta(prevCounts.followerCount, prevFollowing, optimistic),
-        },
-      },
-    }))
+    writeCounts(optimistic)
 
     try {
       const { following } = await usersApi.toggleFollow(id)
-      // 以后端结果为准校正：粉丝数从操作前基线按后端方向计算
-      set((s) => ({
-        followingMap: { ...s.followingMap, [id]: following },
-        countsMap: {
-          ...s.countsMap,
-          [id]: {
-            ...(s.countsMap[id] ?? prevCounts),
-            followerCount: applyFollowerDelta(prevCounts.followerCount, prevFollowing, following),
-          },
-        },
-      }))
+      // 以后端结果为准校正
+      writeCounts(following)
     } catch {
       // 回滚到操作前
-      set((s) => ({
-        followingMap: { ...s.followingMap, [id]: prevFollowing },
-        countsMap: { ...s.countsMap, [id]: prevCounts },
-      }))
+      set((s) => {
+        const counts = { ...s.countsMap, [id]: prevTarget }
+        if (selfId != null && selfId !== id) counts[selfId] = prevSelf
+        return { followingMap: { ...s.followingMap, [id]: prevFollowing }, countsMap: counts }
+      })
       Taro.showToast({ title: '操作失败，请重试', icon: 'none' })
     }
   },
