@@ -113,10 +113,10 @@ export default function UserProfile() {
               <View className='flex mt-5'>
                 <FollowButton userId={userId} className='flex-1 mr-3' />
                 <View
-                  className='press flex-1 inline-flex items-center justify-center rounded-pill px-6 py-2 bg-transparent border border-ink-sub opacity-60'
+                  className='press flex-1 inline-flex items-center justify-center rounded-pill px-6 py-2 bg-peach'
                   onClick={onMessage}
                 >
-                  <Text className='text-sm text-ink-sub'>私信</Text>
+                  <Text className='text-sm text-card'>私信</Text>
                 </View>
               </View>
             )}

@@ -5,22 +5,21 @@ import { PageLayout, SkeletonList } from '../../components'
 import { usePagedList } from '../../hooks/usePagedList'
 import { useMessageStore } from '../../store/message'
 import { useAuthStore } from '../../store/auth'
-import { sendMessage, getMessages } from '../../services/message'
+import { sendMessage, getMessages, findConversation } from '../../services/message'
 import { usersApi, uploadApi } from '../../services/api'
 import type { MessageItem } from '../../types/api'
 
 export default function Chat() {
   const params = getCurrentInstance().router?.params ?? {}
-  // 两种入口：会话列表带 conversationId；他人主页带 userId（无会话，首条消息自动建会话）
   const paramConvId = Number(params.conversationId)
   const paramUserId = Number(params.userId)
   const currentUserId = useAuthStore((s) => s.user?.id)
 
-  // 会话 id 可能来自参数，也可能首条消息发送后由后端返回
+  // 会话 id：会话列表入口直接带；主页入口先查后端，无会话则首条消息后由后端返回
   const [conversationId, setConversationId] = useState<number>(
     Number.isFinite(paramConvId) ? paramConvId : 0,
   )
-  // 从主页进入时的目标用户 id
+  // 接收方 userId：主页入口直接带；会话列表入口从会话信息反查
   const [targetUserId, setTargetUserId] = useState<number>(
     Number.isFinite(paramUserId) ? paramUserId : 0,
   )
@@ -31,30 +30,53 @@ export default function Chat() {
   const scrollViewRef = useRef<any>(null)
   const shouldScrollBottom = useRef(true)
 
-  // 仅当已有 conversationId 时才拉历史
   const fetcher = useCallback(
     (page: number) => getMessages(conversationId, page),
     [conversationId],
   )
-  const { list, loading, hasMore, loadMore } = usePagedList<MessageItem>(fetcher)
+  const { list, loading, hasMore, loadMore, reload } = usePagedList<MessageItem>(fetcher)
 
-  // 首次进入拉历史 + 设置导航标题
+  // 主页入口：先查是否已有会话，有则设置 conversationId 加载历史
+  useEffect(() => {
+    if (paramUserId > 0 && !Number.isFinite(paramConvId)) {
+      findConversation(paramUserId)
+        .then((res) => {
+          if (res.conversationId > 0) setConversationId(res.conversationId)
+        })
+        .catch(() => {})
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  // 有 conversationId 时拉历史 + 标记已读（usePagedList 不自动首屏）
   useEffect(() => {
     if (conversationId > 0) {
+      reload()
       useMessageStore.getState().markRead(conversationId)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [conversationId])
 
-  // 设置对方昵称为导航标题
+  // 设置对方昵称为导航标题（两种入口都需要）
   useEffect(() => {
-    const uid = targetUserId
+    // 优先用 targetUserId；会话列表入口从会话信息反查对方 id
+    let uid = targetUserId
+    if (uid === 0 && conversationId > 0) {
+      const conv = useMessageStore.getState().conversations.find((c) => c.id === conversationId)
+      uid = conv?.otherUser.id ?? 0
+      if (conv) {
+        Taro.setNavigationBarTitle({ title: conv.otherUser.nickname || '聊天' })
+        if (targetUserId === 0) setTargetUserId(uid)
+        return
+      }
+    }
     if (uid > 0) {
       usersApi
         .getUser(uid)
         .then((u) => Taro.setNavigationBarTitle({ title: u.nickname || '聊天' }))
         .catch(() => {})
     }
-  }, [targetUserId])
+  }, [targetUserId, conversationId])
 
   // 有历史/新消息时滚动到底部
   useEffect(() => {
@@ -74,14 +96,12 @@ export default function Chat() {
           prev.some((m) => m.id === latest.id) ? prev : [...prev, latest],
         )
         shouldScrollBottom.current = true
-        // 已读同步
         if (conversationId > 0) useMessageStore.getState().markRead(conversationId)
       }
     })
     return unsub
   }, [conversationId, currentUserId])
 
-  // 解析接收方 userId：优先 targetUserId，其次从会话列表反查
   const resolveToUserId = useCallback((): number => {
     if (targetUserId > 0) return targetUserId
     const conv = useMessageStore.getState().conversations.find((c) => c.id === conversationId)
@@ -98,7 +118,6 @@ export default function Chat() {
       setSending(true)
       try {
         const msg = await sendMessage(toUserId, content, type)
-        // 首条消息发送后拿到 conversationId
         if (conversationId === 0 && msg.conversationId) {
           setConversationId(msg.conversationId)
         }
@@ -142,7 +161,6 @@ export default function Chat() {
     setInputText(e.detail.value)
   }, [])
 
-  // 参数错误：既无 conversationId 也无 userId
   if (conversationId === 0 && targetUserId === 0) {
     return (
       <PageLayout>
@@ -157,90 +175,97 @@ export default function Chat() {
 
   return (
     <PageLayout>
-      {/* 消息列表 */}
-      <ScrollView
-        scrollY
-        className='flex-1 bg-bg'
-        style={{ height: 'calc(100vh - 56px)' }}
-        onScrollToUpper={() => {
-          shouldScrollBottom.current = false
-          if (conversationId > 0 && hasMore && !loading) loadMore()
-        }}
-        upperThreshold={80}
-        scrollWithAnimation
-        ref={scrollViewRef}
-      >
-        <View className='px-4 pt-4 pb-4'>
-          {loading && list.length === 0 && <SkeletonList count={5} />}
+      <View style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
+        {/* 消息列表 */}
+        <ScrollView
+          scrollY
+          className='bg-bg'
+          style={{ flex: 1, minHeight: 0 }}
+          onScrollToUpper={() => {
+            shouldScrollBottom.current = false
+            if (conversationId > 0 && hasMore && !loading) loadMore()
+          }}
+          upperThreshold={80}
+          scrollWithAnimation
+          ref={scrollViewRef}
+        >
+          <View className='px-4 pt-4 pb-4'>
+            {loading && list.length === 0 && <SkeletonList count={5} />}
 
-          {list.length > 0 && hasMore && (
-            <View className='py-2 flex justify-center'>
-              <Text className='text-xs text-ink-sub'>上拉加载更多</Text>
-            </View>
-          )}
-
-          {allMessages.map((msg) => {
-            const isSelf = msg.senderId === currentUserId
-            return (
-              <View
-                key={msg.id}
-                className={`flex mb-3 ${isSelf ? 'justify-end' : 'justify-start'}`}
-              >
-                {msg.type === 'image' ? (
-                  <Image
-                    src={msg.content}
-                    className='max-w-[200px] max-h-[200px] rounded-lg'
-                    mode='widthFix'
-                    onClick={() => Taro.previewImage({ urls: [msg.content] })}
-                  />
-                ) : (
-                  <View
-                    className={`max-w-[70%] px-3 py-2 rounded-2xl shadow-sm ${
-                      isSelf ? 'bg-[#F0A868]' : 'bg-white'
-                    }`}
-                  >
-                    <Text className={`text-sm leading-relaxed ${isSelf ? 'text-white' : 'text-ink'}`}>
-                      {msg.content}
-                    </Text>
-                  </View>
-                )}
+            {list.length > 0 && hasMore && (
+              <View className='py-2 flex justify-center'>
+                <Text className='text-xs text-ink-sub'>上拉加载更多</Text>
               </View>
-            )
-          })}
+            )}
 
-          {!loading && allMessages.length === 0 && (
-            <View className='pt-10 flex justify-center'>
-              <Text className='text-sm text-ink-sub'>开始对话吧～</Text>
+            {allMessages.map((msg) => {
+              const isSelf = msg.senderId === currentUserId
+              return (
+                <View
+                  key={msg.id}
+                  className={`flex mb-3 ${isSelf ? 'justify-end' : 'justify-start'}`}
+                >
+                  {msg.type === 'image' ? (
+                    <Image
+                      src={msg.content}
+                      className='rounded-lg'
+                      style={{ width: '160px' }}
+                      mode='widthFix'
+                      onClick={() => Taro.previewImage({ urls: [msg.content] })}
+                    />
+                  ) : (
+                    <View
+                      className={`max-w-[70%] px-3 py-2 rounded-2xl shadow-sm ${
+                        isSelf ? 'bg-peach' : 'bg-card'
+                      }`}
+                    >
+                      <Text className={`text-sm leading-relaxed ${isSelf ? 'text-white' : 'text-ink'}`}>
+                        {msg.content}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+              )
+            })}
+
+            {!loading && allMessages.length === 0 && (
+              <View className='pt-10 flex justify-center'>
+                <Text className='text-sm text-ink-sub'>开始对话吧～</Text>
+              </View>
+            )}
+          </View>
+        </ScrollView>
+
+        {/* 输入区：输入框 + 加号按钮 */}
+        <View
+          className='flex items-center px-3 py-2 bg-card border-t border-card-soft'
+          style={{ flexShrink: 0, paddingBottom: 'calc(8px + env(safe-area-inset-bottom))' }}
+        >
+          <Input
+            className='flex-1 h-9 rounded-full bg-bg px-3 text-sm text-ink'
+            placeholderClass='text-ink-sub'
+            placeholder='输入消息…'
+            value={inputText}
+            onInput={handleInput}
+            confirmType='send'
+            onConfirm={sendText}
+          />
+          {inputText.trim() ? (
+            <View
+              className='press ml-2 h-9 px-4 rounded-full bg-peach flex items-center justify-center'
+              onClick={sendText}
+            >
+              <Text className='text-white text-sm font-medium'>发送</Text>
+            </View>
+          ) : (
+            <View
+              className='press ml-2 w-9 h-9 rounded-full bg-bg flex items-center justify-center'
+              onClick={pickImage}
+            >
+              <Text className='text-ink-sub text-xl leading-none'>＋</Text>
             </View>
           )}
         </View>
-      </ScrollView>
-
-      {/* 输入区：输入框 + 加号按钮 */}
-      <View className='flex items-center px-3 py-2 bg-white border-t border-gray-100'>
-        <Input
-          className='flex-1 h-9 rounded-full bg-gray-100 px-3 text-sm'
-          placeholder='输入消息…'
-          value={inputText}
-          onInput={handleInput}
-          confirmType='send'
-          onConfirm={sendText}
-        />
-        {inputText.trim() ? (
-          <View
-            className='press ml-2 h-9 px-4 rounded-full bg-[#F0A868] flex items-center justify-center'
-            onClick={sendText}
-          >
-            <Text className='text-white text-sm font-medium'>发送</Text>
-          </View>
-        ) : (
-          <View
-            className='press ml-2 w-9 h-9 rounded-full bg-gray-100 flex items-center justify-center'
-            onClick={pickImage}
-          >
-            <Text className='text-ink-sub text-xl leading-none'>＋</Text>
-          </View>
-        )}
       </View>
     </PageLayout>
   )

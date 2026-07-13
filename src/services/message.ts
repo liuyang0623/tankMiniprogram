@@ -43,3 +43,14 @@ export function markRead(conversationId: number) {
     method: 'POST',
   })
 }
+
+/**
+ * 查询与某用户的会话 id（0 表示无会话）。供他人主页私信入口定位历史。
+ */
+export function findConversation(withUserId: number) {
+  return authRequest<{ conversationId: number }>({
+    url: '/conversations',
+    method: 'GET',
+    data: { withUser: withUserId },
+  })
+}

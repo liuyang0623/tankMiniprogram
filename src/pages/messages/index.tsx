@@ -27,9 +27,11 @@ function formatTime(iso: string): string {
   return `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()}`
 }
 
-/** 消息摘要截断（纯文本截取，图片显示"[图片]"） */
+/** 消息摘要：空或图片 URL 显示"[图片]"，否则显示文本 */
 function messagePreview(content: string): string {
-  return content || '[图片]'
+  if (!content) return '[图片]'
+  if (/^https?:\/\/\S+\.(png|jpe?g|gif|webp|bmp)/i.test(content)) return '[图片]'
+  return content
 }
 
 export default function Messages() {
