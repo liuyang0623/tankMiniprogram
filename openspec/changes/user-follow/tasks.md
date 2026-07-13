@@ -7,9 +7,9 @@
 
 ## 2. 全局 followStore（TDD）
 
-- [ ] 2.1 `store/__tests__/follow.test.ts`：toggle 乐观更新（关注 +1/取关 -1）、后端结果校正、失败回滚、未登录拦截（mock usersApi + authStore）
-- [ ] 2.2 `store/follow.ts`：followingMap/countsMap + hydrateUser + toggle + isFollowing，实现通过测试
-- [ ] 2.3 未登录时 toggle 触发 login() 且不发请求
+- [x] 2.1 `store/__tests__/follow.test.ts`：toggle 乐观更新（关注 +1/取关 -1）、后端结果校正、失败回滚、未登录拦截（mock usersApi + authStore）
+- [x] 2.2 `store/follow.ts`：followingMap/countsMap + hydrateUser + toggle + isFollowing，实现通过测试
+- [x] 2.3 未登录时 toggle 触发 login() 且不发请求
 
 ## 3. follow-list 页（粉丝/关注两用）
 
