@@ -2,8 +2,8 @@
 
 ## 1. API 与类型扩展
 
-- [ ] 1.1 `types/api.ts`：User 补 `followerCount?/followingCount?/isFollowing?`；新增 `FollowUserItem`（id/nickname/avatar/bio/isFollowing）
-- [ ] 1.2 `services/api/users.ts`：新增 `toggleFollow(id)`、`getFollowers(id,page)`、`getFollowing(id,page)`
+- [x] 1.1 `types/api.ts`：User 补 `followerCount?/followingCount?/isFollowing?`；新增 `FollowUserItem`（id/nickname/avatar/bio/isFollowing）
+- [x] 1.2 `services/api/users.ts`：新增 `toggleFollow(id)`、`getFollowers(id,page)`、`getFollowing(id,page)`
 
 ## 2. 全局 followStore（TDD）
 

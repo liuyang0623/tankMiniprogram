@@ -17,7 +17,27 @@ export interface User {
   bio: string
   gender: number
   phone?: string
+  /** 获赞总数（他人主页展示，后端可选返回） */
+  likeCount?: number
+  /** 粉丝数（关注该用户的人数） */
+  followerCount?: number
+  /** 关注数（该用户关注的人数） */
+  followingCount?: number
+  /** 当前登录用户是否已关注该用户（未登录/自己时为 false） */
+  isFollowing?: boolean
 }
+
+/** 关注/粉丝列表项 */
+export interface FollowUserItem {
+  id: number
+  nickname: string
+  avatar: string
+  bio: string
+  isFollowing: boolean
+}
+
+/** 关注/粉丝分页返回 */
+export type PaginatedFollowUsers = Paginated<FollowUserItem>
 
 /** 帖子作者精简信息（昵称 json tag 为 name） */
 export interface PostAuthor {
