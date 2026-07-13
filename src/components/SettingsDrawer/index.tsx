@@ -1,7 +1,8 @@
 import { View, Text } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { logout } from '../../services/auth'
-import { useUiStore } from '../../store/ui'
+import { useThemeStore } from '../../store/theme'
+import type { Mode } from '../../utils/theme'
 
 export interface SettingsDrawerProps {
   open: boolean
@@ -10,17 +11,20 @@ export interface SettingsDrawerProps {
   onLoggedOut?: () => void
 }
 
-/** 右滑全屏设置抽屉：主题占位 / 草稿箱 / 退出登录 */
+const THEME_OPTIONS: { label: string; value: Mode }[] = [
+  { label: '亮', value: 'light' },
+  { label: '暗', value: 'dark' },
+  { label: '跟随系统', value: 'system' },
+]
+
+/** 右滑全屏设置抽屉：主题三选 / 草稿箱 / 退出登录 */
 export default function SettingsDrawer({ open, onClose, onLoggedOut }: SettingsDrawerProps) {
-  const showToast = useUiStore((s) => s.showToast)
+  const mode = useThemeStore((s) => s.mode)
+  const setMode = useThemeStore((s) => s.setMode)
 
   const goDrafts = () => {
     onClose()
     Taro.navigateTo({ url: '/pages/drafts/index' })
-  }
-
-  const onThemeTap = () => {
-    showToast('暗黑模式即将上线～', 'info')
   }
 
   const onLogout = async () => {
@@ -80,31 +84,39 @@ export default function SettingsDrawer({ open, onClose, onLoggedOut }: SettingsD
             </View>
           </View>
 
-          {/* 主题切换入口（占位禁用态） */}
-          <View
-            className='press bg-card rounded-card shadow-soft px-4 py-4 mb-4 flex items-center justify-between'
-            style={{ opacity: 0.5 }}
-            onClick={onThemeTap}
-          >
-            <Text className='text-base text-ink-sub'>主题切换</Text>
-            <Text className='text-xs text-ink-sub'>即将上线</Text>
+          {/* 主题三选 */}
+          <View className='bg-card rounded-card shadow-soft px-4 py-4 mb-4'>
+            <Text className='text-base text-ink'>主题</Text>
+            <View className='flex mt-3'>
+              {THEME_OPTIONS.map((opt) => {
+                const activeItem = mode === opt.value
+                return (
+                  <View
+                    key={opt.value}
+                    className={`press rounded-pill px-4 py-2 mr-3 ${activeItem ? 'bg-peach' : 'bg-card-soft'}`}
+                    onClick={() => setMode(opt.value)}
+                  >
+                    <Text className={`text-sm ${activeItem ? 'text-card' : 'text-ink-sub'}`}>
+                      {opt.label}
+                    </Text>
+                  </View>
+                )
+              })}
+            </View>
           </View>
 
           {/* 草稿箱入口 */}
-          <View
-            className='press bg-card rounded-card shadow-soft px-4 py-4 mb-4'
-            onClick={goDrafts}
-          >
+          <View className='press bg-card rounded-card shadow-soft px-4 py-4 mb-4' onClick={goDrafts}>
             <Text className='text-base text-ink'>草稿箱</Text>
           </View>
 
           {/* 退出登录（置底） */}
           <View
             className='press mt-auto py-3 flex justify-center items-center rounded-card'
-            style={{ border: '1rpx solid #E4A9BE' }}
+            style={{ border: '1rpx solid var(--c-taro)' }}
             onClick={onLogout}
           >
-            <Text className='text-sm' style={{ color: '#E4A9BE' }}>
+            <Text className='text-sm' style={{ color: 'var(--c-taro)' }}>
               退出登录
             </Text>
           </View>

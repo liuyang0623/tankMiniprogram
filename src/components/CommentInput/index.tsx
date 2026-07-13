@@ -51,7 +51,7 @@ export default function CommentInput({ postId, replyTo, onCancelReply, onSubmitt
   return (
     <View
       className='flex items-end px-4 py-3 bg-card'
-      style={{ borderTop: '1rpx solid #EFE8DE' }}
+      style={{ borderTop: '1rpx solid var(--c-card-soft)' }}
     >
       <Textarea
         className='flex-1 text-sm text-ink'
@@ -68,10 +68,10 @@ export default function CommentInput({ postId, replyTo, onCancelReply, onSubmitt
       )}
       <View
         className={`press ml-2 rounded-pill px-5 py-2 ${submitting ? 'opacity-50' : ''}`}
-        style={{ background: '#F0A868' }}
+        style={{ background: 'var(--c-peach)' }}
         onClick={submit}
       >
-        <View className='text-sm' style={{ color: '#fff' }}>
+        <View className='text-sm' style={{ color: 'var(--c-card)' }}>
           发送
         </View>
       </View>

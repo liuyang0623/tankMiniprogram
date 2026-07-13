@@ -59,7 +59,7 @@ export default function Drafts() {
             onCardClick={() => openDraft(post.id)}
             action={
               <View className='press' onClick={() => removeDraft(post.id)}>
-                <Text className='text-xs' style={{ color: '#E4A9BE' }}>
+                <Text className='text-xs' style={{ color: 'var(--c-taro)' }}>
                   删除
                 </Text>
               </View>

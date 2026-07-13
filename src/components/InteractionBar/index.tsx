@@ -61,20 +61,20 @@ export default function InteractionBar({
     })
 
   return (
-    <View className='flex items-center py-4' style={{ borderTop: '1rpx solid #EFE8DE' }}>
+    <View className='flex items-center py-4' style={{ borderTop: '1rpx solid var(--c-card-soft)' }}>
       <View className={`press flex items-center mr-8 ${like.active ? '' : ''}`} onClick={onLike}>
-        <Text style={{ fontSize: '40rpx', color: like.active ? '#EF8A7F' : '#8A7F76' }}>
+        <Text style={{ fontSize: '40rpx', color: like.active ? 'var(--c-heart)' : 'var(--c-ink-sub)' }}>
           {like.active ? '♥' : '♡'}
         </Text>
-        <Text className='text-sm ml-2' style={{ color: like.active ? '#EF8A7F' : '#8A7F76' }}>
+        <Text className='text-sm ml-2' style={{ color: like.active ? 'var(--c-heart)' : 'var(--c-ink-sub)' }}>
           {like.count}
         </Text>
       </View>
       <View className='press flex items-center' onClick={onFavorite}>
-        <Text style={{ fontSize: '40rpx', color: favorited ? '#F0A868' : '#8A7F76' }}>
+        <Text style={{ fontSize: '40rpx', color: favorited ? 'var(--c-peach)' : 'var(--c-ink-sub)' }}>
           {favorited ? '★' : '☆'}
         </Text>
-        <Text className='text-sm ml-2' style={{ color: favorited ? '#F0A868' : '#8A7F76' }}>
+        <Text className='text-sm ml-2' style={{ color: favorited ? 'var(--c-peach)' : 'var(--c-ink-sub)' }}>
           收藏
         </Text>
       </View>

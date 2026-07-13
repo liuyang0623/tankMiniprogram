@@ -59,7 +59,7 @@ export default function CommentItem({ comment, depth = 0, onReply, onDeleted }: 
           {/* 操作行 */}
           <View className='flex items-center mt-2'>
             <View className='press mr-6' onClick={onLike}>
-              <Text className='text-xs' style={{ color: like.active ? '#EF8A7F' : '#8A7F76' }}>
+              <Text className='text-xs' style={{ color: like.active ? 'var(--c-heart)' : 'var(--c-ink-sub)' }}>
                 {like.active ? '♥' : '♡'} {like.count > 0 ? like.count : ''}
               </Text>
             </View>

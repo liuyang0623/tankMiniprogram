@@ -125,10 +125,10 @@ export default function Profile() {
               </View>
               <View
                 className='press bg-card rounded-pill px-4 py-2'
-                style={{ border: '1rpx solid #E4A9BE' }}
+                style={{ border: '1rpx solid var(--c-taro)' }}
                 onClick={() => setDrawerOpen(true)}
               >
-                <Text className='text-xs' style={{ color: '#E4A9BE' }}>设置</Text>
+                <Text className='text-xs' style={{ color: 'var(--c-taro)' }}>设置</Text>
               </View>
             </View>
           </View>
