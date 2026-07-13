@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { View, Text, Input, Textarea, Image, Button } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { usersApi, uploadApi } from '../../services/api'
+import { PageLayout } from '../../components'
 import { collectChanges } from '../../utils/profile'
 import { useAuthStore } from '../../store/auth'
 import { useUiStore } from '../../store/ui'
@@ -82,7 +83,8 @@ export default function ProfileEdit() {
   }
 
   return (
-    <View className='min-h-screen bg-bg px-6 pt-8'>
+    <PageLayout>
+      <View className='min-h-screen bg-bg px-6 pt-8'>
       {/* 头像：微信头像授权 */}
       <View className='flex flex-col items-center mb-8'>
         <Button className='avatar-btn' openType='chooseAvatar' onChooseAvatar={onChooseAvatar}>
@@ -147,5 +149,6 @@ export default function ProfileEdit() {
         <Text className='text-base text-card'>{saving ? '保存中…' : '保存'}</Text>
       </View>
     </View>
+    </PageLayout>
   )
 }

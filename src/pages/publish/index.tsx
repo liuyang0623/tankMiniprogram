@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { View, Text, Input } from '@tarojs/components'
 import Taro, { getCurrentInstance, useUnload } from '@tarojs/taro'
 import RichEditor, { RichEditorHandle } from '../../components/RichEditor'
+import { PageLayout } from '../../components'
 import { firstImage, parseTopics, extractImagesInOrder } from '../../utils/publish'
 import { postsApi } from '../../services/api'
 import { useAuthStore } from '../../store/auth'
@@ -160,7 +161,8 @@ export default function Publish() {
   }
 
   return (
-    <View className='min-h-screen bg-bg px-6 pt-6'>
+    <PageLayout>
+      <View className='min-h-screen bg-bg px-6 pt-6'>
       {/* 保存状态字 */}
       <View className='flex justify-end py-1'>
         <Text className='text-xs text-ink-sub'>
@@ -198,5 +200,6 @@ export default function Publish() {
         </Text>
       </View>
     </View>
+    </PageLayout>
   )
 }
