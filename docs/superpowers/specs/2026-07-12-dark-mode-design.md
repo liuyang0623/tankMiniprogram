@@ -2,6 +2,8 @@
 comet_change: dark-mode
 role: technical-design
 canonical_spec: openspec
+archived-with: 2026-07-13-dark-mode
+status: final
 ---
 
 # dark-mode 技术设计
@@ -144,3 +146,4 @@ export function resolveTheme(mode: Mode, systemTheme: Resolved): Resolved {
 ## 11. 非目标（YAGNI）
 
 不改 go-service；不做多主题/自定义主题；不做每页独立主题；富文本用户内容内联色不强制跟主题；不做主题切换过渡动画（即时切换）。
+
