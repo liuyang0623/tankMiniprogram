@@ -4,6 +4,7 @@ import Taro, { useRouter } from '@tarojs/taro'
 import { Avatar, Tag, DetailSkeleton, InteractionBar, CommentList, PageLayout } from '../../components'
 import { postsApi } from '../../services/api'
 import { extractImageUrls } from '../../utils/richtext'
+import { formatRelativeTime } from '../../utils/time'
 import { goUserProfile } from '../../utils/navigation'
 import type { Post } from '../../types/api'
 import './index.scss'
@@ -79,6 +80,11 @@ export default function Detail() {
                 <Avatar src={post.author?.avatar} size={64} />
                 <View className='ml-3'>
                   <Text className='text-sm text-ink'>{post.author?.name || '匿名'}</Text>
+                  <View className='mt-1'>
+                    <Text className='text-xs text-ink-sub'>
+                      {formatRelativeTime(post.publishedAt || post.createdAt)}
+                    </Text>
+                  </View>
                 </View>
               </View>
               <View className='ml-auto'>

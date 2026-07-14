@@ -1,0 +1,29 @@
+workflow: full
+language: zh-CN
+phase: archive
+context_compression: off
+build_mode: executing-plans
+build_pause: null
+subagent_dispatch: null
+tdd_mode: direct
+review_mode: standard
+isolation: branch
+verify_mode: null
+auto_transition: true
+base_ref: c20ce7cd75e010fc805daae411df64ad78b3479e
+design_doc: docs/superpowers/specs/2026-07-14-post-time-tabbar-icon-design.md
+plan: null
+verify_result: pass
+verification_report: docs/superpowers/reports/2026-07-14-post-time-tabbar-icon-verify.md
+branch_status: handled
+created_at: 2026-07-14
+verified_at: 2026-07-14
+archived: true
+direct_override: null
+build_command: npm run build:weapp
+verify_command: npx tsc --noEmit && npx vitest run && npm run build:weapp
+handoff_context: openspec/changes/post-time-tabbar-icon/.comet/handoff/design-context.json
+handoff_hash: 939ae0ade32616d0b8e498ee8d855340c0f3e7898d8ba7d74d3be99ed98519a2
+classic_profile: full
+classic_migration: 1
+run_id: d9b0721f-5495-4ddd-bc47-b3d3c228f118

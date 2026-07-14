@@ -24,9 +24,24 @@ export default defineAppConfig({
     backgroundColor: '#FFFFFF',
     borderStyle: 'white',
     list: [
-      { pagePath: 'pages/index/index', text: '首页' },
-      { pagePath: 'pages/messages/index', text: '消息' },
-      { pagePath: 'pages/profile/index', text: '我的' },
+      {
+        pagePath: 'pages/index/index',
+        text: '首页',
+        iconPath: 'assets/tabbar/home.png',
+        selectedIconPath: 'assets/tabbar/home-active.png',
+      },
+      {
+        pagePath: 'pages/messages/index',
+        text: '消息',
+        iconPath: 'assets/tabbar/message.png',
+        selectedIconPath: 'assets/tabbar/message-active.png',
+      },
+      {
+        pagePath: 'pages/profile/index',
+        text: '我的',
+        iconPath: 'assets/tabbar/profile.png',
+        selectedIconPath: 'assets/tabbar/profile-active.png',
+      },
     ],
   },
 })
