@@ -7,6 +7,7 @@ import { useAuthStore } from '../../store/auth'
 import { useUiStore } from '../../store/ui'
 import { nextToggleState } from '../../hooks/useOptimisticToggle'
 import { goUserProfile } from '../../utils/navigation'
+import { formatRelativeTime } from '../../utils/time'
 import type { Comment } from '../../types/api'
 
 export interface CommentItemProps {
@@ -65,21 +66,24 @@ export default function CommentItem({ comment, depth = 0, onReply, onDeleted }: 
           <View className='mt-1'>
             <Text className='text-sm text-ink'>{comment.content}</Text>
           </View>
-          {/* 操作行 */}
-          <View className='flex items-center mt-2'>
-            <View className='press mr-6' onClick={onLike}>
-              <Text className='text-xs' style={{ color: like.active ? 'var(--c-heart)' : 'var(--c-ink-sub)' }}>
-                {like.active ? '♥' : '♡'} {like.count > 0 ? like.count : ''}
-              </Text>
-            </View>
-            <View className='press mr-6' onClick={() => onReply(comment)}>
-              <Text className='text-xs text-ink-sub'>回复</Text>
-            </View>
-            {isMine && (
-              <View className='press' onClick={onDelete}>
-                <Text className='text-xs text-ink-sub'>删除</Text>
+          {/* 操作行：左侧时间，右侧点赞/回复/删除 */}
+          <View className='flex items-center justify-between mt-2'>
+            <Text className='text-xs text-ink-sub'>{formatRelativeTime(comment.createdAt || '')}</Text>
+            <View className='flex items-center'>
+              <View className='press ml-4' onClick={onLike}>
+                <Text className='text-xs' style={{ color: like.active ? 'var(--c-heart)' : 'var(--c-ink-sub)' }}>
+                  {like.active ? '♥' : '♡'} {like.count > 0 ? like.count : ''}
+                </Text>
               </View>
-            )}
+              <View className='press ml-4' onClick={() => onReply(comment)}>
+                <Text className='text-xs text-ink-sub'>回复</Text>
+              </View>
+              {isMine && (
+                <View className='press ml-4' onClick={onDelete}>
+                  <Text className='text-xs text-ink-sub'>删除</Text>
+                </View>
+              )}
+            </View>
           </View>
         </View>
       </View>

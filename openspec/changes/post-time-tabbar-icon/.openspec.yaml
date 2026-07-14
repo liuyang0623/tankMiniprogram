@@ -1,0 +1,7 @@
+schema: spec-driven
+created: 2026-07-14
+proposal: proposal.md
+design: design.md
+specs:
+  - relative-time-display
+  - tabbar-icons
