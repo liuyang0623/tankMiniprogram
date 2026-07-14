@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { View, Text, ScrollView } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
-import { Avatar, PostCard, SkeletonList, SettingsDrawer, PageLayout } from '../../components'
+import { Avatar, PostCard, SkeletonList, SettingsDrawer, PageLayout, Iconfont } from '../../components'
 import { usePagedList } from '../../hooks/usePagedList'
 import { postsApi, interactionsApi, usersApi } from '../../services/api'
 import { unwrapFavorites } from '../../utils/favorites'
@@ -126,28 +126,28 @@ export default function Profile() {
       <View className='px-6 pt-16 pb-8'>
         {/* 资料卡 */}
         {isLogin ? (
-          <View className='anim-in bg-card rounded-card shadow-soft p-6 mb-6'>
+          <View className='anim-in bg-card rounded-card shadow-soft p-6 mb-6 relative'>
+            {/* 编辑/设置图标：卡片右上角 */}
+            <View className='absolute flex items-center' style={{ top: '24rpx', right: '24rpx' }}>
+              <View
+                className='press flex items-center justify-center mr-3'
+                onClick={() => Taro.navigateTo({ url: '/pages/profile-edit/index' })}
+              >
+                <Iconfont name='bianji' size={26} color='#f0a868' />
+              </View>
+              <View
+                className='press flex items-center justify-center'
+                onClick={() => setDrawerOpen(true)}
+              >
+                <Iconfont name='quanjushezhi' size={26} color='#f0a868' />
+              </View>
+            </View>
             <View className='flex items-center'>
               <Avatar src={profile?.avatar} size={112} />
-              <View className='ml-4 flex-1'>
+              <View className='ml-4 flex-1' style={{ paddingRight: '120rpx' }}>
                 <Text className='text-lg text-ink font-bold'>{profile?.nickname || '摆烂er'}</Text>
                 <View className='mt-1'>
                   <Text className='text-sm text-ink-sub'>{profile?.bio || '这个人很懒，什么都没写～'}</Text>
-                </View>
-              </View>
-              <View className='flex flex-col items-end'>
-                <View
-                  className='press bg-peach rounded-pill px-4 py-2 mb-2'
-                  onClick={() => Taro.navigateTo({ url: '/pages/profile-edit/index' })}
-                >
-                  <Text className='text-xs text-card'>编辑</Text>
-                </View>
-                <View
-                  className='press bg-card rounded-pill px-4 py-2'
-                  style={{ border: '1rpx solid var(--c-taro)' }}
-                  onClick={() => setDrawerOpen(true)}
-                >
-                  <Text className='text-xs' style={{ color: 'var(--c-taro)' }}>设置</Text>
                 </View>
               </View>
             </View>

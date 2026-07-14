@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { View, Text, Input } from '@tarojs/components'
 import Taro, { getCurrentInstance, useUnload } from '@tarojs/taro'
 import RichEditor, { RichEditorHandle } from '../../components/RichEditor'
-import { PageLayout } from '../../components'
+import { PageLayout, CategoryPicker } from '../../components'
 import { firstImage, parseTopics, extractImagesInOrder } from '../../utils/publish'
 import { postsApi } from '../../services/api'
 import { useAuthStore } from '../../store/auth'
@@ -17,6 +17,7 @@ export default function Publish() {
   const editorRef = useRef<RichEditorHandle>(null)
   const [title, setTitle] = useState('')
   const [topicInput, setTopicInput] = useState('')
+  const [category, setCategory] = useState('')
   const [submitting, setSubmitting] = useState(false)
   // 编辑态：url ?id= 存在
   const idParam = getCurrentInstance().router?.params?.id
@@ -56,6 +57,7 @@ export default function Publish() {
       .then((p) => {
         setTitle(p.title || '')
         origStatusRef.current = p.status
+        setCategory(p.category || '')
         setTopicInput((p.topics || []).map((t) => `#${t.name}`).join(' '))
         // 编辑器 ready 后回填（延迟确保 ctx 就绪），回填完成才解除 gate
         setTimeout(() => {
@@ -118,9 +120,9 @@ export default function Publish() {
       if (targetId) {
         // 已发布不传 status 保持 PUBLISHED；草稿更新后再发布
         if (origStatusRef.current === 'PUBLISHED') {
-          await postsApi.update(targetId, { title, content: html, cover, images, topics })
+          await postsApi.update(targetId, { title, content: html, cover, images, topics, category })
         } else {
-          await postsApi.update(targetId, { title, content: html, cover, images, topics })
+          await postsApi.update(targetId, { title, content: html, cover, images, topics, category })
           await postsApi.publish(targetId)
         }
         showToast(editingId ? '已保存' : '发布成功', 'success')
@@ -133,6 +135,7 @@ export default function Publish() {
           cover,
           images,
           topics,
+          category,
           status: 'PUBLISHED',
         })
         showToast('发布成功', 'success')
@@ -182,6 +185,7 @@ export default function Publish() {
         onInput={(e) => setTitle(e.detail.value)}
       />
       <RichEditor ref={editorRef} onInput={onEditorInput} />
+      <CategoryPicker value={category} onChange={setCategory} />
       <View className='mt-4'>
         <Text className='text-xs text-ink-sub'>话题（用 #话题 形式，空格分隔）</Text>
         <Input

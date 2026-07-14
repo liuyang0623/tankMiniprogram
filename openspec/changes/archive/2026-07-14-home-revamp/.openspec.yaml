@@ -1,0 +1,7 @@
+schema: spec-driven
+created: 2026-07-14
+proposal: proposal.md
+design: design.md
+specs:
+  - home-content-hub
+  - post-category-ui

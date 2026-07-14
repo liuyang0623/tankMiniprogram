@@ -1,0 +1,29 @@
+workflow: full
+language: zh-CN
+phase: archive
+context_compression: off
+build_mode: executing-plans
+build_pause: null
+subagent_dispatch: null
+tdd_mode: direct
+review_mode: standard
+isolation: branch
+verify_mode: full
+auto_transition: true
+base_ref: a445046bcae6ae91dd66e0fbe5fdf05c5e63d0fc
+design_doc: docs/superpowers/specs/2026-07-14-home-revamp-design.md
+plan: null
+verify_result: pass
+verification_report: docs/superpowers/reports/2026-07-14-home-revamp-verify.md
+branch_status: handled
+created_at: 2026-07-14
+verified_at: 2026-07-14
+archived: true
+direct_override: null
+build_command: npm run build:weapp
+verify_command: npx tsc --noEmit && npm run build:weapp
+handoff_context: openspec/changes/home-revamp/.comet/handoff/design-context.json
+handoff_hash: 98ae4d061eb557388b5a9408d7471de039ed17021d8386d1c7f0c2ff129d1a73
+classic_profile: full
+classic_migration: 1
+run_id: e5fd977b-89ba-4d76-ab2a-4fba73dc8b37
