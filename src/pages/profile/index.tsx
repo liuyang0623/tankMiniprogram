@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback, useRef } from 'react'
 import { View, Text, ScrollView } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
-import { Avatar, PostCard, SkeletonList, SettingsDrawer, PageLayout } from '../../components'
+import { Avatar, PostCard, SkeletonList, SettingsDrawer, PageLayout, Iconfont } from '../../components'
 import { usePagedList } from '../../hooks/usePagedList'
 import { postsApi, interactionsApi, usersApi } from '../../services/api'
 import { unwrapFavorites } from '../../utils/favorites'
@@ -135,19 +135,18 @@ export default function Profile() {
                   <Text className='text-sm text-ink-sub'>{profile?.bio || '这个人很懒，什么都没写～'}</Text>
                 </View>
               </View>
-              <View className='flex flex-col items-end'>
+              <View className='flex items-center'>
                 <View
-                  className='press bg-peach rounded-pill px-4 py-2 mb-2'
+                  className='press w-8 h-8 rounded-full bg-card flex items-center justify-center mr-2'
                   onClick={() => Taro.navigateTo({ url: '/pages/profile-edit/index' })}
                 >
-                  <Text className='text-xs text-card'>编辑</Text>
+                  <Iconfont name='bianji' size={18} color='#f0a868' />
                 </View>
                 <View
-                  className='press bg-card rounded-pill px-4 py-2'
-                  style={{ border: '1rpx solid var(--c-taro)' }}
+                  className='press w-8 h-8 rounded-full bg-card flex items-center justify-center'
                   onClick={() => setDrawerOpen(true)}
                 >
-                  <Text className='text-xs' style={{ color: 'var(--c-taro)' }}>设置</Text>
+                  <Iconfont name='quanjushezhi' size={18} color='#f0a868' />
                 </View>
               </View>
             </View>

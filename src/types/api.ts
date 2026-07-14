@@ -64,6 +64,7 @@ export interface Post {
   content: string
   cover?: string
   status: PostStatus
+  category?: string
   authorId: number
   author: PostAuthor
   viewCount: number
@@ -77,6 +78,12 @@ export interface Post {
   createdAt: string
   updatedAt: string
   publishedAt?: string
+}
+
+/** 固定分类项（GET /categories 返回） */
+export interface CategoryInfo {
+  value: string
+  label: string
 }
 
 export interface Comment {
