@@ -2,6 +2,8 @@
 comet_change: home-revamp
 role: technical-design
 canonical_spec: openspec
+archived-with: 2026-07-14-home-revamp
+status: final
 ---
 
 # 首页改版 + 发布分类 + 个人中心图标化 Design Doc
@@ -143,3 +145,4 @@ if opts.Category == "none" {
 - "其他"= category 空，依赖后端 category=none 修订
 - weapp svg base64 兼容性 build 时验证
 - 清理无用的 taro-iconfont-cli 依赖
+

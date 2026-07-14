@@ -1,6 +1,6 @@
 workflow: full
 language: zh-CN
-phase: verify
+phase: archive
 context_compression: off
 build_mode: executing-plans
 build_pause: null
@@ -17,8 +17,8 @@ verify_result: pass
 verification_report: docs/superpowers/reports/2026-07-14-home-revamp-verify.md
 branch_status: handled
 created_at: 2026-07-14
-verified_at: null
-archived: false
+verified_at: 2026-07-14
+archived: true
 direct_override: null
 build_command: npm run build:weapp
 verify_command: npx tsc --noEmit && npm run build:weapp
