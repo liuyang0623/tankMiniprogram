@@ -2,6 +2,8 @@
 comet_change: post-time-tabbar-icon
 role: technical-design
 canonical_spec: openspec
+archived-with: 2026-07-14-post-time-tabbar-icon
+status: final
 ---
 
 # TabBar 图标 + 相对时间显示 Design Doc
@@ -109,3 +111,4 @@ list: [
 - 时间字段空值：详情用 publishedAt||createdAt 兜底
 - 不改后端、不改 messages 时间格式、不显示文章卡片时间
 - assets 路径需确认 Taro weapp 编译能正确打包（build 时验证）
+
