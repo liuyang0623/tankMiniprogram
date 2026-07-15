@@ -1,21 +1,3 @@
-.diary-header {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 20px 24px;
-  gap: 8px;
-  background: var(--c-bg);
-  border-bottom: 1px solid var(--c-shadow);
-}
-.diary-header__name {
-  color: var(--c-ink);
-  font-size: 34px;
-  font-weight: 600;
-}
-.diary-header__arrow {
-  color: var(--c-ink-sub);
-  font-size: 24px;
-}
 .diary-page {
   height: 100vh;
   display: flex;

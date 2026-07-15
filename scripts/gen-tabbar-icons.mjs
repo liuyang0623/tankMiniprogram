@@ -19,7 +19,7 @@ const root = path.resolve(__dirname, '..')
 // tabBar 图标：iconfont name → 输出文件名
 const TABBAR_ICONS = [
   { icon: 'shouye', out: 'home' },
-  { icon: 'linggan', out: 'diary' }, // 日记 tab（灵感图标，iconfont 加专属图标后可替换）
+  { icon: 'shu_o', out: 'diary' }, // 日记 tab（书本图标）
   { icon: 'xiaoxi_o', out: 'message' },
   { icon: 'gerentouxiang_o', out: 'profile' },
 ]

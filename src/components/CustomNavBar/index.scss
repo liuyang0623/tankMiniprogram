@@ -1,0 +1,28 @@
+.custom-nav {
+  width: 100%;
+  background: var(--c-bg);
+  box-sizing: border-box;
+}
+.custom-nav__bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+.custom-nav__title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+}
+.custom-nav__name {
+  color: var(--c-ink);
+  font-size: 32px;
+  font-weight: 600;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.custom-nav__arrow {
+  flex-shrink: 0;
+}

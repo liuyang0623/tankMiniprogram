@@ -1,7 +1,7 @@
 import { useState, useCallback, useRef } from 'react'
 import { View, Text, Swiper, SwiperItem } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
-import { NotebookDrawer, DiaryCard, PageLayout } from '../../components'
+import { NotebookDrawer, DiaryCard, PageLayout, CustomNavBar } from '../../components'
 import { notebookApi, diaryApi } from '../../services/api'
 import { useAuthStore } from '../../store/auth'
 import { useUiStore } from '../../store/ui'
@@ -107,10 +107,11 @@ export default function DiaryIndex() {
   return (
     <PageLayout>
       <View className='diary-page'>
-        <View className='diary-header' onClick={() => setDrawerOpen(true)}>
-          <Text className='diary-header__name'>{activeNotebook?.name ?? '我的日记本'}</Text>
-          <Text className='diary-header__arrow'>▼</Text>
-        </View>
+        <CustomNavBar
+          title={activeNotebook?.name ?? '我的日记本'}
+          arrowOpen={drawerOpen}
+          onTitleTap={() => setDrawerOpen(true)}
+        />
 
       <NotebookDrawer
         open={drawerOpen}
