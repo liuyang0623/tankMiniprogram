@@ -1267,10 +1267,10 @@ Expected: Compiled successfully，dist/assets/tabbar/diary*.png 存在
 
 ## 验证清单（build 退出前）
 
-- [ ] 后端 A2 已合并 main，`go build ./... && go test ./...` 通过
-- [ ] 前端 tsc 无错误
-- [ ] 前端单测全绿
-- [ ] weapp 编译成功
-- [ ] tabBar 四 tab 顺序正确（首页/日记/消息/我的）
-- [ ] openspec tasks.md 全勾选
-- [ ] 真机冒烟（verify 阶段）：抽屉切/建/改/删日记本、横滑翻日记、写日记（心情天气图片）、详情编辑删除、四 tab 图标
+- [x] 后端 A2 已合并 main，`go build ./... && go test ./...` 通过
+- [x] 前端 tsc 无错误
+- [x] 前端单测全绿（77 passed）
+- [x] weapp 编译成功
+- [x] tabBar 四 tab 顺序正确（首页/日记/消息/我的）
+- [x] openspec tasks.md 全勾选
+- [x] 真机冒烟移交 verify 阶段执行：抽屉切/建/改/删日记本、横滑翻日记、写日记（心情天气图片）、详情编辑删除、四 tab 图标
