@@ -1,6 +1,7 @@
-import { View, Text } from '@tarojs/components'
+import { View, Text, Image } from '@tarojs/components'
 import { moodEmoji, weatherEmoji } from '../../types/diary'
 import { formatRelativeTime } from '../../utils/time'
+import { decorFor } from '../../assets/diary-decor'
 import type { DiaryListItem } from '../../types/diary'
 import './index.scss'
 
@@ -18,6 +19,9 @@ export default function DiaryCard({ diary, notebookColor, onTap }: Props) {
   return (
     <View className='diary-card' onClick={onTap}>
       <View className={`diary-card__bg ${hasCover ? '' : 'diary-card__bg--solid'}`} style={bg}>
+        {!hasCover ? (
+          <Image className='diary-card__decor' src={decorFor(diary.id)} mode='aspectFit' />
+        ) : null}
         <View className='diary-card__mask'>
           <View className='diary-card__meta'>
             {diary.mood ? <Text className='diary-card__emoji'>{moodEmoji(diary.mood)}</Text> : null}
