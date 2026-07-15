@@ -106,10 +106,11 @@ export default function DiaryIndex() {
 
   return (
     <PageLayout>
-      <View className='diary-header' onClick={() => setDrawerOpen(true)}>
-        <Text className='diary-header__name'>{activeNotebook?.name ?? '我的日记本'}</Text>
-        <Text className='diary-header__arrow'>▼</Text>
-      </View>
+      <View className='diary-page'>
+        <View className='diary-header' onClick={() => setDrawerOpen(true)}>
+          <Text className='diary-header__name'>{activeNotebook?.name ?? '我的日记本'}</Text>
+          <Text className='diary-header__arrow'>▼</Text>
+        </View>
 
       <NotebookDrawer
         open={drawerOpen}
@@ -143,6 +144,7 @@ export default function DiaryIndex() {
 
       <View className='diary-fab' onClick={onWrite}>
         <Text className='diary-fab__plus'>＋</Text>
+      </View>
       </View>
     </PageLayout>
   )
