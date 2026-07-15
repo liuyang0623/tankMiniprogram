@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useRef } from 'react'
 import { View, Text, Swiper, SwiperItem } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
 import { NotebookDrawer, DiaryCard, PageLayout } from '../../components'
@@ -11,6 +11,7 @@ import './index.scss'
 export default function DiaryIndex() {
   const [notebooks, setNotebooks] = useState<Notebook[]>([])
   const [activeNb, setActiveNb] = useState<number>()
+  const activeNbRef = useRef<number>()
   const [diaries, setDiaries] = useState<DiaryListItem[]>([])
   const [drawerOpen, setDrawerOpen] = useState(false)
   const showToast = useUiStore((s) => s.showToast)
@@ -29,12 +30,14 @@ export default function DiaryIndex() {
     try {
       const nbs = await notebookApi.list()
       setNotebooks(nbs)
-      const first = nbs[0]?.id
-      setActiveNb((prev) => {
-        const keep = prev && nbs.some((n) => n.id === prev) ? prev : first
-        if (keep) loadDiaries(keep)
-        return keep
-      })
+      // 保持当前选中；已失效或首次进入则回落到第一个本
+      const prev = activeNbRef.current
+      const keep = prev && nbs.some((n) => n.id === prev) ? prev : nbs[0]?.id
+      if (keep) {
+        setActiveNb(keep)
+        activeNbRef.current = keep
+        loadDiaries(keep)
+      }
     } catch {
       // 未登录或网络失败，忽略
     }
@@ -48,6 +51,7 @@ export default function DiaryIndex() {
 
   const onSelectNb = (id: number) => {
     setActiveNb(id)
+    activeNbRef.current = id
     setDrawerOpen(false)
     loadDiaries(id)
   }
@@ -56,10 +60,14 @@ export default function DiaryIndex() {
     const res = await Taro.showModal({ title: '新建日记本', editable: true, placeholderText: '日记本名称' } as any)
     const content = (res as any).content as string | undefined
     if (res.confirm && content) {
-      const nb = await notebookApi.create({ name: content, color: '#f0a868' })
-      setDrawerOpen(false)
-      await loadNotebooks()
-      onSelectNb(nb.id)
+      try {
+        const nb = await notebookApi.create({ name: content, color: '#f0a868' })
+        setDrawerOpen(false)
+        await loadNotebooks()
+        onSelectNb(nb.id)
+      } catch {
+        showToast('新建失败，请重试', 'error')
+      }
     }
   }
 
@@ -71,15 +79,23 @@ export default function DiaryIndex() {
       const r = await Taro.showModal({ title: '改名', editable: true, content: activeNotebook.name } as any)
       const content = (r as any).content as string | undefined
       if (r.confirm && content) {
-        await notebookApi.update(activeNotebook.id, { name: content })
-        loadNotebooks()
+        try {
+          await notebookApi.update(activeNotebook.id, { name: content })
+          loadNotebooks()
+        } catch {
+          showToast('改名失败，请重试', 'error')
+        }
       }
     } else if (res.tapIndex === 1) {
       const r = await Taro.showModal({ title: '删除日记本', content: '删除后本内日记将移出该本，确认？' })
       if (r.confirm) {
-        await notebookApi.remove(activeNotebook.id)
-        showToast('已删除')
-        loadNotebooks()
+        try {
+          await notebookApi.remove(activeNotebook.id)
+          showToast('已删除')
+          loadNotebooks()
+        } catch {
+          showToast('删除失败，请重试', 'error')
+        }
       }
     }
   }
