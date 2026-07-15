@@ -128,7 +128,7 @@ export default function DiaryIndex() {
       ) : (
         <Swiper className='diary-swiper' circular={false} previousMargin='24px' nextMargin='24px'>
           {diaries.map((d) => (
-            <SwiperItem key={d.id}>
+            <SwiperItem key={d.id} className='diary-swiper-item'>
               <DiaryCard
                 diary={d}
                 notebookColor={activeNotebook?.color ?? '#f0a868'}
