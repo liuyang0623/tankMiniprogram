@@ -1,0 +1,35 @@
+.mw-picker {
+  padding: 16px 0;
+}
+.mw-row {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.mw-label {
+  width: 64px;
+  color: var(--c-ink-sub);
+  font-size: 28px;
+}
+.mw-opts {
+  display: flex;
+  flex: 1;
+  gap: 12px;
+}
+.mw-opt {
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--c-card-soft);
+  border: 2px solid transparent;
+}
+.mw-opt--active {
+  border-color: var(--c-peach);
+  background: rgba(240, 168, 104, 0.12);
+}
+.mw-emoji {
+  font-size: 36px;
+}
