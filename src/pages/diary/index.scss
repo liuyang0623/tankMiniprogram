@@ -2,8 +2,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 24px;
+  padding: 20px 24px;
   gap: 8px;
+  background: var(--c-bg);
+  border-bottom: 1px solid var(--c-shadow);
 }
 .diary-header__name {
   color: var(--c-ink);
