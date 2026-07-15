@@ -121,23 +121,25 @@ export default function DiaryIndex() {
         onClose={() => setDrawerOpen(false)}
       />
 
-      {diaries.length === 0 ? (
-        <View className='diary-empty'>
-          <Text className='diary-empty__text'>这个本子还没有日记，写第一篇吧</Text>
-        </View>
-      ) : (
-        <Swiper className='diary-swiper' circular={false} previousMargin='24px' nextMargin='24px'>
-          {diaries.map((d) => (
-            <SwiperItem key={d.id} className='diary-swiper-item'>
-              <DiaryCard
-                diary={d}
-                notebookColor={activeNotebook?.color ?? '#f0a868'}
-                onTap={() => Taro.navigateTo({ url: `/pages/diary/detail?id=${d.id}` })}
-              />
-            </SwiperItem>
-          ))}
-        </Swiper>
-      )}
+      <View className='diary-body'>
+        {diaries.length === 0 ? (
+          <View className='diary-empty'>
+            <Text className='diary-empty__text'>这个本子还没有日记，写第一篇吧</Text>
+          </View>
+        ) : (
+          <Swiper className='diary-swiper' circular={false} previousMargin='24px' nextMargin='24px'>
+            {diaries.map((d) => (
+              <SwiperItem key={d.id}>
+                <DiaryCard
+                  diary={d}
+                  notebookColor={activeNotebook?.color ?? '#f0a868'}
+                  onTap={() => Taro.navigateTo({ url: `/pages/diary/detail?id=${d.id}` })}
+                />
+              </SwiperItem>
+            ))}
+          </Swiper>
+        )}
+      </View>
 
       <View className='diary-fab' onClick={onWrite}>
         <Text className='diary-fab__plus'>＋</Text>

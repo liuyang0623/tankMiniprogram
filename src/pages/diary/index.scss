@@ -16,20 +16,19 @@
   color: var(--c-ink-sub);
   font-size: 24px;
 }
+.diary-body {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
 .diary-swiper {
   height: 60vh;
-}
-.diary-swiper-item {
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 .diary-empty {
   display: flex;
   align-items: center;
   justify-content: center;
-  height: 60vh;
 }
 .diary-empty__text {
   color: var(--c-ink-sub);
