@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { View, Text, RichText, ScrollView, Image } from '@tarojs/components'
+import { View, Text, RichText, ScrollView } from '@tarojs/components'
 import Taro, { useRouter, useDidShow } from '@tarojs/taro'
 import { PageLayout } from '../../components'
 import { diaryApi } from '../../services/api'
@@ -74,9 +74,6 @@ export default function DiaryDetail() {
 
           {state === 'success' && diary && (
             <View className='anim-in'>
-              {diary.cover ? (
-                <Image className='w-full rounded-card mb-4' mode='widthFix' src={diary.cover} />
-              ) : null}
               <Text className='text-2xl text-ink font-bold'>{diary.title || '无标题'}</Text>
               <View className='flex items-center mt-3 mb-4'>
                 {diary.mood ? <Text className='text-lg mr-2'>{moodEmoji(diary.mood)}</Text> : null}
