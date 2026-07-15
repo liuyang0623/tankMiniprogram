@@ -3,6 +3,8 @@ comet_change: diary-frontend
 role: technical-design
 canonical_spec: openspec
 status: final
+archived-with: 2026-07-15-diary-frontend
+status: final
 ---
 
 # 日记前端（Moo 风格）Design Doc
@@ -162,3 +164,4 @@ export const diaryApi = {
 - 大图卡无封面用 color 兜底
 - 分页/统计/密码锁/导出留第二期
 - weapp Swiper 大图性能 build 时验证
+
