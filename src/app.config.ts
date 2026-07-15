@@ -10,6 +10,9 @@ export default defineAppConfig({
     'pages/user-profile/index',
     'pages/follow-list/index',
     'pages/chat/index',
+    'pages/diary/index',
+    'pages/diary/edit',
+    'pages/diary/detail',
   ],
   window: {
     backgroundTextStyle: 'dark',
@@ -29,6 +32,12 @@ export default defineAppConfig({
         text: '首页',
         iconPath: 'assets/tabbar/home.png',
         selectedIconPath: 'assets/tabbar/home-active.png',
+      },
+      {
+        pagePath: 'pages/diary/index',
+        text: '日记',
+        iconPath: 'assets/tabbar/diary.png',
+        selectedIconPath: 'assets/tabbar/diary-active.png',
       },
       {
         pagePath: 'pages/messages/index',
