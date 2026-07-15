@@ -1,0 +1,61 @@
+.nb-drawer {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+}
+.nb-drawer__mask {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+}
+.nb-drawer__panel {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  background: var(--c-card);
+  border-radius: 0 0 28px 28px;
+  padding: 24px;
+  box-shadow: 0 8px 24px var(--c-shadow);
+}
+.nb-item {
+  display: flex;
+  align-items: center;
+  padding: 20px 12px;
+  border-radius: 16px;
+}
+.nb-item--active {
+  background: rgba(240, 168, 104, 0.1);
+}
+.nb-item__dot {
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  margin-right: 16px;
+}
+.nb-item__name {
+  flex: 1;
+  color: var(--c-ink);
+  font-size: 30px;
+}
+.nb-item__count {
+  color: var(--c-ink-sub);
+  font-size: 24px;
+  margin-right: 12px;
+}
+.nb-item__check {
+  color: var(--c-peach);
+  font-size: 30px;
+}
+.nb-divider {
+  height: 1px;
+  background: var(--c-shadow);
+  margin: 12px 0;
+}
+.nb-action {
+  padding: 18px 12px;
+}
+.nb-action__text {
+  color: var(--c-peach);
+  font-size: 28px;
+}
