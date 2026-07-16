@@ -180,7 +180,23 @@ export default function Profile() {
           )}
         </View>
 
-        {/* Tab + 列表：占满剩余高度，可滚动 */}
+        {/* Tab 切换：固定，不随列表滚动 */}
+        {isLogin && (
+          <View className='px-6 pb-3 flex'>
+            <View className='press mr-6' onClick={() => setTab('posts')}>
+              <Text className={tab === 'posts' ? 'text-base text-ink font-bold' : 'text-base text-ink-sub'}>
+                我的帖子
+              </Text>
+            </View>
+            <View className='press' onClick={() => setTab('favorites')}>
+              <Text className={tab === 'favorites' ? 'text-base text-ink font-bold' : 'text-base text-ink-sub'}>
+                我的收藏
+              </Text>
+            </View>
+          </View>
+        )}
+
+        {/* 列表：占满剩余高度，可滚动 */}
         {isLogin && (
           <ScrollView
             scrollY
@@ -191,19 +207,6 @@ export default function Profile() {
             lowerThreshold={80}
           >
             <View className='px-6 pb-8'>
-              <View className='flex mb-4'>
-                <View className='press mr-6' onClick={() => setTab('posts')}>
-                  <Text className={tab === 'posts' ? 'text-base text-ink font-bold' : 'text-base text-ink-sub'}>
-                    我的帖子
-                  </Text>
-                </View>
-                <View className='press' onClick={() => setTab('favorites')}>
-                  <Text className={tab === 'favorites' ? 'text-base text-ink font-bold' : 'text-base text-ink-sub'}>
-                    我的收藏
-                  </Text>
-                </View>
-              </View>
-
               {/* 列表 */}
               {active.loading && active.list.length === 0 && <SkeletonList count={3} />}
               {!active.loading && active.list.length === 0 && (
