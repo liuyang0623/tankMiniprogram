@@ -2,6 +2,7 @@ import { View, Text } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { logout } from '../../services/auth'
 import { useThemeStore } from '../../store/theme'
+import Iconfont from '../Iconfont'
 import type { Mode } from '../../utils/theme'
 
 export interface SettingsDrawerProps {
@@ -75,12 +76,12 @@ export default function SettingsDrawer({ open, onClose, onLoggedOut }: SettingsD
           zIndex: 101,
         }}
       >
-        <View className='px-6 pt-16 pb-8 flex flex-col' style={{ height: '100%' }}>
+        <View className='px-6 pt-8 pb-8 flex flex-col' style={{ height: '100%' }}>
           {/* 顶部标题 + 关闭 */}
           <View className='flex items-center justify-between mb-8'>
             <Text className='text-lg text-ink font-bold'>设置</Text>
-            <View className='press' onClick={onClose}>
-              <Text className='text-sm text-ink-sub'>关闭</Text>
+            <View className='press flex items-center justify-center' onClick={onClose}>
+              <Iconfont name='guanbi_o' size={22} color='#8a7f76' />
             </View>
           </View>
 

@@ -115,118 +115,120 @@ export default function Profile() {
 
   return (
     <PageLayout>
-      <ScrollView
-        scrollY
-        className='bg-bg'
-        style={{ height: '100vh' }}
-        scrollTop={scrollTop}
-        onScrollToLower={onScrollToLower}
-        lowerThreshold={80}
-      >
-      <View className='px-6 pt-16 pb-8'>
-        {/* 资料卡 */}
-        {isLogin ? (
-          <View className='anim-in bg-card rounded-card shadow-soft p-6 mb-6 relative'>
-            {/* 编辑/设置图标：卡片右上角 */}
-            <View className='absolute flex items-center' style={{ top: '24rpx', right: '24rpx' }}>
-              <View
-                className='press flex items-center justify-center mr-3'
-                onClick={() => Taro.navigateTo({ url: '/pages/profile-edit/index' })}
-              >
-                <Iconfont name='bianji' size={26} color='#f0a868' />
+      <View className='bg-bg flex flex-col' style={{ height: '100vh' }}>
+        {/* 资料卡：固定顶端，不随列表滚动，去卡片样式 */}
+        <View className='px-6 pt-16 pb-6'>
+          {isLogin ? (
+            <View className='anim-in relative'>
+              {/* 编辑/设置图标：右上角 */}
+              <View className='absolute flex items-center' style={{ top: '0', right: '0' }}>
+                <View
+                  className='press flex items-center justify-center mr-3'
+                  onClick={() => Taro.navigateTo({ url: '/pages/profile-edit/index' })}
+                >
+                  <Iconfont name='bianji' size={26} color='#f0a868' />
+                </View>
+                <View
+                  className='press flex items-center justify-center'
+                  onClick={() => setDrawerOpen(true)}
+                >
+                  <Iconfont name='quanjushezhi' size={26} color='#f0a868' />
+                </View>
               </View>
-              <View
-                className='press flex items-center justify-center'
-                onClick={() => setDrawerOpen(true)}
-              >
-                <Iconfont name='quanjushezhi' size={26} color='#f0a868' />
+              <View className='flex items-center'>
+                <Avatar src={profile?.avatar} size={112} />
+                <View className='ml-4 flex-1' style={{ paddingRight: '120rpx' }}>
+                  <Text className='text-lg text-ink font-bold'>{profile?.nickname || '摆烂er'}</Text>
+                  <View className='mt-1'>
+                    <Text className='text-sm text-ink-sub'>{profile?.bio || '这个人很懒，什么都没写～'}</Text>
+                  </View>
+                </View>
               </View>
-            </View>
-            <View className='flex items-center'>
-              <Avatar src={profile?.avatar} size={112} />
-              <View className='ml-4 flex-1' style={{ paddingRight: '120rpx' }}>
-                <Text className='text-lg text-ink font-bold'>{profile?.nickname || '摆烂er'}</Text>
-                <View className='mt-1'>
-                  <Text className='text-sm text-ink-sub'>{profile?.bio || '这个人很懒，什么都没写～'}</Text>
+              {/* 关注 / 粉丝计数 */}
+              <View className='flex mt-5'>
+                <View
+                  className='press flex items-baseline mr-8'
+                  onClick={() =>
+                    selfId != null &&
+                    Taro.navigateTo({ url: `/pages/follow-list/index?userId=${selfId}&type=following` })
+                  }
+                >
+                  <Text className='text-base text-ink font-bold'>{myCounts?.followingCount ?? 0}</Text>
+                  <Text className='text-xs text-ink-sub ml-1'>关注</Text>
+                </View>
+                <View
+                  className='press flex items-baseline'
+                  onClick={() =>
+                    selfId != null &&
+                    Taro.navigateTo({ url: `/pages/follow-list/index?userId=${selfId}&type=followers` })
+                  }
+                >
+                  <Text className='text-base text-ink font-bold'>{myCounts?.followerCount ?? 0}</Text>
+                  <Text className='text-xs text-ink-sub ml-1'>粉丝</Text>
                 </View>
               </View>
             </View>
-            {/* 关注 / 粉丝计数 */}
-            <View className='flex mt-5'>
-              <View
-                className='press flex items-baseline mr-8'
-                onClick={() =>
-                  selfId != null &&
-                  Taro.navigateTo({ url: `/pages/follow-list/index?userId=${selfId}&type=following` })
-                }
-              >
-                <Text className='text-base text-ink font-bold'>{myCounts?.followingCount ?? 0}</Text>
-                <Text className='text-xs text-ink-sub ml-1'>关注</Text>
+          ) : (
+            <View className='anim-in flex flex-col items-center'>
+              <View className='py-4'>
+                <Text className='text-sm text-ink-sub'>登录后查看你的个人空间</Text>
               </View>
-              <View
-                className='press flex items-baseline'
-                onClick={() =>
-                  selfId != null &&
-                  Taro.navigateTo({ url: `/pages/follow-list/index?userId=${selfId}&type=followers` })
-                }
-              >
-                <Text className='text-base text-ink font-bold'>{myCounts?.followerCount ?? 0}</Text>
-                <Text className='text-xs text-ink-sub ml-1'>粉丝</Text>
+              <View className='press bg-peach rounded-pill px-8 py-2' onClick={onLogin}>
+                <Text className='text-sm text-card'>微信登录</Text>
               </View>
             </View>
-          </View>
-        ) : (
-          <View className='anim-in bg-card rounded-card shadow-soft p-6 flex flex-col items-center mb-6'>
-            <View className='py-4'>
-              <Text className='text-sm text-ink-sub'>登录后查看你的个人空间</Text>
-            </View>
-            <View className='press bg-peach rounded-pill px-8 py-2' onClick={onLogin}>
-              <Text className='text-sm text-card'>微信登录</Text>
-            </View>
-          </View>
-        )}
+          )}
+        </View>
 
-        {/* Tab */}
+        {/* Tab + 列表：占满剩余高度，可滚动 */}
         {isLogin && (
-          <>
-            <View className='flex mb-4'>
-              <View className='press mr-6' onClick={() => setTab('posts')}>
-                <Text className={tab === 'posts' ? 'text-base text-ink font-bold' : 'text-base text-ink-sub'}>
-                  我的帖子
-                </Text>
-              </View>
-              <View className='press' onClick={() => setTab('favorites')}>
-                <Text className={tab === 'favorites' ? 'text-base text-ink font-bold' : 'text-base text-ink-sub'}>
-                  我的收藏
-                </Text>
-              </View>
-            </View>
-
-            {/* 列表 */}
-            {active.loading && active.list.length === 0 && <SkeletonList count={3} />}
-            {!active.loading && active.list.length === 0 && (
-              <View className='bg-card rounded-card shadow-soft p-6 flex flex-col items-center'>
-                <View className='py-6'>
-                  <Text className='text-sm text-ink-sub'>
-                    {tab === 'posts' ? '还没有发过帖子～' : '还没有收藏～'}
+          <ScrollView
+            scrollY
+            className='flex-1'
+            style={{ minHeight: 0 }}
+            scrollTop={scrollTop}
+            onScrollToLower={onScrollToLower}
+            lowerThreshold={80}
+          >
+            <View className='px-6 pb-8'>
+              <View className='flex mb-4'>
+                <View className='press mr-6' onClick={() => setTab('posts')}>
+                  <Text className={tab === 'posts' ? 'text-base text-ink font-bold' : 'text-base text-ink-sub'}>
+                    我的帖子
+                  </Text>
+                </View>
+                <View className='press' onClick={() => setTab('favorites')}>
+                  <Text className={tab === 'favorites' ? 'text-base text-ink font-bold' : 'text-base text-ink-sub'}>
+                    我的收藏
                   </Text>
                 </View>
               </View>
-            )}
-            {active.list.map((post) => (
-              <PostCard key={post.id} post={post} />
-            ))}
-            {active.list.length > 0 && (
-              <View className='py-4 flex justify-center items-center'>
-                <Text className='text-xs text-ink-sub'>
-                  {active.loading ? '加载中…' : active.hasMore ? '上拉加载更多' : '没有更多了'}
-                </Text>
-              </View>
-            )}
-          </>
+
+              {/* 列表 */}
+              {active.loading && active.list.length === 0 && <SkeletonList count={3} />}
+              {!active.loading && active.list.length === 0 && (
+                <View className='bg-card rounded-card shadow-soft p-6 flex flex-col items-center'>
+                  <View className='py-6'>
+                    <Text className='text-sm text-ink-sub'>
+                      {tab === 'posts' ? '还没有发过帖子～' : '还没有收藏～'}
+                    </Text>
+                  </View>
+                </View>
+              )}
+              {active.list.map((post) => (
+                <PostCard key={post.id} post={post} />
+              ))}
+              {active.list.length > 0 && (
+                <View className='py-4 flex justify-center items-center'>
+                  <Text className='text-xs text-ink-sub'>
+                    {active.loading ? '加载中…' : active.hasMore ? '上拉加载更多' : '没有更多了'}
+                  </Text>
+                </View>
+              )}
+            </View>
+          </ScrollView>
         )}
       </View>
-    </ScrollView>
       <SettingsDrawer
         open={drawerOpen}
         onClose={() => setDrawerOpen(false)}
