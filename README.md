@@ -5,14 +5,15 @@
 ## 技术栈
 
 - **框架**：Taro 4 + React 18 + TypeScript
-- **包管理**：bun
+- **包管理**：bun（仓库同时保留 `package-lock.json`，npm/npx 亦可）
 - **样式**：weapp-tailwindcss + Tailwind（自绘设计系统）
 - **状态**：Zustand
-- **请求**：基于 `Taro.request` 的自封装 HTTP 客户端
+- **请求**：基于 `Taro.request` 的自封装 HTTP 客户端（三层：request / authRequest / optionalAuthRequest）
 - **测试**：vitest
+- **流程**：comet + OpenSpec 管理需求到归档全流程（AI 协作铁律见 [AGENT.md](./AGENT.md)）
 - **后端**：go-service（`/api/v1`，Go+Gin+GORM+MySQL，JWT + 微信登录）
 
-## bun 脚本
+## 脚本
 
 ```bash
 bun install            # 安装依赖
@@ -23,6 +24,16 @@ bun run tsc            # 类型检查
 ```
 
 编译后用微信开发者工具打开项目根目录（`miniprogramRoot` 指向 `dist/`）预览。
+
+### 代码生成脚本（改了源必须重跑，产物入 git）
+
+```bash
+node scripts/gen-icons.mjs         # iconfont symbol JS → src/components/Iconfont/icons.ts
+node scripts/gen-tabbar-icons.mjs  # icons.ts → src/assets/tabbar/*.png（依赖 ImageMagick）
+```
+
+- 更新图标：改 `iconfont.json` 的 `symbol_url` 后重跑 `gen-icons.mjs`；用 `<Iconfont name='...' />` 渲染（svg data-uri，颜色需传具体 hex）。
+- tabBar 图标只支持本地 PNG，由 `gen-tabbar-icons.mjs` 从 `icons.ts` 生成两套配色。
 
 ## 环境切换
 
@@ -39,19 +50,31 @@ TARO_APP_ENV=prod bun run build:weapp
 
 ```
 config/            # Taro 编译配置 + env.ts（可切换 baseURL）
+scripts/           # gen-icons.mjs / gen-tabbar-icons.mjs（代码生成）
 src/
-  app.config.ts    # 全局路由 + TabBar（首页/发布/我的）
+  app.config.ts    # 全局路由 + TabBar（首页/日记/消息/我的）
   app.tsx          # 启动恢复登录态 + 全局 Toast
-  pages/           # index(信息流) / publish(占位) / profile(占位)
-  components/       # 设计系统：Button/Card/Avatar/Tag/Skeleton/Transition/Toast
-  store/           # Zustand：auth（登录态）/ ui（Toast/loading）
+  pages/           # index(信息流) detail(帖子详情) publish(发布) messages/chat(私信)
+                   # profile/profile-edit(个人中心) drafts(草稿) follow-list(关注/粉丝)
+                   # user-profile(他人主页) diary(日记：index/edit/detail)
+  components/       # 设计系统 + 业务组件：Button/Card/Avatar/Tag/Skeleton/Toast/Transition
+                   # PostCard/CommentList/RichEditor/Iconfont/PageLayout/SettingsDrawer
+                   # CustomNavBar/DiaryCard/NotebookDrawer/FollowButton 等
+  store/           # Zustand：auth(登录态) ui(Toast/loading) theme(亮暗) follow(关注计数)
+                   # message(会话) ws(WebSocket)
   services/
-    request.ts     # HTTP 客户端（baseURL/JWT/解包/401）
-    authRequest.ts # 受保护请求封装（注入 token + 401 清态）
-    auth.ts        # 微信登录流程
-    api/           # 各模块 API 方法（auth/users/posts/interactions/upload）
-  hooks/           # useAuthGuard（登录守卫）
-  types/api.ts     # go-service 接口契约类型
+    request.ts             # HTTP 客户端（baseURL/JWT/解包/401）
+    authRequest.ts         # 受保护请求（注入 token + 统一 401 清态+提示）
+    optionalAuthRequest.ts # 可选登录请求（OptionalJWT 路由）
+    auth.ts                # 微信静默登录流程（login/logout）
+    errors.ts              # ApiError 规范化错误
+    message.ts             # 私信消息服务
+    api/                   # 各模块 API：auth/users/posts/interactions/upload/diary
+  hooks/           # usePagedList(分页) useAuthGuard(互动登录守卫)
+                   # useOptimisticToggle(乐观更新) useDraftAutosave(草稿自存)
+  utils/           # navbar(自绘导航栏几何) tabbar(原生导航/tabBar 配色) theme 等
+  types/           # go-service 接口契约类型（api.ts / diary.ts）
+  assets/          # tabbar 图标 PNG / diary-decor 装饰插画
   styles/          # tokens.scss + motion.scss
 ```
 
@@ -74,16 +97,20 @@ src/
 
 ## 鉴权模型
 
-- **公开接口**（帖子列表/详情）：匿名可访问
-- **受保护接口**（发布/互动/个人中心）：`Authorization: Bearer <jwt>`，未登录时 `useAuthGuard` 引导登录
-- token 由 `wx.login` 换取并持久化，启动自动恢复；401 自动清态重登
+- **公开接口**（帖子列表/详情）：匿名可访问，走 `optionalAuthRequest`（登录则带 token 个性化返回）。
+- **受保护接口**（发布/互动/个人中心/日记）：`Authorization: Bearer <jwt>`，走 `authRequest`。
+- **登录**：微信静默登录（`Taro.login` 换 JWT，见 `services/auth.ts`），无独立登录页；页面用 `isLogin` 判断 + 引导登录（参考 `pages/messages`、`pages/diary` 的未登录分支）。互动场景（评论/点赞）用 `useAuthGuard` 守卫。
+- **401 统一处理**：收敛在 `authRequest` 的 `onUnauthorized`——清登录态 + 全局 toast「登录已失效，请重新登录」。调用方无需各自处理；已登出则跳过，配合 toast 去重避免并发 401 叠弹窗。
+- token 由 `wx.login` 换取并持久化，启动自动恢复。
 
-## 后续开发
+## 功能模块
 
-本工程是地基层（`miniprogram-foundation`）。后续特性 change 复用此处的设计系统、请求层与鉴权：
+已落地的主要特性（均复用统一的设计系统、请求层与鉴权）：
 
-- `article-feed-and-detail`：信息流 + 详情 + 互动
-- `article-publish-richtext`：富文本发布（微信 editor）+ 草稿 + 话题 + 上传
-- `user-profile-center`：个人中心 + 资料 + 我的帖子 + 收藏
+- **信息流与详情**：首页分类信息流、帖子详情、评论、点赞/收藏互动
+- **发布**：富文本发布（微信 editor）+ 草稿箱 + 话题分类 + 图片上传
+- **个人中心**：资料展示/编辑、我的帖子、我的收藏、设置抽屉（主题切换/草稿/退出）
+- **社交**：关注/粉丝列表、他人主页、私信会话（WebSocket）
+- **日记**：多日记本、自定义导航栏切换、日记时间线、写/看日记
 
 > 注：登录换 JWT 与真实列表数据需 go-service 启动后端到端联调；请求层与错误处理已按真实契约实现并有单测覆盖，离线可验证分支逻辑。
