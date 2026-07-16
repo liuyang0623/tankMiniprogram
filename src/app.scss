@@ -1,10 +1,10 @@
+/* @use 须在所有规则之前（Sass 规范）；@tailwind 由后续 PostCSS 阶段处理，不受此顺序影响 */
+@use './styles/tokens.scss';
+@use './styles/motion.scss';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* stylelint-disable-next-line -- @tailwind 指令需在最前，故 partial 用 @import */
-@import './styles/tokens.scss';
-@import './styles/motion.scss';
 
 /* 全局基础 —— page 默认给 light 变量兜底，PageLayout 子树覆盖为实际主题 */
 page {
