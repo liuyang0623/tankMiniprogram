@@ -1,4 +1,5 @@
 import { View, Text } from '@tarojs/components'
+import { getNavBarGeom } from '../../utils/navbar'
 import type { Notebook } from '../../types/diary'
 import './index.scss'
 
@@ -16,10 +17,12 @@ export default function NotebookDrawer({
   open, notebooks, activeId, onSelect, onCreate, onManage, onClose,
 }: Props) {
   if (!open) return null
+  // 面板从自定义导航栏下方展开，避免盖住导航栏（标题+切换入口仍可见可点）
+  const panelTop = getNavBarGeom().totalHeight
   return (
     <View className='nb-drawer'>
       <View className='nb-drawer__mask' onClick={onClose} />
-      <View className='nb-drawer__panel'>
+      <View className='nb-drawer__panel' style={{ top: `${panelTop}px` }}>
         {notebooks.map((nb) => (
           <View
             key={nb.id}

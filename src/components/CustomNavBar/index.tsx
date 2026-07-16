@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import { View, Text } from '@tarojs/components'
-import Taro from '@tarojs/taro'
 import Iconfont from '../Iconfont'
+import { getNavBarGeom } from '../../utils/navbar'
 import './index.scss'
 
 interface Props {
@@ -26,24 +26,7 @@ interface Props {
  * 几何数据用 Sync API 一次读取（导航栏在首屏即需定位，无异步必要）。
  */
 export default function CustomNavBar({ title, arrowOpen = false, onTitleTap }: Props) {
-  const geom = useMemo(() => {
-    let statusBarHeight = 20
-    let navContentHeight = 44
-    let capsuleRight = 10
-    try {
-      const sys = Taro.getSystemInfoSync()
-      statusBarHeight = sys.statusBarHeight ?? 20
-      const cap = Taro.getMenuButtonBoundingClientRect()
-      // 内容行高 = 胶囊高 + 上下对称间距（胶囊 top 到状态栏底的距离 ×2）
-      const gap = cap.top - statusBarHeight
-      navContentHeight = cap.height + gap * 2
-      // 右侧避让：胶囊左缘到屏幕右缘的距离，标题区两侧各留这么宽保持居中
-      capsuleRight = sys.windowWidth - cap.left
-    } catch {
-      // 非小程序端或 API 不可用，用兜底值
-    }
-    return { statusBarHeight, navContentHeight, capsuleRight }
-  }, [])
+  const geom = useMemo(() => getNavBarGeom(), [])
 
   return (
     <View
