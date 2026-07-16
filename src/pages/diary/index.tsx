@@ -5,6 +5,7 @@ import { NotebookDrawer, DiaryCard, PageLayout, CustomNavBar } from '../../compo
 import { notebookApi, diaryApi } from '../../services/api'
 import { useAuthStore } from '../../store/auth'
 import { useUiStore } from '../../store/ui'
+import { login } from '../../services/auth'
 import type { Notebook, DiaryListItem } from '../../types/diary'
 import './index.scss'
 
@@ -14,6 +15,7 @@ export default function DiaryIndex() {
   const activeNbRef = useRef<number>()
   const [diaries, setDiaries] = useState<DiaryListItem[]>([])
   const [drawerOpen, setDrawerOpen] = useState(false)
+  const isLogin = useAuthStore((s) => s.isLogin)
   const showToast = useUiStore((s) => s.showToast)
 
   const loadDiaries = useCallback(async (nbId: number) => {
@@ -102,6 +104,28 @@ export default function DiaryIndex() {
 
   const onWrite = () => {
     Taro.navigateTo({ url: `/pages/diary/edit?notebookId=${activeNb ?? ''}` })
+  }
+
+  // 未登录：引导登录（微信静默登录，点一下即可），不请求受保护接口
+  if (!isLogin) {
+    return (
+      <PageLayout>
+        <View className='diary-guest'>
+          <Text className='diary-guest__title'>登录后开始记录日记</Text>
+          <Text className='diary-guest__hint'>用文字留住每一天的心情</Text>
+          <View
+            className='diary-guest__btn'
+            onClick={() => {
+              login()
+                .then(() => loadNotebooks())
+                .catch((e: any) => showToast(e?.message || '登录失败，请重试', 'error'))
+            }}
+          >
+            <Text className='diary-guest__btn-text'>微信一键登录</Text>
+          </View>
+        </View>
+      </PageLayout>
+    )
   }
 
   return (

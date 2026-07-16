@@ -4,6 +4,35 @@
   flex-direction: column;
   box-sizing: border-box;
 }
+.diary-guest {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0 48px;
+}
+.diary-guest__title {
+  color: var(--c-ink);
+  font-size: 34px;
+  font-weight: 600;
+}
+.diary-guest__hint {
+  color: var(--c-ink-sub);
+  font-size: 26px;
+  margin-top: 16px;
+}
+.diary-guest__btn {
+  margin-top: 48px;
+  padding: 20px 56px;
+  background: var(--c-peach);
+  border-radius: 999px;
+}
+.diary-guest__btn-text {
+  color: #fff;
+  font-size: 30px;
+  font-weight: 500;
+}
 .diary-body {
   flex: 1;
   display: flex;
