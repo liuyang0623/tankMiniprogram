@@ -13,4 +13,4 @@ export const BASE_URL = MAP[ENV] ?? MAP.dev
 
 // 微信订阅消息模板 ID：「被关注通知」。用于 wx.requestSubscribeMessage 拉起授权，
 // 需与后端 WECHAT_SUBSCRIBE_TPL_FOLLOW 保持一致。
-export const SUBSCRIBE_TPL_FOLLOW = 'Q2BcepkCFvBshhtriPZIJVWA471xoYkoyJ7xDS4T_BA'
+export const SUBSCRIBE_TPL_FOLLOW = 'Q2BcepkCFvBshhtriPZlJVWA471xoYkoyJ7xDS4T_BA'

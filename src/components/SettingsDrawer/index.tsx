@@ -41,19 +41,28 @@ export default function SettingsDrawer({ open, onClose, onLoggedOut }: SettingsD
   // 开启关注提醒：拉起微信订阅授权 → 用户同意后上报后端累加可推送配额。
   // 微信订阅是「一次授权一次配额」制，无法回读授权状态，故做成行动按钮而非受控开关。
   const onEnableFollowNotify = async () => {
+    let res: Record<string, string>
     try {
       // Taro 类型把 entityIds 标为必填（实为一次性消息可选字段），断言绕过。
-      const res = await Taro.requestSubscribeMessage({
+      res = (await Taro.requestSubscribeMessage({
         tmplIds: [SUBSCRIBE_TPL_FOLLOW],
-      } as Taro.requestSubscribeMessage.Option)
-      if (res[SUBSCRIBE_TPL_FOLLOW] === 'accept') {
-        await usersApi.reportSubscribeFollow()
-        Taro.showToast({ title: '已开启关注提醒', icon: 'success' })
-      } else {
-        Taro.showToast({ title: '已取消', icon: 'none' })
-      }
-    } catch {
-      Taro.showToast({ title: '开启失败，请重试', icon: 'none' })
+      } as Taro.requestSubscribeMessage.Option)) as unknown as Record<string, string>
+    } catch (e) {
+      console.error('[关注提醒] requestSubscribeMessage 失败:', e)
+      Taro.showToast({ title: '授权拉起失败', icon: 'none' })
+      return
+    }
+    console.log('[关注提醒] 授权结果:', res)
+    if (res[SUBSCRIBE_TPL_FOLLOW] !== 'accept') {
+      Taro.showToast({ title: '已取消', icon: 'none' })
+      return
+    }
+    try {
+      await usersApi.reportSubscribeFollow()
+      Taro.showToast({ title: '已开启关注提醒', icon: 'success' })
+    } catch (e) {
+      console.error('[关注提醒] 上报后端失败:', e)
+      Taro.showToast({ title: '上报失败，请重试', icon: 'none' })
     }
   }
 
