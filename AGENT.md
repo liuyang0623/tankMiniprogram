@@ -110,5 +110,5 @@ npm run build:weapp       # 微信端构建，必须 EXIT 0
 
 ## 7. 记忆与状态（跨会话）
 
-- 项目级踩坑与契约记录在 comet 记忆索引（Taro 踩坑、go-service API 契约、原生组件主题化等）。遇到反复出现的坑，先查再动手。
+- 项目级踩坑与契约记录在 comet 记忆索引（Taro 踩坑、tankService API 契约、原生组件主题化等）。遇到反复出现的坑，先查再动手。
 - 怀疑上下文被压缩、找不到之前讨论时，跑 `node .comet/skills/skills/comet/scripts/comet-state.mjs check <name> <phase> --recover` 恢复。

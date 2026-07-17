@@ -11,7 +11,7 @@
 - **请求**：基于 `Taro.request` 的自封装 HTTP 客户端（三层：request / authRequest / optionalAuthRequest）
 - **测试**：vitest
 - **流程**：comet + OpenSpec 管理需求到归档全流程（AI 协作铁律见 [AGENT.md](./AGENT.md)）
-- **后端**：go-service（`/api/v1`，Go+Gin+GORM+MySQL，JWT + 微信登录）
+- **后端**：tankService（`/api/v1`，Go+Gin+GORM+MySQL，JWT + 微信登录）
 
 ## 脚本
 
@@ -73,7 +73,7 @@ src/
   hooks/           # usePagedList(分页) useAuthGuard(互动登录守卫)
                    # useOptimisticToggle(乐观更新) useDraftAutosave(草稿自存)
   utils/           # navbar(自绘导航栏几何) tabbar(原生导航/tabBar 配色) theme 等
-  types/           # go-service 接口契约类型（api.ts / diary.ts）
+  types/           # tankService 接口契约类型（api.ts / diary.ts）
   assets/          # tabbar 图标 PNG / diary-decor 装饰插画
   styles/          # tokens.scss + motion.scss
 ```
@@ -114,4 +114,4 @@ src/
 - **系统通知**：关注他人时给对方写站内通知；消息页顶部固定"系统通知"聚合入口（未读红点 + 最新摘要），独立详情页整体已读、关注者可点跳主页（类型可扩展，预留 like/comment）
 - **日记**：多日记本、自定义导航栏切换、日记时间线、写/看日记
 
-> 注：登录换 JWT 与真实列表数据需 go-service 启动后端到端联调；请求层与错误处理已按真实契约实现并有单测覆盖，离线可验证分支逻辑。
+> 注：登录换 JWT 与真实列表数据需 tankService 启动后端到端联调；请求层与错误处理已按真实契约实现并有单测覆盖，离线可验证分支逻辑。
