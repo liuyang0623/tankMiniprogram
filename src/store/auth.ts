@@ -37,6 +37,7 @@ export const useAuthStore = create<AuthState>((set) => ({
     // 登出时断开 WebSocket
     import('../store/ws').then(({ useWsStore }) => useWsStore.getState().disconnect())
     import('./message').then(({ useMessageStore }) => useMessageStore.getState().reset())
+    import('./notification').then(({ useNotificationStore }) => useNotificationStore.getState().reset())
   },
 
   restore: () => {

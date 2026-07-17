@@ -1,6 +1,6 @@
 import { create } from 'zustand'
-import Taro from '@tarojs/taro'
 import { getConversations, markRead as markReadApi } from '../services/message'
+import { refreshMessageTabBadge } from '../utils/tabBadge'
 import type { ConversationItem, MessageItem } from '../types/api'
 
 interface MessageState {
@@ -20,13 +20,9 @@ interface MessageState {
   reset: () => void
 }
 
-function updateTabBadge(count: number) {
-  // tabBar 顺序：首页(0)/日记(1)/消息(2)/我的(3)，消息在 index 2
-  if (count > 0) {
-    Taro.setTabBarBadge({ index: 2, text: count > 99 ? '99+' : String(count) }).catch(() => {})
-  } else {
-    Taro.removeTabBarBadge({ index: 2 }).catch(() => {})
-  }
+function updateTabBadge(_count: number) {
+  // 合并私信 + 系统通知未读，统一由共享工具计算
+  refreshMessageTabBadge()
 }
 
 export const useMessageStore = create<MessageState>((set, get) => ({

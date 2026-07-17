@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { notificationApi } from '../services/api/notification'
+import { refreshMessageTabBadge } from '../utils/tabBadge'
 import type { NotificationItem } from '../types/notification'
 
 interface NotificationState {
@@ -30,6 +31,7 @@ export const useNotificationStore = create<NotificationState>((set) => ({
     try {
       const res = await notificationApi.unreadCount()
       set({ unreadCount: res.unreadCount, latest: res.latest })
+      refreshMessageTabBadge()
     } catch {
       // 未登录或网络失败，忽略
     }
@@ -52,10 +54,14 @@ export const useNotificationStore = create<NotificationState>((set) => ({
         unreadCount: 0,
         list: s.list.map((n) => ({ ...n, read: true })),
       }))
+      refreshMessageTabBadge()
     } catch {
       // 失败不清红点，下次进入重试
     }
   },
 
-  reset: () => set({ unreadCount: 0, latest: null, list: [], loading: false }),
+  reset: () => {
+    set({ unreadCount: 0, latest: null, list: [], loading: false })
+    refreshMessageTabBadge()
+  },
 }))
