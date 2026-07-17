@@ -21,10 +21,11 @@ interface MessageState {
 }
 
 function updateTabBadge(count: number) {
+  // tabBar 顺序：首页(0)/日记(1)/消息(2)/我的(3)，消息在 index 2
   if (count > 0) {
-    Taro.setTabBarBadge({ index: 1, text: count > 99 ? '99+' : String(count) }).catch(() => {})
+    Taro.setTabBarBadge({ index: 2, text: count > 99 ? '99+' : String(count) }).catch(() => {})
   } else {
-    Taro.removeTabBarBadge({ index: 1 }).catch(() => {})
+    Taro.removeTabBarBadge({ index: 2 }).catch(() => {})
   }
 }
 
