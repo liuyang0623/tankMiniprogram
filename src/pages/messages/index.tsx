@@ -1,10 +1,12 @@
 import { useEffect, useCallback } from 'react'
 import { View, Text, ScrollView, Image } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
-import { PageLayout, SkeletonList } from '../../components'
+import { PageLayout, SkeletonList, Iconfont } from '../../components'
 import { useMessageStore } from '../../store/message'
+import { useNotificationStore } from '../../store/notification'
 import { useAuthStore } from '../../store/auth'
 import type { ConversationItem } from '../../types/api'
+import { notificationSummary } from '../../utils/notification'
 
 /** 简洁时间格式化 */
 function formatTime(iso: string): string {
@@ -40,6 +42,9 @@ export default function Messages() {
   const loading = useMessageStore((s) => s.loading)
   const loadConversations = useMessageStore((s) => s.loadConversations)
   const isLogin = useAuthStore((s) => s.isLogin)
+  const notifUnread = useNotificationStore((s) => s.unreadCount)
+  const notifLatest = useNotificationStore((s) => s.latest)
+  const refreshUnread = useNotificationStore((s) => s.refreshUnread)
 
   // 首次加载
   useEffect(() => {
@@ -48,13 +53,20 @@ export default function Messages() {
     }
   }, [isLogin, loaded, loadConversations])
 
-  // 每次进入刷新
+  // 每次进入刷新（会话 + 系统通知未读）
   useDidShow(() => {
-    if (isLogin) loadConversations()
+    if (isLogin) {
+      loadConversations()
+      refreshUnread()
+    }
   })
 
   const goChat = useCallback((conv: ConversationItem) => {
     Taro.navigateTo({ url: `/pages/chat/index?conversationId=${conv.id}` })
+  }, [])
+
+  const goNotifications = useCallback(() => {
+    Taro.navigateTo({ url: '/pages/notifications/index' })
   }, [])
 
   // 未登录
@@ -78,6 +90,37 @@ export default function Messages() {
         onRefresherRefresh={() => loadConversations()}
       >
         <View className='px-4 pt-2 pb-8'>
+          {/* 系统通知聚合入口：常驻置顶，不随会话排序 */}
+          <View
+            className='flex items-center py-3 px-2 active:bg-gray-50 rounded-xl'
+            onClick={goNotifications}
+          >
+            <View
+              className='w-12 h-12 rounded-full mr-3 flex-shrink-0 flex items-center justify-center'
+              style={{ background: 'rgba(240,168,104,0.15)' }}
+            >
+              <Iconfont name='xiaoxi_o' size={24} color='#f0a868' />
+            </View>
+            <View className='flex-1 min-w-0'>
+              <View className='flex items-center justify-between'>
+                <Text className='text-sm font-medium text-ink-default'>系统通知</Text>
+                {notifUnread > 0 && (
+                  <View
+                    className='rounded-full flex items-center justify-center flex-shrink-0'
+                    style={{ background: '#ef8a7f', minWidth: '32rpx', height: '32rpx', paddingLeft: '8rpx', paddingRight: '8rpx' }}
+                  >
+                    <Text className='text-card' style={{ fontSize: '20rpx' }}>
+                      {notifUnread > 99 ? '99+' : notifUnread}
+                    </Text>
+                  </View>
+                )}
+              </View>
+              <Text className='text-xs text-ink-sub truncate block mt-1'>
+                {notifLatest ? notificationSummary(notifLatest) : '暂无通知'}
+              </Text>
+            </View>
+          </View>
+
           {/* 加载态 */}
           {loading && !loaded && <SkeletonList count={5} />}
 

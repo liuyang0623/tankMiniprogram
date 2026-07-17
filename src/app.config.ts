@@ -13,6 +13,7 @@ export default defineAppConfig({
     'pages/diary/index',
     'pages/diary/edit',
     'pages/diary/detail',
+    'pages/notifications/index',
   ],
   window: {
     backgroundTextStyle: 'dark',
