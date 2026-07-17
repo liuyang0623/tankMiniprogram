@@ -1,6 +1,8 @@
 import { View, Text } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { logout } from '../../services/auth'
+import { usersApi } from '../../services/api/users'
+import { SUBSCRIBE_TPL_FOLLOW } from '../../config/env'
 import { useThemeStore } from '../../store/theme'
 import Iconfont from '../Iconfont'
 import type { Mode } from '../../utils/theme'
@@ -34,6 +36,25 @@ export default function SettingsDrawer({ open, onClose, onLoggedOut }: SettingsD
     logout()
     onClose()
     onLoggedOut?.()
+  }
+
+  // 开启关注提醒：拉起微信订阅授权 → 用户同意后上报后端累加可推送配额。
+  // 微信订阅是「一次授权一次配额」制，无法回读授权状态，故做成行动按钮而非受控开关。
+  const onEnableFollowNotify = async () => {
+    try {
+      // Taro 类型把 entityIds 标为必填（实为一次性消息可选字段），断言绕过。
+      const res = await Taro.requestSubscribeMessage({
+        tmplIds: [SUBSCRIBE_TPL_FOLLOW],
+      } as Taro.requestSubscribeMessage.Option)
+      if (res[SUBSCRIBE_TPL_FOLLOW] === 'accept') {
+        await usersApi.reportSubscribeFollow()
+        Taro.showToast({ title: '已开启关注提醒', icon: 'success' })
+      } else {
+        Taro.showToast({ title: '已取消', icon: 'none' })
+      }
+    } catch {
+      Taro.showToast({ title: '开启失败，请重试', icon: 'none' })
+    }
   }
 
   return (
@@ -109,6 +130,18 @@ export default function SettingsDrawer({ open, onClose, onLoggedOut }: SettingsD
           {/* 草稿箱入口 */}
           <View className='press bg-card rounded-card shadow-soft px-4 py-4 mb-4' onClick={goDrafts}>
             <Text className='text-base text-ink'>草稿箱</Text>
+          </View>
+
+          {/* 关注提醒授权 */}
+          <View
+            className='press bg-card rounded-card shadow-soft px-4 py-4 mb-4 flex items-center justify-between'
+            onClick={onEnableFollowNotify}
+          >
+            <View className='flex flex-col'>
+              <Text className='text-base text-ink'>关注提醒</Text>
+              <Text className='text-xs text-ink-sub mt-1'>有人关注你时收到微信通知</Text>
+            </View>
+            <Iconfont name='jiantou_liebiaoxiangyou' size={18} color='#c9bfb6' />
           </View>
 
           {/* 退出登录（置底） */}

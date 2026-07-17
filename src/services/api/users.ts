@@ -30,4 +30,7 @@ export const usersApi = {
   /** 公开（可选鉴权）：某用户的关注列表 */
   getFollowing: (id: number, page = 1) =>
     optionalAuthRequest<Paginated<FollowUserItem>>({ url: `/users/${id}/following?page=${page}` }),
+  /** 受保护：上报关注订阅授权，累加可推送配额 */
+  reportSubscribeFollow: () =>
+    authRequest<{ ok: boolean }>({ url: '/users/subscribe/follow', method: 'POST' }),
 }
