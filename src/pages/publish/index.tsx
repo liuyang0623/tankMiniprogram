@@ -179,7 +179,7 @@ export default function Publish() {
         </Text>
       </View>
       <Input
-        className='text-xl text-ink font-bold py-3'
+        className='text-xl text-ink font-bold py-4 leading-relaxed'
         value={title}
         placeholder='起个标题吧～'
         onInput={(e) => setTitle(e.detail.value)}

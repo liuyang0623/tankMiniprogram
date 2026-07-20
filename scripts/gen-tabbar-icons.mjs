@@ -20,6 +20,7 @@ const root = path.resolve(__dirname, '..')
 const TABBAR_ICONS = [
   { icon: 'shouye', out: 'home' },
   { icon: 'shu_o', out: 'diary' }, // 日记 tab（书本图标）
+  { icon: 'linggan', out: 'inspiration' }, // 灵感 tab（灯泡图标）
   { icon: 'xiaoxi_o', out: 'message' },
   { icon: 'gerentouxiang_o', out: 'profile' },
 ]

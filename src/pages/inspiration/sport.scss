@@ -138,7 +138,24 @@
   display: block;
   color: var(--c-ink-sub);
   font-size: 24px;
+}
+.sport-card__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   margin-top: 16px;
+}
+.sport-card__toggle {
+  color: var(--c-peach);
+  font-size: 24px;
+  font-weight: 600;
+  flex-shrink: 0;
+  margin-left: 16px;
+}
+.sport-card__cal {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid var(--c-shadow);
 }
 
 .sport-empty {

@@ -29,6 +29,10 @@
   font-size: 28px;
   line-height: 1.6;
   margin-top: 20px;
+  /* rich-text 内部图片自适应宽度 */
+  image {
+    max-width: 100%;
+  }
 }
 .qad-question__time {
   display: block;
@@ -52,16 +56,74 @@
   margin-top: 20px;
   box-shadow: 0 4px 14px var(--c-shadow);
 }
+.qad-answer__badges {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.qad-badge {
+  font-size: 22px;
+  font-weight: 700;
+  padding: 6px 16px;
+  border-radius: 999px;
+}
+.qad-badge--best {
+  color: #fff;
+  background: var(--c-peach);
+}
+.qad-badge--accepted {
+  color: var(--c-peach);
+  background: var(--c-card-soft);
+  border: 1px solid var(--c-peach);
+}
 .qad-answer__content {
+  display: block;
   color: var(--c-ink);
   font-size: 29px;
   line-height: 1.6;
+  image {
+    max-width: 100%;
+  }
+}
+.qad-answer__foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 20px;
 }
 .qad-answer__time {
-  display: block;
   color: var(--c-ink-sub);
   font-size: 23px;
-  margin-top: 16px;
+}
+.qad-answer__actions {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+}
+.qad-accept {
+  color: var(--c-peach);
+  font-size: 26px;
+  font-weight: 600;
+  padding: 6px 20px;
+  border: 1px solid var(--c-peach);
+  border-radius: 999px;
+}
+.qad-like {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.qad-like__icon {
+  font-size: 32px;
+  color: var(--c-ink-sub);
+}
+.qad-like__count {
+  font-size: 26px;
+  color: var(--c-ink-sub);
+}
+.qad-like.is-liked .qad-like__icon,
+.qad-like.is-liked .qad-like__count {
+  color: var(--c-heart);
 }
 .qad-empty {
   padding: 60px 0;
@@ -73,33 +135,20 @@
   font-size: 27px;
 }
 
-.qad-input {
-  display: flex;
-  align-items: flex-end;
-  gap: 16px;
+.qad-write {
   padding: 20px 28px calc(20px + constant(safe-area-inset-bottom));
   padding-bottom: calc(20px + env(safe-area-inset-bottom));
   background: var(--c-card);
   box-shadow: 0 -4px 16px var(--c-shadow);
 }
-.qad-input__field {
-  flex: 1;
-  min-height: 64px;
-  max-height: 200px;
-  padding: 18px 24px;
-  background: var(--c-card-soft);
-  border-radius: 24px;
-  color: var(--c-ink);
-  font-size: 28px;
-  box-sizing: border-box;
-}
-.qad-input__btn {
-  flex-shrink: 0;
-  padding: 20px 40px;
+.qad-write__btn {
+  padding: 24px 0;
   background: var(--c-peach);
   border-radius: 24px;
+  display: flex;
+  justify-content: center;
 }
-.qad-input__btn-text {
+.qad-write__text {
   color: #fff;
   font-size: 30px;
   font-weight: 600;

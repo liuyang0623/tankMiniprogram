@@ -117,3 +117,17 @@
   font-size: 30px;
   font-weight: 600;
 }
+
+.qa-ask__title {
+  width: 100%;
+  min-height: 96px;
+  padding: 24px;
+  margin-bottom: 20px;
+  background: var(--c-card);
+  border-radius: 20px;
+  color: var(--c-ink);
+  font-size: 32px;
+  line-height: 1.5;
+  font-weight: 600;
+  box-sizing: border-box;
+}

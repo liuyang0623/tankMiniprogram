@@ -7,6 +7,10 @@ export interface Answer {
   id: number
   authorId: number
   content: string
+  likeCount: number
+  likedByMe: boolean
+  isBest: boolean
+  isAccepted: boolean
   createdAt: string
 }
 
@@ -17,6 +21,7 @@ export interface Question {
   title: string
   content: string
   answerCount: number
+  acceptedAnswerId?: number
   answers: Answer[]
   createdAt: string
   updatedAt: string
@@ -40,6 +45,13 @@ export interface CreateQuestionBody {
 
 export interface CreateAnswerBody {
   content: string
+}
+
+/** 点赞/取消点赞回答的结果 */
+export interface AnswerLikeResult {
+  answerId: number
+  liked: boolean
+  likeCount: number
 }
 
 // ── 运动计划 ──
@@ -80,4 +92,11 @@ export interface UpdateSportGoalBody {
   type?: string
   icon?: string
   targetDays?: number
+}
+
+/** 某目标某月的打卡日期列表 */
+export interface MonthRecords {
+  year: number
+  month: number
+  dates: string[] // YYYY-MM-DD
 }

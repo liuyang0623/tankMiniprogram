@@ -73,7 +73,7 @@ export default function DiaryEdit() {
     <PageLayout>
       <View className='min-h-screen bg-bg px-6 pt-6'>
         <Input
-          className='text-xl text-ink font-bold py-3'
+          className='text-xl text-ink font-bold py-4 leading-relaxed'
           value={title}
           placeholder='今天想记点什么～'
           onInput={(e) => setTitle(e.detail.value)}

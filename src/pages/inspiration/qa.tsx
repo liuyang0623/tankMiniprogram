@@ -1,7 +1,8 @@
-import { useState, useCallback } from 'react'
-import { View, Text } from '@tarojs/components'
+import { useState, useCallback, useRef } from 'react'
+import { View, Text, Input } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
-import { PageLayout } from '../../components'
+import { PageLayout, BottomSheet, RichEditor } from '../../components'
+import type { RichEditorHandle } from '../../components'
 import { qaApi } from '../../services/api'
 import { useAuthStore } from '../../store/auth'
 import { useUiStore } from '../../store/ui'
@@ -13,8 +14,12 @@ import './qa.scss'
 export default function QaPage() {
   const [list, setList] = useState<QuestionListItem[]>([])
   const [loaded, setLoaded] = useState(false)
+  const [askOpen, setAskOpen] = useState(false)
+  const [title, setTitle] = useState('')
+  const [submitting, setSubmitting] = useState(false)
   const isLogin = useAuthStore((s) => s.isLogin)
   const showToast = useUiStore((s) => s.showToast)
+  const editorRef = useRef<RichEditorHandle>(null)
 
   const load = useCallback(async () => {
     if (!useAuthStore.getState().isLogin) return
@@ -32,25 +37,28 @@ export default function QaPage() {
     load()
   })
 
-  const onAsk = async () => {
-    const res = await Taro.showModal({
-      title: '说说你的困惑',
-      editable: true,
-      placeholderText: '一句话描述你的问题',
-    } as any)
-    const content = (res as any).content as string | undefined
-    if (res.confirm) {
-      if (!content || !content.trim()) {
-        showToast('标题不能为空', 'error')
-        return
-      }
-      try {
-        await qaApi.create({ title: content.trim() })
-        showToast('已发布，等待大家的回答')
-        load()
-      } catch {
-        showToast('发布失败，请重试', 'error')
-      }
+  const openAsk = () => {
+    setTitle('')
+    setAskOpen(true)
+  }
+
+  const onSubmitAsk = async () => {
+    if (submitting) return
+    if (!title.trim()) {
+      showToast('标题不能为空', 'error')
+      return
+    }
+    const { html } = (await editorRef.current?.getContents()) || { html: '', text: '' }
+    setSubmitting(true)
+    try {
+      await qaApi.create({ title: title.trim(), content: html })
+      setAskOpen(false)
+      showToast('已发布，等待大家的回答')
+      load()
+    } catch {
+      showToast('发布失败，请重试', 'error')
+    } finally {
+      setSubmitting(false)
     }
   }
 
@@ -108,10 +116,32 @@ export default function QaPage() {
           )}
         </View>
 
-        <View className='qa-fab press' onClick={onAsk}>
+        <View className='qa-fab press' onClick={openAsk}>
           <Text className='qa-fab__text'>提问</Text>
         </View>
       </View>
+
+      <BottomSheet
+        visible={askOpen}
+        title='说说你的困惑'
+        confirmText={submitting ? '…' : '发布'}
+        confirmDisabled={submitting}
+        onConfirm={onSubmitAsk}
+        onClose={() => setAskOpen(false)}
+      >
+        {askOpen && (
+          <View className='qa-ask'>
+            <Input
+              className='qa-ask__title'
+              value={title}
+              placeholder='一句话描述你的问题'
+              maxlength={100}
+              onInput={(e) => setTitle(e.detail.value)}
+            />
+            <RichEditor ref={editorRef} placeholder='补充说明你的困惑（选填）…' />
+          </View>
+        )}
+      </BottomSheet>
     </PageLayout>
   )
 }

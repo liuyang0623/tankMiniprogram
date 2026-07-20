@@ -1,0 +1,112 @@
+.cal {
+  padding: 8px 4px 4px;
+
+  &__head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 8px 16px;
+  }
+  &__nav {
+    width: 56px;
+    height: 56px;
+    line-height: 52px;
+    text-align: center;
+    color: var(--c-peach);
+    font-size: 44px;
+    border-radius: 50%;
+  }
+  &__title {
+    color: var(--c-ink);
+    font-size: 28px;
+    font-weight: 600;
+  }
+
+  &__week {
+    display: flex;
+    padding: 0 4px 8px;
+  }
+  &__week-cell {
+    flex: 1;
+    text-align: center;
+    color: var(--c-ink-sub);
+    font-size: 24px;
+  }
+
+  &__grid {
+    display: flex;
+    flex-wrap: wrap;
+    transition: opacity 0.2s ease;
+    &.is-loading {
+      opacity: 0.4;
+    }
+  }
+  &__cell {
+    width: 14.285%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 0;
+    box-sizing: border-box;
+  }
+  &__day {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.18s ease;
+    &-num {
+      font-size: 26px;
+    }
+
+    // 已打卡：橙底白字
+    &--done,
+    &--today-done {
+      background: var(--c-peach);
+      transform: scale(1);
+      .cal__day-num { color: #fff; font-weight: 700; }
+    }
+    // 缺卡：弱化灰字
+    &--miss {
+      .cal__day-num { color: var(--c-ink-sub); opacity: 0.55; }
+    }
+    // 未来：正常墨色
+    &--future {
+      .cal__day-num { color: var(--c-ink); }
+    }
+    // 今天：描边强调
+    &--today-miss {
+      border: 2px solid var(--c-peach);
+      .cal__day-num { color: var(--c-peach); font-weight: 700; }
+    }
+    &--today-done {
+      box-shadow: 0 0 0 4px var(--c-card), 0 0 0 6px var(--c-peach);
+    }
+  }
+
+  &__legend {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    padding: 20px 0 8px;
+  }
+  &__legend-item {
+    display: flex;
+    align-items: center;
+  }
+  &__dot {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    margin-right: 8px;
+    &--done { background: var(--c-peach); }
+    &--miss { background: var(--c-ink-sub); opacity: 0.4; }
+    &--today { border: 2px solid var(--c-peach); box-sizing: border-box; }
+  }
+  &__legend-text {
+    color: var(--c-ink-sub);
+    font-size: 22px;
+  }
+}
