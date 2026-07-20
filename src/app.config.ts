@@ -1,4 +1,6 @@
 export default defineAppConfig({
+  // 组件按需注入：仅注入页面实际用到的组件，提审代码质量必查项
+  lazyCodeLoading: 'requiredComponents',
   pages: [
     'pages/index/index',
     'pages/messages/index',

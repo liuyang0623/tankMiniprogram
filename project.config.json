@@ -5,8 +5,8 @@
   "appid": "wx555c14bc9d837e27",
   "setting": {
     "urlCheck": false,
-    "es6": false,
-    "enhance": false,
+    "es6": true,
+    "enhance": true,
     "postcss": false,
     "minified": false,
     "babelSetting": {
@@ -24,9 +24,10 @@
     "localPlugins": false,
     "disableUseStrict": false,
     "useCompilerPlugins": false,
-    "condition": false,
+    "condition": true,
     "swc": false,
-    "disableSWC": true
+    "disableSWC": true,
+    "debug": true
   },
   "compileType": "miniprogram",
   "condition": {},

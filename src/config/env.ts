@@ -6,7 +6,7 @@ const ENV: string = process.env.TARO_APP_ENV || 'dev'
 
 const MAP: Record<string, string> = {
   dev: 'http://localhost:3000/api/v1',
-  prod: 'https://api.example.com/api/v1', // TODO: 上线时替换为真实域名
+  prod: 'https://tank.dayangge.site/api/v1',
 }
 
 export const BASE_URL = MAP[ENV] ?? MAP.dev
