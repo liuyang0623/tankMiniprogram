@@ -15,7 +15,7 @@ export default defineConfig<'webpack5'>(async (merge, { command, mode }) => {
     plugins: ['@tarojs/plugin-framework-react'],
     // 编译期把 process.env.TARO_APP_ENV 替换为字面量，避免小程序运行时无 process 全局
     defineConstants: {
-      'process.env.TARO_APP_ENV': JSON.stringify(process.env.TARO_APP_ENV || 'dev'),
+      'process.env.TARO_APP_ENV': JSON.stringify(process.env.TARO_APP_ENV || 'prod'),
     },
     copy: { patterns: [], options: {} },
     framework: 'react',
