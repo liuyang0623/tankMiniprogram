@@ -1,0 +1,115 @@
+.fortune-page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 40px 44px 80px;
+}
+
+.fortune-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.fortune-head__title {
+  color: var(--c-ink);
+  font-size: 42px;
+  font-weight: 700;
+}
+.fortune-head__sub {
+  color: var(--c-ink-sub);
+  font-size: 26px;
+  margin-top: 12px;
+}
+
+.fortune-stage {
+  flex: 1;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 560px;
+}
+
+.fortune-cup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transform-origin: 50% 20%;
+}
+.fortune-cup__emoji {
+  font-size: 180px;
+  line-height: 1;
+}
+.fortune-cup__hint {
+  color: var(--c-ink-sub);
+  font-size: 27px;
+  margin-top: 32px;
+}
+
+.fortune-card {
+  width: 100%;
+  background: var(--c-card);
+  border-radius: 40px;
+  padding: 56px 44px;
+  box-shadow: 0 12px 36px var(--c-shadow);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.fortune-card__level {
+  color: var(--c-peach);
+  font-size: 64px;
+  font-weight: 800;
+  letter-spacing: 4px;
+}
+.fortune-card__stars {
+  display: flex;
+  gap: 8px;
+  margin-top: 20px;
+}
+.fortune-star {
+  font-size: 36px;
+  color: var(--c-shadow);
+}
+.fortune-star.on {
+  color: var(--c-peach);
+}
+.fortune-card__title {
+  color: var(--c-ink);
+  font-size: 40px;
+  font-weight: 600;
+  margin-top: 28px;
+}
+.fortune-card__desc {
+  color: var(--c-ink-sub);
+  font-size: 28px;
+  line-height: 1.6;
+  text-align: center;
+  margin-top: 20px;
+}
+.fortune-card__tip {
+  margin-top: 32px;
+  padding: 16px 32px;
+  background: var(--c-card-soft);
+  border-radius: 999px;
+}
+.fortune-card__tip-text {
+  color: var(--c-ink);
+  font-size: 25px;
+}
+
+.fortune-btn {
+  margin-top: 40px;
+  padding: 24px 96px;
+  background: var(--c-peach);
+  border-radius: 999px;
+  box-shadow: 0 8px 20px var(--c-shadow);
+}
+.fortune-btn__text {
+  color: #fff;
+  font-size: 32px;
+  font-weight: 600;
+  letter-spacing: 4px;
+}

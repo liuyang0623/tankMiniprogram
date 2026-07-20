@@ -1,0 +1,73 @@
+.insp-page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding-bottom: 60px;
+}
+
+.insp-hero {
+  padding: 24px 44px 12px;
+  display: flex;
+  flex-direction: column;
+}
+.insp-hero__title {
+  color: var(--c-ink);
+  font-size: 44px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+.insp-hero__sub {
+  color: var(--c-ink-sub);
+  font-size: 26px;
+  margin-top: 10px;
+}
+
+.insp-grid {
+  padding: 20px 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.insp-card {
+  display: flex;
+  align-items: center;
+  padding: 32px 28px;
+  background: var(--c-card);
+  border-radius: 32px;
+  box-shadow: 0 8px 24px var(--c-shadow);
+}
+.insp-card__icon {
+  width: 92px;
+  height: 92px;
+  border-radius: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.insp-card__emoji {
+  font-size: 48px;
+  line-height: 1;
+}
+.insp-card__body {
+  flex: 1;
+  margin-left: 28px;
+  display: flex;
+  flex-direction: column;
+}
+.insp-card__title {
+  color: var(--c-ink);
+  font-size: 34px;
+  font-weight: 600;
+}
+.insp-card__desc {
+  color: var(--c-ink-sub);
+  font-size: 25px;
+  margin-top: 8px;
+}
+.insp-card__arrow {
+  color: var(--c-ink-sub);
+  font-size: 48px;
+  font-weight: 300;
+  margin-left: 12px;
+}

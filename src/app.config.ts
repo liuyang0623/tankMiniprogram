@@ -15,6 +15,12 @@ export default defineAppConfig({
     'pages/diary/index',
     'pages/diary/edit',
     'pages/diary/detail',
+    'pages/inspiration/index',
+    'pages/inspiration/fortune',
+    'pages/inspiration/food',
+    'pages/inspiration/qa',
+    'pages/inspiration/qa-detail',
+    'pages/inspiration/sport',
     'pages/notifications/index',
   ],
   window: {
@@ -41,6 +47,12 @@ export default defineAppConfig({
         text: '日记',
         iconPath: 'assets/tabbar/diary.png',
         selectedIconPath: 'assets/tabbar/diary-active.png',
+      },
+      {
+        pagePath: 'pages/inspiration/index',
+        text: '灵感',
+        iconPath: 'assets/tabbar/inspiration.png',
+        selectedIconPath: 'assets/tabbar/inspiration-active.png',
       },
       {
         pagePath: 'pages/messages/index',

@@ -46,3 +46,114 @@
   opacity: 0.9;
   transition: transform 0.18s, opacity 0.18s;
 }
+
+/* ===================== 灵感 tab 动效原语 ===================== */
+
+/* 错位淡入：配合 inline animation-delay 让列表/卡片依次进场 */
+.anim-stagger {
+  animation: fadeInUp 0.42s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* 测运势：签筒摇动 */
+@keyframes shake {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  20% {
+    transform: rotate(-8deg);
+  }
+  40% {
+    transform: rotate(7deg);
+  }
+  60% {
+    transform: rotate(-5deg);
+  }
+  80% {
+    transform: rotate(4deg);
+  }
+}
+.anim-shake {
+  animation: shake 0.6s ease-in-out;
+}
+
+/* 测运势：签文卡片翻转揭晓 */
+@keyframes flipReveal {
+  from {
+    opacity: 0;
+    transform: perspective(800px) rotateY(90deg) scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: perspective(800px) rotateY(0deg) scale(1);
+  }
+}
+.anim-flip {
+  animation: flipReveal 0.5s cubic-bezier(0.22, 1, 0.36, 1) both;
+}
+
+/* 今天吃什么：老虎机滚动落定回弹 */
+@keyframes slotSettle {
+  0% {
+    transform: translateY(-40rpx) scale(0.94);
+    opacity: 0.4;
+  }
+  60% {
+    transform: translateY(6rpx) scale(1.04);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(0) scale(1);
+    opacity: 1;
+  }
+}
+.anim-slot {
+  animation: slotSettle 0.42s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+/* 老虎机滚动中：快速上滚 */
+@keyframes slotRoll {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+.anim-roll {
+  animation: slotRoll 0.12s linear infinite;
+}
+
+/* 运动打卡：庆祝缩放脉冲 */
+@keyframes celebratePop {
+  0% {
+    transform: scale(1);
+  }
+  35% {
+    transform: scale(1.25);
+  }
+  55% {
+    transform: scale(0.92);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+.anim-celebrate {
+  animation: celebratePop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+/* 运动打卡：庆祝光点扩散 */
+@keyframes ringPulse {
+  0% {
+    opacity: 0.6;
+    transform: scale(0.6);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.8);
+  }
+}
+.anim-ring-pulse {
+  animation: ringPulse 0.6s ease-out both;
+}

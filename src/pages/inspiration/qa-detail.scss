@@ -1,0 +1,106 @@
+.qad-page {
+  height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+
+.qad-scroll {
+  flex: 1;
+  padding: 24px 32px 24px;
+  box-sizing: border-box;
+}
+
+.qad-question {
+  background: var(--c-card);
+  border-radius: 28px;
+  padding: 36px 28px;
+  box-shadow: 0 6px 18px var(--c-shadow);
+}
+.qad-question__title {
+  color: var(--c-ink);
+  font-size: 38px;
+  font-weight: 700;
+  line-height: 1.5;
+}
+.qad-question__content {
+  display: block;
+  color: var(--c-ink-sub);
+  font-size: 28px;
+  line-height: 1.6;
+  margin-top: 20px;
+}
+.qad-question__time {
+  display: block;
+  color: var(--c-ink-sub);
+  font-size: 24px;
+  margin-top: 20px;
+}
+
+.qad-answers {
+  margin-top: 32px;
+}
+.qad-answers__label {
+  color: var(--c-ink);
+  font-size: 28px;
+  font-weight: 600;
+}
+.qad-answer {
+  background: var(--c-card);
+  border-radius: 24px;
+  padding: 28px 26px;
+  margin-top: 20px;
+  box-shadow: 0 4px 14px var(--c-shadow);
+}
+.qad-answer__content {
+  color: var(--c-ink);
+  font-size: 29px;
+  line-height: 1.6;
+}
+.qad-answer__time {
+  display: block;
+  color: var(--c-ink-sub);
+  font-size: 23px;
+  margin-top: 16px;
+}
+.qad-empty {
+  padding: 60px 0;
+  display: flex;
+  justify-content: center;
+}
+.qad-empty__text {
+  color: var(--c-ink-sub);
+  font-size: 27px;
+}
+
+.qad-input {
+  display: flex;
+  align-items: flex-end;
+  gap: 16px;
+  padding: 20px 28px calc(20px + constant(safe-area-inset-bottom));
+  padding-bottom: calc(20px + env(safe-area-inset-bottom));
+  background: var(--c-card);
+  box-shadow: 0 -4px 16px var(--c-shadow);
+}
+.qad-input__field {
+  flex: 1;
+  min-height: 64px;
+  max-height: 200px;
+  padding: 18px 24px;
+  background: var(--c-card-soft);
+  border-radius: 24px;
+  color: var(--c-ink);
+  font-size: 28px;
+  box-sizing: border-box;
+}
+.qad-input__btn {
+  flex-shrink: 0;
+  padding: 20px 40px;
+  background: var(--c-peach);
+  border-radius: 24px;
+}
+.qad-input__btn-text {
+  color: #fff;
+  font-size: 30px;
+  font-weight: 600;
+}
