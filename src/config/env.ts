@@ -2,7 +2,8 @@
 // 注意：小程序运行时没有 Node 的 process 全局。Taro defineConstants 会在编译期
 // 把 process.env.TARO_APP_ENV 整体替换为字面量字符串（如 "dev"），因此运行时
 // 不会真正读取 process 对象。
-const ENV: string = process.env.TARO_APP_ENV || 'dev'
+// 默认走 prod（线上后端）；本地开发需手动设 TARO_APP_ENV=dev
+const ENV: string = process.env.TARO_APP_ENV || 'prod'
 
 const MAP: Record<string, string> = {
   dev: 'http://localhost:3000/api/v1',

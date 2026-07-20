@@ -10,10 +10,9 @@
     "framework": "react"
   },
   "scripts": {
-    "dev:weapp": "taro build --type weapp --watch",
+    "dev:weapp": "TARO_APP_ENV=dev taro build --type weapp --watch",
     "dev:weapp:prod": "TARO_APP_ENV=prod taro build --type weapp --watch",
     "build:weapp": "taro build --type weapp",
-    "build:weapp:prod": "TARO_APP_ENV=prod taro build --type weapp",
     "test": "vitest run",
     "test:watch": "vitest",
     "tsc": "tsc --noEmit"
