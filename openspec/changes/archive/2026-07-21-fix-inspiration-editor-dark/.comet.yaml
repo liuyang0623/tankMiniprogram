@@ -18,7 +18,7 @@ verification_report: openspec/changes/fix-inspiration-editor-dark/verification-r
 branch_status: handled
 created_at: 2026-07-21
 verified_at: 2026-07-21
-archived: false
+archived: true
 build_command: npm run build:weapp
 verify_command: npm run tsc && npm run build:weapp
 direct_override: null
