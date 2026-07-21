@@ -1,0 +1,29 @@
+workflow: hotfix
+language: zh-CN
+phase: build
+context_compression: off
+build_mode: direct
+build_pause: null
+subagent_dispatch: null
+tdd_mode: direct
+review_mode: off
+isolation: branch
+verify_mode: light
+auto_transition: true
+base_ref: 2b9cf74564de7f8fc9031a3b78655b7ac5d62ed1
+design_doc: null
+plan: null
+verify_result: pending
+verification_report: null
+branch_status: pending
+created_at: 2026-07-21
+verified_at: null
+archived: false
+build_command: npm run build:weapp
+verify_command: npm run tsc && npm run build:weapp
+direct_override: null
+handoff_context: null
+handoff_hash: null
+classic_profile: hotfix
+classic_migration: 1
+run_id: e4f5edc2-f4ba-47f1-bc37-00b99cdb305a

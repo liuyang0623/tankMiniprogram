@@ -12,10 +12,10 @@
     padding: 8rpx 16rpx;
     margin: 4rpx;
     border-radius: 12rpx;
-    background: #faf6f0;
+    background: var(--c-card-soft);
     .tool-txt {
       font-size: 26rpx;
-      color: #4a4038;
+      color: var(--c-ink);
     }
   }
 }
@@ -37,10 +37,10 @@
     padding: 6rpx 14rpx;
     margin: 4rpx;
     border-radius: 10rpx;
-    background: #faf6f0;
+    background: var(--c-card-soft);
     .panel-btn-txt {
       font-size: 24rpx;
-      color: #4a4038;
+      color: var(--c-ink);
     }
   }
   .color-dot {
@@ -55,7 +55,7 @@
   margin-top: 16rpx;
   padding: 16rpx;
   border-radius: 20rpx;
-  background: #ffffff;
+  background: var(--c-card);
   font-size: 30rpx;
   line-height: 1.7;
 }
