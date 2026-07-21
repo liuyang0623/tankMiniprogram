@@ -1,6 +1,6 @@
 workflow: hotfix
 language: zh-CN
-phase: verify
+phase: archive
 context_compression: off
 build_mode: direct
 build_pause: null
@@ -13,11 +13,11 @@ auto_transition: true
 base_ref: 2b9cf74564de7f8fc9031a3b78655b7ac5d62ed1
 design_doc: null
 plan: null
-verify_result: pending
-verification_report: verification-report.md
+verify_result: pass
+verification_report: openspec/changes/fix-inspiration-editor-dark/verification-report.md
 branch_status: handled
 created_at: 2026-07-21
-verified_at: null
+verified_at: 2026-07-21
 archived: false
 build_command: npm run build:weapp
 verify_command: npm run tsc && npm run build:weapp
