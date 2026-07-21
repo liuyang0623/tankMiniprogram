@@ -1,7 +1,7 @@
 import { useState, useCallback } from 'react'
-import { View, Text } from '@tarojs/components'
+import { View, Text, Input } from '@tarojs/components'
 import Taro, { useDidShow } from '@tarojs/taro'
-import { PageLayout, CheckinCalendar } from '../../components'
+import { PageLayout, CheckinCalendar, BottomSheet } from '../../components'
 import { toDateKey, toMonthKey } from '../../components/CheckinCalendar/calendar'
 import { sportApi } from '../../services/api'
 import { useAuthStore } from '../../store/auth'
@@ -23,6 +23,10 @@ export default function SportPage() {
   const [expandedId, setExpandedId] = useState<number | null>(null)
   // 每个目标的日历状态（当前查看的年月与打卡日期）
   const [cal, setCal] = useState<Record<number, CalState>>({})
+  // 新建目标抽屉
+  const [createOpen, setCreateOpen] = useState(false)
+  const [goalName, setGoalName] = useState('')
+  const [creating, setCreating] = useState(false)
   const isLogin = useAuthStore((s) => s.isLogin)
   const showToast = useUiStore((s) => s.showToast)
 
@@ -68,24 +72,22 @@ export default function SportPage() {
   }
 
   const onCreate = async () => {
-    const res = await Taro.showModal({
-      title: '新的运动目标',
-      editable: true,
-      placeholderText: '如：每天跑步、每天喝2L水',
-    } as any)
-    const content = (res as any).content as string | undefined
-    if (res.confirm) {
-      if (!content || !content.trim()) {
-        showToast('目标名称不能为空', 'error')
-        return
-      }
-      try {
-        await sportApi.create({ name: content.trim(), targetDays: 30 })
-        showToast('目标已创建，加油坚持')
-        load()
-      } catch {
-        showToast('创建失败，请重试', 'error')
-      }
+    const name = goalName.trim()
+    if (!name) {
+      showToast('目标名称不能为空', 'error')
+      return
+    }
+    setCreating(true)
+    try {
+      await sportApi.create({ name, targetDays: 30 })
+      showToast('目标已创建，加油坚持')
+      setCreateOpen(false)
+      setGoalName('')
+      load()
+    } catch {
+      showToast('创建失败，请重试', 'error')
+    } finally {
+      setCreating(false)
     }
   }
 

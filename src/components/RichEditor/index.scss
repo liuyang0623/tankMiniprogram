@@ -58,4 +58,11 @@
   background: var(--c-card);
   font-size: 30rpx;
   line-height: 1.7;
+  color: var(--c-ink);
+
+  /* 原生 Editor 基于 Quill，placeholder 由 .ql-blank::before 渲染，
+     默认固定深灰在暗色下几乎不可见，改用弱化文字色让两套主题都跟随 */
+  .ql-editor.ql-blank::before {
+    color: var(--c-ink-sub) !important;
+  }
 }
