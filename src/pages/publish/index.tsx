@@ -179,9 +179,12 @@ export default function Publish() {
         </Text>
       </View>
       <Input
-        className='text-xl text-ink font-bold py-4 leading-relaxed'
+        className='text-xl text-ink font-bold'
+        style={{ height: '96rpx', lineHeight: '96rpx' }}
         value={title}
         placeholder='起个标题吧～'
+        adjustPosition={false}
+        cursorSpacing={0}
         onInput={(e) => setTitle(e.detail.value)}
       />
       <RichEditor ref={editorRef} onInput={onEditorInput} />
