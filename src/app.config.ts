@@ -2,6 +2,7 @@ export default defineAppConfig({
   // 组件按需注入：仅注入页面实际用到的组件，提审代码质量必查项
   lazyCodeLoading: 'requiredComponents',
   pages: [
+    'pages/diary/index',
     'pages/index/index',
     'pages/messages/index',
     'pages/publish/index',
@@ -12,7 +13,6 @@ export default defineAppConfig({
     'pages/user-profile/index',
     'pages/follow-list/index',
     'pages/chat/index',
-    'pages/diary/index',
     'pages/diary/edit',
     'pages/diary/detail',
     'pages/inspiration/index',
@@ -31,6 +31,7 @@ export default defineAppConfig({
     backgroundColor: '#FAF6F0',
   },
   tabBar: {
+    custom: true,
     color: '#8A7F76',
     selectedColor: '#F0A868',
     backgroundColor: '#FFFFFF',
