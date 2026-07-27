@@ -54,15 +54,15 @@ pages: [
 ],
 ```
 
-- [ ] **Step 1.1: 编辑 app.config.ts**
+- [x] **Step 1.1: 编辑 app.config.ts**
 
 使用 Edit 工具，将 `src/app.config.ts` 的 pages 数组调整为上述顺序。具体操作：删除第 15 行的 `'pages/diary/index',`，在第 4 行之后（pages 数组开头）插入。
 
-- [ ] **Step 1.2: 验证变更**
+- [x] **Step 1.2: 验证变更**
 
 运行 `git diff src/app.config.ts` 确认只移动了 diary 页面，未改动其他内容。
 
-- [ ] **Step 1.3: 提交**
+- [x] **Step 1.3: 提交**
 
 ```bash
 git add src/app.config.ts
@@ -86,7 +86,7 @@ git commit -m "feat(audit-mode): 将diary页面移到pages首位以支持审核�
 - 审核模式下消息 tab 通过 tab bar 过滤隐藏，用户无法主动到达该页
 - 消息页自身的 `useDidShow` 中的未读消息拉取逻辑在正常模式下才执行，审核模式下不会触发
 
-- [ ] **Step 2.2: 标记任务 9 完成**
+- [x] **Step 2.2: 标记任务 9 完成**
 
 将 `openspec/changes/audit-mode-toggle/tasks.md` 中的任务 9 标记为 [x]：
 
@@ -120,7 +120,7 @@ git commit -m "feat(audit-mode): 将diary页面移到pages首位以支持审核�
 - [x] 12. 创建 `src/store/__tests__/audit.test.ts` — audit store 单元测试
 ```
 
-- [ ] **Step 3.2: 最终 git status 检查**
+- [x] **Step 3.2: 最终 git status 检查**
 
 ```bash
 git status
