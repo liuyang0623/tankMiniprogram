@@ -166,6 +166,16 @@ export default function Messages() {
               </View>
             </View>
           ))}
+
+          {/* 列表尾提示：有会话且已加载完成时显示 */}
+          {loaded && conversations.length > 0 && (
+            <View className='flex justify-center py-4'>
+              <Text className='text-xs text-ink-sub'>没有更多了</Text>
+            </View>
+          )}
+
+          {/* 底部占位：避开固定定位的自定义 tabBar（含安全区），防止内容被遮挡 */}
+          <View className='tab-bar-safe-bottom' />
         </View>
       </ScrollView>
     </PageLayout>

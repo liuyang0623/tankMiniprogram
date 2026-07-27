@@ -1,6 +1,7 @@
 import { View, Text } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { PageLayout } from '../../components'
+import { useAuditStore } from '../../store/audit'
 import './index.scss'
 
 interface Section {
@@ -20,6 +21,9 @@ const SECTIONS: Section[] = [
 ]
 
 export default function InspirationIndex() {
+  const auditMode = useAuditStore((s) => s.auditMode)
+  // 审核模式隐藏「解惑」（UGC 互助），其余板块保留
+  const sections = auditMode ? SECTIONS.filter((s) => s.key !== 'qa') : SECTIONS
   const go = (url: string) => Taro.navigateTo({ url })
 
   return (
@@ -31,7 +35,7 @@ export default function InspirationIndex() {
         </View>
 
         <View className='insp-grid'>
-          {SECTIONS.map((s, i) => (
+          {sections.map((s, i) => (
             <View
               key={s.key}
               className='insp-card press anim-stagger'

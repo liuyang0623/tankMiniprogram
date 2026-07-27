@@ -22,3 +22,13 @@ page {
   color: var(--c-ink);
   font-size: 28rpx;
 }
+
+/* 固定定位自定义 tabBar 的底部占位。
+   tabBar 用 box-sizing:content-box，真实高度 = 110rpx + 安全区；
+   占位需在此基础上再多留 60rpx 可视间距，否则尾提示底边正好贴 tabBar 上沿被遮挡 */
+.tab-bar-safe-bottom {
+  width: 100%;
+  height: 170rpx;
+  height: calc(170rpx + constant(safe-area-inset-bottom));
+  height: calc(170rpx + env(safe-area-inset-bottom));
+}
