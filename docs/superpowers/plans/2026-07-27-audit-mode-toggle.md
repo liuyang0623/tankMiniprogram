@@ -1,3 +1,7 @@
+---
+archived-with: 2026-07-27-audit-mode-toggle
+status: final
+---
 # 审核模式开关 - 实施计划
 
 > **For agentic workers:** REQUIRED SUB-SKILL: Use superpowers:subagent-driven-development to implement this plan task-by-task. Steps use checkbox (`- [ ]`) syntax for tracking.

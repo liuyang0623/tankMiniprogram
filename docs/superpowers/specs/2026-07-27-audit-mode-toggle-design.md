@@ -2,6 +2,8 @@
 comet_change: audit-mode-toggle
 role: technical-design
 canonical_spec: openspec
+archived-with: 2026-07-27-audit-mode-toggle
+status: final
 ---
 
 # Design Doc: 审核模式开关
