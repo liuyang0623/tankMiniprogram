@@ -2,6 +2,7 @@ import { View, Text } from '@tarojs/components'
 import Taro from '@tarojs/taro'
 import { PageLayout } from '../../components'
 import './index.scss'
+import { useIsAuditMode } from '../../hooks/useAuditGuard'
 
 interface Section {
   key: string
@@ -15,11 +16,16 @@ interface Section {
 const SECTIONS: Section[] = [
   { key: 'fortune', title: '测运势', desc: '摇一签，看看今天的运气', emoji: '🔮', url: '/pages/inspiration/fortune', accent: 'var(--c-taro)' },
   { key: 'food', title: '今天吃什么', desc: '选择困难？交给缘分', emoji: '🍜', url: '/pages/inspiration/food', accent: 'var(--c-peach)' },
-  { key: 'qa', title: '解惑', desc: '把困惑说出来，听听大家的', emoji: '💬', url: '/pages/inspiration/qa', accent: 'var(--c-haze)' },
   { key: 'sport', title: '运动计划', desc: '每天一点点，坚持有回响', emoji: '🏃', url: '/pages/inspiration/sport', accent: 'var(--c-heart)' },
+  // QA 模块在审核模式下被移除
 ]
 
 export default function InspirationIndex() {
+  const isAuditMode = useIsAuditMode()
+
+  // 过滤掉 QA 板块（审核模式下）
+  const displaySections = SECTIONS.filter(s => s.key !== 'qa')
+
   const go = (url: string) => Taro.navigateTo({ url })
 
   return (
@@ -31,7 +37,7 @@ export default function InspirationIndex() {
         </View>
 
         <View className='insp-grid'>
-          {SECTIONS.map((s, i) => (
+          {displaySections.map((s, i) => (
             <View
               key={s.key}
               className='insp-card press anim-stagger'

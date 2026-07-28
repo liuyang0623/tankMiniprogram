@@ -125,6 +125,11 @@ export interface AuthResponse {
   user: LoginUser
 }
 
+/** 审核模式配置 */
+export interface AppConfig {
+  auditMode: boolean
+}
+
 /** 评论分页返回 */
 export type PaginatedComments = Paginated<Comment>
 
@@ -136,6 +141,13 @@ export interface FavoriteItem {
 
 /** 收藏分页返回 */
 export type PaginatedFavorites = Paginated<FavoriteItem>
+
+// ── 用户扩展 ──
+
+/** 用户资料中新增的管理员标识 */
+export interface ExtendedUser extends User {
+  isAdmin: boolean
+}
 
 // ── 消息/私信 ──
 

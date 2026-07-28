@@ -5,6 +5,7 @@ import type { ReactNode } from 'react'
 import { Card, Avatar, Tag } from '../index'
 import { goUserProfile } from '../../utils/navigation'
 import type { Post } from '../../types/api'
+import { useIsAuditMode } from '../../hooks/useAuditGuard'
 
 export interface PostCardProps {
   post: Post
@@ -16,6 +17,7 @@ export interface PostCardProps {
 
 /** 信息流帖子卡片，点击进详情；可选右上角 action 区、可选覆盖点击行为 */
 export default function PostCard({ post, action, onCardClick }: PostCardProps) {
+  const isAuditMode = useIsAuditMode()
   const goDetail = () => {
     Taro.navigateTo({ url: `/pages/detail/index?id=${post.id}` })
   }
@@ -63,10 +65,12 @@ export default function PostCard({ post, action, onCardClick }: PostCardProps) {
           ))}
         </View>
       )}
-      {/* 互动计数 */}
+      {/* 互动计数 - 审核模式下不显示评论数 */}
       <View className='flex'>
         <Text className='text-xs text-ink-sub mr-4'>♡ {post.likeCount}</Text>
-        <Text className='text-xs text-ink-sub'>💬 {post.commentCount}</Text>
+        {isAuditMode !== true && (
+          <Text className='text-xs text-ink-sub'>💬 {post.commentCount}</Text>
+        )}
       </View>
     </Card>
   )

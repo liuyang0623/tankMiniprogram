@@ -14,6 +14,7 @@ import { usePagedList } from '../../hooks/usePagedList'
 import { postsApi, categoriesApi } from '../../services/api'
 import { useAuthStore } from '../../store/auth'
 import type { Post } from '../../types/api'
+import { useIsAuditMode } from '../../hooks/useAuditGuard'
 
 /** 组装分类 tab：关注(登录才有) + 推荐 + 后端分类 + 其他 */
 function buildTabs(categories: { value: string; label: string }[], isLogin: boolean): CategoryTab[] {
@@ -30,6 +31,9 @@ export default function Index() {
   const [tabs, setTabs] = useState<CategoryTab[]>([])
   const [activeKey, setActiveKey] = useState('recommend') // 默认推荐
   const [keyword, setKeyword] = useState('')
+
+  // 获取审核模式状态
+  const isAuditMode = useIsAuditMode()
 
   // 拉分类组装 tab
   useEffect(() => {
@@ -60,8 +64,12 @@ export default function Index() {
   }, [])
 
   const handleAdd = useCallback(() => {
+    // 审核模式下不显示发布入口
+    if (isAuditMode === true) {
+      return
+    }
     Taro.navigateTo({ url: '/pages/publish/index' })
-  }, [])
+  }, [isAuditMode])
 
   const isFirstLoading = feed.loading && feed.list.length === 0
 
@@ -70,7 +78,10 @@ export default function Index() {
       <View style={{ height: '100vh', display: 'flex', flexDirection: 'column' }}>
         {/* 顶部：搜索栏 + 分类 tab（固定，不随列表滚动） */}
         <View className='pt-12 bg-bg' style={{ flexShrink: 0 }}>
-          <SearchBar onSearch={handleSearch} onAdd={handleAdd} />
+          {/* 审核模式下不显示发布入口的搜索栏 */}
+          {isAuditMode !== true && (
+            <SearchBar onSearch={handleSearch} onAdd={handleAdd} />
+          )}
           {!keyword && <CategoryTabs tabs={tabs} activeKey={activeKey} onChange={setActiveKey} />}
         </View>
 

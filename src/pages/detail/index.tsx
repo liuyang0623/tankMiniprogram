@@ -8,6 +8,7 @@ import { formatRelativeTime } from '../../utils/time'
 import { goUserProfile } from '../../utils/navigation'
 import type { Post } from '../../types/api'
 import './index.scss'
+import { useIsAuditMode } from '../../hooks/useAuditGuard'
 
 type LoadState = 'loading' | 'success' | 'error'
 
@@ -16,6 +17,7 @@ export default function Detail() {
   const id = Number(router.params.id)
   const [state, setState] = useState<LoadState>('loading')
   const [post, setPost] = useState<Post | null>(null)
+  const isAuditMode = useIsAuditMode()
 
   const load = async () => {
     if (!id) {
@@ -116,8 +118,8 @@ export default function Detail() {
               initialLikeCount={post.likeCount}
             />
 
-            {/* 评论区 */}
-            <CommentList postId={post.id} />
+            {/* 评论区 - 审核模式下不显示 */}
+            {isAuditMode !== true && <CommentList postId={post.id} />}
           </View>
         )}
       </View>

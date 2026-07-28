@@ -6,6 +6,8 @@ import { SUBSCRIBE_TPL_FOLLOW } from '../../config/env'
 import { useThemeStore } from '../../store/theme'
 import Iconfont from '../Iconfont'
 import type { Mode } from '../../utils/theme'
+import { useAdminCheck, useIsAuditMode } from '../../hooks/useAuditGuard'
+import { toggleAuditMode } from '../../services/audit'
 
 export interface SettingsDrawerProps {
   open: boolean
@@ -25,9 +27,32 @@ export default function SettingsDrawer({ open, onClose, onLoggedOut }: SettingsD
   const mode = useThemeStore((s) => s.mode)
   const setMode = useThemeStore((s) => s.setMode)
 
+  const isAuditMode = useIsAuditMode()
+  const isAdmin = useAdminCheck()
+
   const goDrafts = () => {
     onClose()
     Taro.navigateTo({ url: '/pages/drafts/index' })
+  }
+
+  // 切换审核模式
+  const toggleAuditModeHandler = async () => {
+    if (!confirm('确定要切换审核模式吗？此操作会影响所有用户可见的功能。')) return
+
+    try {
+      Taro.showToast({ title: '处理中', icon: 'loading' })
+      const newMode = await toggleAuditMode()
+      Taro.hideToast()
+      Taro.showToast({ title: `审核模式已${newMode ? '开启' : '关闭'}`, icon: 'success' })
+      // 重新获取审核状态以更新 UI
+      setTimeout(() => {
+        // 重新触发读取
+      }, 100)
+    } catch (error) {
+      Taro.hideToast()
+      Taro.showToast({ title: '切换失败', icon: 'error' })
+      console.error('Toggle audit mode failed:', error)
+    }
   }
 
   const onLogout = async () => {
@@ -136,10 +161,32 @@ export default function SettingsDrawer({ open, onClose, onLoggedOut }: SettingsD
             </View>
           </View>
 
-          {/* 草稿箱入口 */}
-          <View className='press bg-card rounded-card shadow-soft px-4 py-4 mb-4' onClick={goDrafts}>
-            <Text className='text-base text-ink'>草稿箱</Text>
-          </View>
+          {/* 审核模式切换（管理员可见） */}
+          {isAdmin && (
+            <View className='mb-4'>
+              <View
+                className='press bg-card rounded-card shadow-soft px-4 py-4'
+                onClick={toggleAuditModeHandler}
+              >
+                <View className='flex items-center justify-between'>
+                  <View className='flex-1'>
+                    <Text className='text-base text-ink'>审核模式</Text>
+                    <Text className='text-xs text-ink-sub mt-1 block'>
+                      {isAuditMode === true ? '已开启' : isAuditMode === false ? '已关闭' : '加载中...'}
+                    </Text>
+                  </View>
+                  <Iconfont name='jiantou_liebiaoxiangyou' size={18} color='#c9bfb6' />
+                </View>
+              </View>
+            </View>
+          )}
+
+          {/* 草稿箱入口（审核模式下不显示） */}
+          {isAuditMode !== true && (
+            <View className='press bg-card rounded-card shadow-soft px-4 py-4 mb-4' onClick={goDrafts}>
+              <Text className='text-base text-ink'>草稿箱</Text>
+            </View>
+          )}
 
           {/* 关注提醒授权 */}
           <View

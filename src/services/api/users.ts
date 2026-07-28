@@ -1,7 +1,7 @@
 import { request } from '../request'
 import { authRequest } from '../authRequest'
 import { optionalAuthRequest } from '../optionalAuthRequest'
-import type { User, Post, Paginated, FollowUserItem } from '../../types/api'
+import type { User, Post, Paginated, FollowUserItem, ExtendedUser } from '../../types/api'
 
 export interface UpdateProfileBody {
   nickname?: string
@@ -14,7 +14,7 @@ export const usersApi = {
   /** 公开（可选鉴权）：按 id 查看用户，登录时带回 isFollowing */
   getUser: (id: number) => optionalAuthRequest<User>({ url: `/users/${id}` }),
   /** 受保护：当前登录用户资料 */
-  getProfile: () => authRequest<User>({ url: '/users/profile' }),
+  getProfile: () => authRequest<ExtendedUser>({ url: '/users/profile' }),
   /** 受保护：更新资料 */
   updateProfile: (body: UpdateProfileBody) =>
     authRequest<User>({ url: '/users/profile', method: 'PATCH', data: body }),

@@ -4,6 +4,7 @@ import { useAuthStore } from './store/auth'
 import { useThemeStore } from './store/theme'
 import { useMessageStore } from './store/message'
 import { useNotificationStore } from './store/notification'
+import { useAuditStore } from './store/audit'
 import Toast from './components/Toast'
 import './app.scss'
 
@@ -27,6 +28,9 @@ function App({ children }: PropsWithChildren) {
       sysTheme = 'light'
     }
     useThemeStore.getState().init(sysTheme)
+
+    // 审核模式初始化
+    useAuditStore.getState().load
 
     // app 级只注册一次：system 模式跟随系统深浅色实时切换
     Taro.onThemeChange(({ theme }) => {

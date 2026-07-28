@@ -7,6 +7,7 @@ import { useNotificationStore } from '../../store/notification'
 import { useAuthStore } from '../../store/auth'
 import type { ConversationItem } from '../../types/api'
 import { notificationSummary } from '../../utils/notification'
+import { useIsAuditMode } from '../../hooks/useAuditGuard'
 
 /** 简洁时间格式化 */
 function formatTime(iso: string): string {
@@ -46,16 +47,19 @@ export default function Messages() {
   const notifLatest = useNotificationStore((s) => s.latest)
   const refreshUnread = useNotificationStore((s) => s.refreshUnread)
 
-  // 首次加载
+  // 获取审核模式状态
+  const isAuditMode = useIsAuditMode()
+
+  // 首次加载（审核模式下不加载）
   useEffect(() => {
-    if (isLogin && !loaded) {
+    if (isLogin && !loaded && isAuditMode !== true) {
       loadConversations()
     }
-  }, [isLogin, loaded, loadConversations])
+  }, [isLogin, loaded, loadConversations, isAuditMode])
 
-  // 每次进入刷新（会话 + 系统通知未读）
+  // 每次进入刷新（会话 + 系统通知未读），审核模式下不刷新
   useDidShow(() => {
-    if (isLogin) {
+    if (isLogin && isAuditMode !== true) {
       loadConversations()
       refreshUnread()
     }
@@ -75,6 +79,21 @@ export default function Messages() {
       <PageLayout>
         <View className='px-6 pt-10 flex justify-center'>
           <Text className='text-sm text-ink-sub'>登录后可查看消息</Text>
+        </View>
+      </PageLayout>
+    )
+  }
+
+  // 审核模式下隐藏消息内容
+  if (isAuditMode === true) {
+    return (
+      <PageLayout>
+        <View className='px-6 pt-10 flex flex-col items-center' style={{ height: '100%', justifyContent: 'center' }}>
+          <View className='mb-6'>
+            <Iconfont name='zhong' size={48} color='#8a7f76' />
+          </View>
+          <Text className='text-lg font-medium text-ink-default mb-2'>审核模式中</Text>
+          <Text className='text-sm text-ink-sub'>消息功能暂时不可用</Text>
         </View>
       </PageLayout>
     )

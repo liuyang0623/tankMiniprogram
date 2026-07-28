@@ -7,6 +7,7 @@ import { usersApi } from '../../services/api'
 import { useFollowStore } from '../../store/follow'
 import { useAuthStore } from '../../store/auth'
 import type { Post } from '../../types/api'
+import { useIsAuditMode } from '../../hooks/useAuditGuard'
 
 /** 单个计数块，可选点击 */
 function CountItem({ label, value, onClick }: { label: string; value: number; onClick?: () => void }) {
@@ -35,6 +36,9 @@ export default function UserProfile() {
   })
 
   const posts = usePagedList<Post>((page) => usersApi.getUserPosts(userId, page))
+
+  // 获取审核模式状态
+  const isAuditMode = useIsAuditMode()
 
   const loadUser = useCallback(async () => {
     if (!Number.isFinite(userId)) return
@@ -108,16 +112,18 @@ export default function UserProfile() {
               <CountItem label='关注' value={counts?.followingCount ?? 0} onClick={goFollowing} />
             </View>
 
-            {/* 关注 + 私信按钮（非本人才显示） */}
+            {/* 关注 + 私信按钮（非本人才显示，审核模式下隐藏私信） */}
             {!isSelf && (
               <View className='flex mt-5'>
                 <FollowButton userId={userId} className='flex-1 mr-3' />
-                <View
-                  className='press flex-1 inline-flex items-center justify-center rounded-pill px-6 py-2 bg-peach'
-                  onClick={onMessage}
-                >
-                  <Text className='text-sm text-card'>私信</Text>
-                </View>
+                {isAuditMode !== true && (
+                  <View
+                    className='press flex-1 inline-flex items-center justify-center rounded-pill px-6 py-2 bg-peach'
+                    onClick={onMessage}
+                  >
+                    <Text className='text-sm text-card'>私信</Text>
+                  </View>
+                )}
               </View>
             )}
           </View>
