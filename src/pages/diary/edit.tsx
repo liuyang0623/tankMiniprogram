@@ -20,6 +20,7 @@ export default function DiaryEdit() {
   const [weather, setWeather] = useState('')
   const [notebookId, setNotebookId] = useState(initialNotebookId)
   const [submitting, setSubmitting] = useState(false)
+  const [errorMessage, setErrorMessage] = useState('')
 
   // 编辑态回填
   useEffect(() => {
@@ -39,6 +40,10 @@ export default function DiaryEdit() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [editingId])
 
+  const clearError = () => {
+    setErrorMessage('')
+  }
+
   const submit = async () => {
     if (submitting) return
     if (!useAuthStore.getState().isLogin) {
@@ -46,10 +51,26 @@ export default function DiaryEdit() {
       return
     }
     const { html, text } = await editorRef.current!.getContents()
-    if (!title.trim() || !text.trim()) {
-      showToast('标题和正文不能为空', 'info')
+
+    // 验证必填项
+    let isValid = true
+    let errorMsg = ''
+
+    if (!title.trim()) {
+      isValid = false
+      errorMsg = '标题不能为空'
+    } else if (!text.trim()) {
+      isValid = false
+      errorMsg = '正文内容不能为空'
+    }
+
+    if (!isValid) {
+      setErrorMessage(errorMsg)
+      showToast(errorMsg, 'error')
       return
     }
+
+    setErrorMessage('')
     const images = extractImagesInOrder(html)
     const cover = firstImage(html)
     setSubmitting(true)
@@ -79,8 +100,16 @@ export default function DiaryEdit() {
           placeholder='今天想记点什么～'
           adjustPosition={false}
           cursorSpacing={0}
-          onInput={(e) => setTitle(e.detail.value)}
+          onInput={(e) => {
+            setTitle(e.detail.value)
+            clearError()
+          }}
         />
+        {errorMessage && (
+          <View className='mt-2'>
+            <Text className='text-xs' style={{ color: 'var(--c-taro)' }}>{errorMessage}</Text>
+          </View>
+        )}
         <MoodWeatherPicker
           mood={mood}
           weather={weather}

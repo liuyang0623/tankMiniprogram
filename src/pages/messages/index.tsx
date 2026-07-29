@@ -128,13 +128,6 @@ export default function Messages() {
             </View>
           </View>
 
-          {!showPrivateConversations && isLogin && (
-            <View className='px-6 pt-10 flex flex-col items-center'>
-              <Text className='text-sm text-ink-sub'>审核模式下仅显示系统通知</Text>
-            </View>
-          )}
-
-          {/* 加载态 - 仅在非审核模式时显示 */}
           {showPrivateConversations && loading && !loaded && <SkeletonList count={5} />}
 
           {/* 空态 - 仅在非审核模式时显示 */}
