@@ -88,8 +88,11 @@ npm run build:weapp       # 微信端构建，必须 EXIT 0
 
 ---
 
-## 5. Git 约定
+## 5. Git 约定与分支策略
 
+- **每次新增需求或修复 Bug，必须先创建新分支**再启动 comet 流程或直接开发；不得直接在 main 或其他共享分支上改动。
+  - 命名规范：`feat/<描述>`（新功能）、`fix/<描述>`（修复）、`chore/<描述>`（维护）
+  - 示例：`git checkout -b feat/audit-mode`
 - 提交信息用 `<type>(scope): 描述`，type ∈ feat/fix/refactor/docs/test/chore/perf/ci。
 - feature 分支合 main 优先 **fast-forward**（历史线性）。
 - **提交/推送需用户明确要求**，不要自动 push。
