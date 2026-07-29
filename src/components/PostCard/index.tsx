@@ -68,7 +68,7 @@ export default function PostCard({ post, action, onCardClick }: PostCardProps) {
       {/* 互动计数 - 审核模式下不显示评论数 */}
       <View className='flex'>
         <Text className='text-xs text-ink-sub mr-4'>♡ {post.likeCount}</Text>
-        {isAuditMode !== true && (
+        {!isAuditMode && (
           <Text className='text-xs text-ink-sub'>💬 {post.commentCount}</Text>
         )}
       </View>

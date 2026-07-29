@@ -52,14 +52,14 @@ export default function Messages() {
 
   // 首次加载（审核模式下不加载）
   useEffect(() => {
-    if (isLogin && !loaded && isAuditMode !== true) {
+    if (isLogin && !loaded && !isAuditMode) {
       loadConversations()
     }
   }, [isLogin, loaded, loadConversations, isAuditMode])
 
   // 每次进入刷新（会话 + 系统通知未读），审核模式下不刷新
   useDidShow(() => {
-    if (isLogin && isAuditMode !== true) {
+    if (isLogin && !isAuditMode) {
       loadConversations()
       refreshUnread()
     }
@@ -84,16 +84,12 @@ export default function Messages() {
     )
   }
 
-  // 审核模式下隐藏消息内容
+  // 审核模式下隐藏消息内容（展示普通空态）
   if (isAuditMode === true) {
     return (
       <PageLayout>
         <View className='px-6 pt-10 flex flex-col items-center' style={{ height: '100%', justifyContent: 'center' }}>
-          <View className='mb-6'>
-            <Iconfont name='zhong' size={48} color='#8a7f76' />
-          </View>
-          <Text className='text-lg font-medium text-ink-default mb-2'>审核模式中</Text>
-          <Text className='text-sm text-ink-sub'>消息功能暂时不可用</Text>
+          <Text className='text-sm text-ink-sub'>还没有消息～</Text>
         </View>
       </PageLayout>
     )

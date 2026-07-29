@@ -7,7 +7,7 @@ import { useThemeStore } from '../../store/theme'
 import Iconfont from '../Iconfont'
 import type { Mode } from '../../utils/theme'
 import { useAdminCheck, useIsAuditMode } from '../../hooks/useAuditGuard'
-import { toggleAuditMode } from '../../services/audit'
+import { useAuditStore } from '../../store/audit'
 
 export interface SettingsDrawerProps {
   open: boolean
@@ -29,6 +29,7 @@ export default function SettingsDrawer({ open, onClose, onLoggedOut }: SettingsD
 
   const isAuditMode = useIsAuditMode()
   const isAdmin = useAdminCheck()
+  const auditStore = useAuditStore()
 
   const goDrafts = () => {
     onClose()
@@ -37,17 +38,17 @@ export default function SettingsDrawer({ open, onClose, onLoggedOut }: SettingsD
 
   // 切换审核模式
   const toggleAuditModeHandler = async () => {
-    if (!confirm('确定要切换审核模式吗？此操作会影响所有用户可见的功能。')) return
+    const { confirm } = await Taro.showModal({
+      title: '警告',
+      content: '确定要切换审核模式吗？此操作会影响所有用户可见的功能。'
+    })
+    if (!confirm) return
 
     try {
       Taro.showToast({ title: '处理中', icon: 'loading' })
-      const newMode = await toggleAuditMode()
+      const newMode = await auditStore.toggleAuditMode()
       Taro.hideToast()
       Taro.showToast({ title: `审核模式已${newMode ? '开启' : '关闭'}`, icon: 'success' })
-      // 重新获取审核状态以更新 UI
-      setTimeout(() => {
-        // 重新触发读取
-      }, 100)
     } catch (error) {
       Taro.hideToast()
       Taro.showToast({ title: '切换失败', icon: 'error' })
@@ -172,7 +173,7 @@ export default function SettingsDrawer({ open, onClose, onLoggedOut }: SettingsD
                   <View className='flex-1'>
                     <Text className='text-base text-ink'>审核模式</Text>
                     <Text className='text-xs text-ink-sub mt-1 block'>
-                      {isAuditMode === true ? '已开启' : isAuditMode === false ? '已关闭' : '加载中...'}
+                      {isAuditMode ? '已开启' : '已关闭'}
                     </Text>
                   </View>
                   <Iconfont name='jiantou_liebiaoxiangyou' size={18} color='#c9bfb6' />
@@ -182,7 +183,7 @@ export default function SettingsDrawer({ open, onClose, onLoggedOut }: SettingsD
           )}
 
           {/* 草稿箱入口（审核模式下不显示） */}
-          {isAuditMode !== true && (
+          {!isAuditMode && (
             <View className='press bg-card rounded-card shadow-soft px-4 py-4 mb-4' onClick={goDrafts}>
               <Text className='text-base text-ink'>草稿箱</Text>
             </View>

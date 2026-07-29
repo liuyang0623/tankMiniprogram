@@ -8,6 +8,21 @@ import { useAuditStore } from './store/audit'
 import Toast from './components/Toast'
 import './app.scss'
 
+// 全局错误处理：静默忽略非 tabBar页面的 setTabBarStyle 错误
+// 在模块级别注册，仅执行一次
+Taro.onError((error: any) => {
+  let errorMessage = ''
+  if (typeof error === 'string') {
+    errorMessage = error
+  } else if (error) {
+    errorMessage = error.message || error.errmsg || String(error)
+  }
+  if (errorMessage?.includes('setTabBarStyle:fail not TabBar page')) {
+    console.debug('Ignored non-critical tabBar style error:', errorMessage)
+    return true
+  }
+})
+
 function App({ children }: PropsWithChildren) {
   useLaunch(() => {
     // 启动时从本地存储恢复登录态（token 未失效时自动登录）
@@ -30,7 +45,7 @@ function App({ children }: PropsWithChildren) {
     useThemeStore.getState().init(sysTheme)
 
     // 审核模式初始化
-    useAuditStore.getState().load
+    useAuditStore.getState().load()
 
     // app 级只注册一次：system 模式跟随系统深浅色实时切换
     Taro.onThemeChange(({ theme }) => {

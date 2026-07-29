@@ -119,7 +119,7 @@ export default function Detail() {
             />
 
             {/* 评论区 - 审核模式下不显示 */}
-            {isAuditMode !== true && <CommentList postId={post.id} />}
+            {!isAuditMode && <CommentList postId={post.id} />}
           </View>
         )}
       </View>

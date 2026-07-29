@@ -17,14 +17,15 @@ const SECTIONS: Section[] = [
   { key: 'fortune', title: '测运势', desc: '摇一签，看看今天的运气', emoji: '🔮', url: '/pages/inspiration/fortune', accent: 'var(--c-taro)' },
   { key: 'food', title: '今天吃什么', desc: '选择困难？交给缘分', emoji: '🍜', url: '/pages/inspiration/food', accent: 'var(--c-peach)' },
   { key: 'sport', title: '运动计划', desc: '每天一点点，坚持有回响', emoji: '🏃', url: '/pages/inspiration/sport', accent: 'var(--c-heart)' },
-  // QA 模块在审核模式下被移除
+  // QA 板块在审核模式下隐藏
+  { key: 'qa', title: '问答社区', desc: '提问和回答，一起交流想法', emoji: '❓', url: '/pages/inspiration/qa', accent: 'var(--c-ink-sub)' },
 ]
 
 export default function InspirationIndex() {
   const isAuditMode = useIsAuditMode()
 
-  // 过滤掉 QA 板块（审核模式下）
-  const displaySections = SECTIONS.filter(s => s.key !== 'qa')
+  // QA 板块在审核模式下隐藏
+  const displaySections = isAuditMode ? SECTIONS.filter(s => s.key !== 'qa') : SECTIONS
 
   const go = (url: string) => Taro.navigateTo({ url })
 

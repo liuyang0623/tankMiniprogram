@@ -1,17 +1,46 @@
-import { useEffect } from 'react'
+import { useEffect, useRef, useState, useLayoutEffect } from 'react'
 import { View, Text, ScrollView } from '@tarojs/components'
-import Taro from '@tarojs/taro'
+import Taro, { getCurrentInstance, useUnload } from '@tarojs/taro'
 import { PostCard, SkeletonList, PageLayout } from '../../components'
 import { usePagedList } from '../../hooks/usePagedList'
 import { postsApi } from '../../services/api'
 import { useUiStore } from '../../store/ui'
 import type { Post } from '../../types/api'
+import { useIsAuditMode } from '../../hooks/useAuditGuard'
 
 export default function Drafts() {
   const showToast = useUiStore((s) => s.showToast)
   const { list, loading, hasMore, loadMore, reload, setList } = usePagedList<Post>((page) =>
     postsApi.findDrafts(page),
   )
+
+  // 获取审核模式状态
+  const isAuditMode = useIsAuditMode()
+
+  // 🔒 安全拦截：审核模式下禁止进入，显示提示并重定向到首页
+  const [hasRedirected, setHasRedirected] = useState(false)
+  useLayoutEffect(() => {
+    if (isAuditMode && !hasRedirected) {
+      setHasRedirected(true)
+      Taro.switchTab({ url: '/pages/index/index' })
+    }
+  }, [isAuditMode, hasRedirected])
+
+  // 在重定向完成前，显示加载提示（避免白屏）
+  if (isAuditMode) {
+    return (
+      <PageLayout>
+        <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          <View className='text-center'>
+            <Text className='text-lg text-ink'>加载中…</Text>
+          </View>
+        </View>
+      </PageLayout>
+    )
+  }
+
+  // 只有确认不是审核模式后，才继续渲染草稿列表
+  // （下面原本的草稿列表代码保持不变）
 
   useEffect(() => {
     reload()

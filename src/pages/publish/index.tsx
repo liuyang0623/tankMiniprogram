@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useRef, useState, useLayoutEffect } from 'react'
 import { View, Text, Input } from '@tarojs/components'
 import Taro, { getCurrentInstance, useUnload } from '@tarojs/taro'
 import RichEditor, { RichEditorHandle } from '../../components/RichEditor'
@@ -11,6 +11,7 @@ import { useUiStore } from '../../store/ui'
 import { useDraftAutosave } from '../../hooks/useDraftAutosave'
 import { isUnauthorized } from '../../utils/http'
 import type { PostStatus } from '../../types/api'
+import { useIsAuditMode } from '../../hooks/useAuditGuard'
 
 export default function Publish() {
   const showToast = useUiStore((s) => s.showToast)
@@ -29,6 +30,34 @@ export default function Publish() {
   const lastTextRef = useRef('')
   // 回填 gate：编辑态载入回填未完成前，不触发自动保存（避免用空 html 覆盖草稿）
   const backfillingRef = useRef<boolean>(!!(idParam ? Number(idParam) : null))
+
+  // 获取审核模式状态
+  const isAuditMode = useIsAuditMode()
+
+  // 🔒 安全拦截：审核模式下禁止进入，显示提示并重定向到首页
+  const [hasRedirected, setHasRedirected] = useState(false)
+  useLayoutEffect(() => {
+    if (isAuditMode && !hasRedirected) {
+      setHasRedirected(true)
+      Taro.switchTab({ url: '/pages/index/index' })
+    }
+  }, [isAuditMode, hasRedirected])
+
+  // 在重定向完成前，显示加载提示（避免白屏）
+  if (isAuditMode) {
+    return (
+      <PageLayout>
+        <View style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+          <View className='text-center'>
+            <Text className='text-lg text-ink'>加载中…</Text>
+          </View>
+        </View>
+      </PageLayout>
+    )
+  }
+
+  // 只有确认不是审核模式后，才继续渲染发布表单
+  // （下面原本的发布表单代码保持不变）
 
   const draft = useDraftAutosave({
     editingId,
@@ -63,7 +92,7 @@ export default function Publish() {
         setTimeout(() => {
           editorRef.current?.setContents(p.content || '')
           lastHtmlRef.current = p.content || ''
-          lastTextRef.current = (p.content || '').replace(/<[^>]+>/g, '')
+          lastTextRef.current = (p.content || '').replace(/<[^>]/g, '')
           backfillingRef.current = false
         }, 300)
       })
@@ -166,47 +195,47 @@ export default function Publish() {
   return (
     <PageLayout>
       <View className='min-h-screen bg-bg px-6 pt-6'>
-      {/* 保存状态字 */}
-      <View className='flex justify-end py-1'>
-        <Text className='text-xs text-ink-sub'>
-          {draft.status === 'saving'
-            ? '保存中…'
-            : draft.status === 'saved'
-              ? '草稿已保存'
-              : draft.status === 'expired'
-                ? '登录已过期，内容已保留'
-                : ''}
-        </Text>
-      </View>
-      <Input
-        className='text-xl text-ink font-bold'
-        style={{ height: '96rpx', lineHeight: '96rpx' }}
-        value={title}
-        placeholder='起个标题吧～'
-        adjustPosition={false}
-        cursorSpacing={0}
-        onInput={(e) => setTitle(e.detail.value)}
-      />
-      <RichEditor ref={editorRef} onInput={onEditorInput} />
-      <CategoryPicker value={category} onChange={setCategory} />
-      <View className='mt-4'>
-        <Text className='text-xs text-ink-sub'>话题（用 #话题 形式，空格分隔）</Text>
+        {/* 保存状态字 */}
+        <View className='flex justify-end py-1'>
+          <Text className='text-xs text-ink-sub'>
+            {draft.status === 'saving'
+              ? '保存中…'
+              : draft.status === 'saved'
+                ? '草稿已保存'
+                : draft.status === 'expired'
+                  ? '登录已过期，内容已保留'
+                  : ''}
+          </Text>
+        </View>
         <Input
-          className='mt-2 text-base text-ink'
-          value={topicInput}
-          placeholder='#摆烂 #周末'
-          onInput={(e) => setTopicInput(e.detail.value)}
+          className='text-xl text-ink font-bold'
+          style={{ height: '96rpx', lineHeight: '96rpx' }}
+          value={title}
+          placeholder='起个标题吧～'
+          adjustPosition={false}
+          cursorSpacing={0}
+          onInput={(e) => setTitle(e.detail.value)}
         />
+        <RichEditor ref={editorRef} onInput={onEditorInput} />
+        <CategoryPicker value={category} onChange={setCategory} />
+        <View className='mt-4'>
+          <Text className='text-xs text-ink-sub'>话题（用 #话题 形式，空格分隔）</Text>
+          <Input
+            className='mt-2 text-base text-ink'
+            value={topicInput}
+            placeholder='#摆烂 #周末'
+            onInput={(e) => setTopicInput(e.detail.value)}
+          />
+        </View>
+        <View
+          className={`press bg-peach rounded-pill py-3 mt-8 flex justify-center items-center ${submitting ? 'opacity-50' : ''}`}
+          onClick={submit}
+        >
+          <Text className='text-base text-card'>
+            {submitting ? '提交中…' : editingId ? '保存' : '发布'}
+          </Text>
+        </View>
       </View>
-      <View
-        className={`press bg-peach rounded-pill py-3 mt-8 flex justify-center items-center ${submitting ? 'opacity-50' : ''}`}
-        onClick={submit}
-      >
-        <Text className='text-base text-card'>
-          {submitting ? '提交中…' : editingId ? '保存' : '发布'}
-        </Text>
-      </View>
-    </View>
     </PageLayout>
   )
 }

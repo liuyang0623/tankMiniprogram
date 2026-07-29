@@ -79,7 +79,7 @@ export default function Index() {
         {/* 顶部：搜索栏 + 分类 tab（固定，不随列表滚动） */}
         <View className='pt-12 bg-bg' style={{ flexShrink: 0 }}>
           {/* 审核模式下不显示发布入口的搜索栏 */}
-          {isAuditMode !== true && (
+          {!isAuditMode && (
             <SearchBar onSearch={handleSearch} onAdd={handleAdd} />
           )}
           {!keyword && <CategoryTabs tabs={tabs} activeKey={activeKey} onChange={setActiveKey} />}

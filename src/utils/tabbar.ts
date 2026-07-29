@@ -19,11 +19,10 @@ const TABBAR_STYLE: Record<Resolved, Taro.setTabBarStyle.Option> = {
 
 /** 按解析后的主题应用原生 tabBar 配色；失败静默（部分页面无 tabBar 时 API 会报错） */
 export function applyTabBarStyle(resolved: Resolved): void {
-  try {
-    Taro.setTabBarStyle(TABBAR_STYLE[resolved])
-  } catch {
-    // 当前页无 tabBar 或 API 不可用时忽略
-  }
+  Taro.setTabBarStyle(TABBAR_STYLE[resolved]).catch(error => {
+    // 静默忽略：可能在非 tabBar 页面调用时触发
+    console.debug('applyTabBarStyle ignored (likely non-tabBar page):', error)
+  })
 }
 
 /** 两套导航栏配色（原生 header 不受 CSS 变量控制；文字色仅支持 black/white） */
