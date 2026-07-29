@@ -6,10 +6,8 @@ import { PageLayout, MoodWeatherPicker } from '../../components'
 import { firstImage, extractImagesInOrder } from '../../utils/publish'
 import { diaryApi } from '../../services/api'
 import { useAuthStore } from '../../store/auth'
-import { useUiStore } from '../../store/ui'
 
 export default function DiaryEdit() {
-  const showToast = useUiStore((s) => s.showToast)
   const editorRef = useRef<RichEditorHandle>(null)
   const params = getCurrentInstance().router?.params
   const editingId = params?.id ? Number(params.id) : null
@@ -35,35 +33,56 @@ export default function DiaryEdit() {
           editorRef.current?.setContents(d.content || '')
         }, 300)
       })
-      .catch(() => showToast('载入失败', 'error'))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [editingId])
+      .catch(() => Taro.showToast({ title: '载入失败', icon: 'error' }))
+  }, [editingId, diaryApi])
 
   const submit = async () => {
     if (submitting) return
+
+    // ① 先校验登录态
     if (!useAuthStore.getState().isLogin) {
-      showToast('请先登录', 'error')
+      Taro.showToast({ title: '请先登录', icon: 'none' })
       return
     }
-    const { html, text } = await editorRef.current!.getContents()
-    if (!title.trim() || !text.trim()) {
-      showToast('标题和正文不能为空', 'info')
+
+    // ② 同步校验标题（绝不依赖异步操作）
+    if (!title.trim()) {
+      Taro.showToast({ title: '标题不能为空', icon: 'none' })
       return
     }
-    const images = extractImagesInOrder(html)
-    const cover = firstImage(html)
-    setSubmitting(true)
+
+    // ③ 检查编辑器是否就绪
+    if (!editorRef.current) {
+      console.error('Editor ref not mounted!')
+      Taro.showToast({ title: '编辑器未就绪', icon: 'error' })
+      return
+    }
+
+    // ④ 再获取正文内容
     try {
+      const { html, text } = await editorRef.current.getContents()
+
+      // 同步校验正文
+      if (!text.trim()) {
+        Taro.showToast({ title: '正文内容不能为空', icon: 'none' })
+        return
+      }
+
+      const images = extractImagesInOrder(html)
+      const cover = firstImage(html)
+      setSubmitting(true)
+
       if (editingId) {
         await diaryApi.update(editingId, { title, content: html, cover, mood, weather, notebookId, images })
-        showToast('已保存', 'success')
+        Taro.showToast({ title: '已保存', icon: 'success' })
       } else {
         await diaryApi.create({ notebookId, title, content: html, cover, mood, weather, images })
-        showToast('已保存', 'success')
+        Taro.showToast({ title: '已保存', icon: 'success' })
       }
       Taro.navigateBack()
-    } catch {
-      showToast('保存失败，请重试', 'error')
+    } catch (e) {
+      console.error('Save error:', e)
+      Taro.showToast({ title: '保存失败', icon: 'error' })
     } finally {
       setSubmitting(false)
     }

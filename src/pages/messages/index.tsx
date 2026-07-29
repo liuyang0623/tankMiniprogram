@@ -84,16 +84,8 @@ export default function Messages() {
     )
   }
 
-  // 审核模式下隐藏消息内容（展示普通空态）
-  if (isAuditMode === true) {
-    return (
-      <PageLayout>
-        <View className='px-6 pt-10 flex flex-col items-center' style={{ height: '100%', justifyContent: 'center' }}>
-          <Text className='text-sm text-ink-sub'>还没有消息～</Text>
-        </View>
-      </PageLayout>
-    )
-  }
+    // 审核模式下：显示系统通知入口，但不显示私人会话
+  const showPrivateConversations = !isAuditMode
 
   return (
     <PageLayout>
@@ -102,7 +94,7 @@ export default function Messages() {
         className='bg-bg'
         style={{ height: '100vh' }}
         refresherEnabled
-        onRefresherRefresh={() => loadConversations()}
+        onRefresherRefresh={() => isAuditMode ? undefined : loadConversations()}
       >
         <View className='px-4 pt-2 pb-8'>
           {/* 系统通知聚合入口：常驻置顶，不随会话排序 */}
@@ -136,18 +128,17 @@ export default function Messages() {
             </View>
           </View>
 
-          {/* 加载态 */}
-          {loading && !loaded && <SkeletonList count={5} />}
+          {showPrivateConversations && loading && !loaded && <SkeletonList count={5} />}
 
-          {/* 空态 */}
-          {loaded && conversations.length === 0 && (
+          {/* 空态 - 仅在非审核模式时显示 */}
+          {showPrivateConversations && loaded && conversations.length === 0 && (
             <View className='px-6 pt-10 flex flex-col items-center'>
               <Text className='text-sm text-ink-sub'>还没有消息～</Text>
             </View>
           )}
 
-          {/* 会话列表 */}
-          {conversations.map((conv) => (
+          {/* 会话列表 - 仅在非审核模式时显示 */}
+          {showPrivateConversations && conversations.map((conv) => (
             <View
               key={conv.id}
               className='flex items-center py-3 px-2 active:bg-gray-50 rounded-xl'
