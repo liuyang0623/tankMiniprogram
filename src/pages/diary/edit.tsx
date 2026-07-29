@@ -45,13 +45,15 @@ export default function DiaryEdit() {
       showToast('请先登录', 'error')
       return
     }
-    const { html, text } = await editorRef.current!.getContents()
 
-    // 验证必填项
+    // 先验证标题（快速路径，无需等待编辑器）
     if (!title.trim()) {
       showToast('标题不能为空', 'error')
       return
     }
+
+    // 再获取并验证正文内容
+    const { html, text } = await editorRef.current!.getContents()
     if (!text.trim()) {
       showToast('正文内容不能为空', 'error')
       return
